@@ -1,0 +1,32 @@
+﻿section {
+	border: 1px solid #000;
+	padding: 10px 
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 25px 0;
+	font-size: 18px;
+	font-family: sans-serif;
+	min-width: 400px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+thead tr {
+	background-color: #ff6a00;
+	color: #ffffff;
+	text-align: left;
+	font-weight: bold;
+	border-top-left-radius: 10px;
+}
+
+th, td {
+	padding: 12px 15px;
+}
+
+input {
+	border: 1px solid #000;
+	border-radius: 5px;
+	padding: 5px
+}

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/1. UI/">
+    <Project Path="GestãoDeTurmas/GestãoDeTurmas.csproj" Id="21100616-7054-407b-a37f-67dd88f7485f" />
+  </Folder>
+  <Folder Name="/2. Application/">
+    <Project Path="API/API.csproj" Id="4b8b2b9d-57bc-4e82-8bd0-1078efa39947" />
+    <Project Path="Common/Common.csproj" Id="c07c9737-b2f3-44d6-8375-3a3e4d0e76fd" />
+  </Folder>
+  <Folder Name="/3. Data/">
+    <Project Path="Repository/Repository.csproj" Id="09ce5bcf-1a5f-4555-b534-02ae97915d21" />
+  </Folder>
+  <Project Path="DesafioTecnico1-Fundamentos/DesafioTecnico1-Fundamentos.csproj" />
+</Solution>
