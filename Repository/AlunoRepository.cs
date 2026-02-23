@@ -24,7 +24,7 @@ namespace Repository
             _context.SaveChanges();
         }
 
-        public (List<Aluno> lista, int total) ObterTodosOsAluno(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
             var query = _context.Alunos.AsNoTracking().AsQueryable();
 
@@ -43,37 +43,32 @@ namespace Repository
                 query = query.Where(a => a.Ativo == ativo.Value);
             }
 
-            int total = query.Count();
+            int total = await query.CountAsync();
 
-            var lista = query.OrderBy(a => a.Nome)
+            var lista = await query.OrderBy(a => a.Nome)
                 .Skip((pagina - 1) * tamanho)
                 .Take(tamanho)
-                .ToList();
+                .ToListAsync();
 
             return (lista, total);
         }
 
-        public void Excluir(int id)
+        public async Task ExcluirAsync(int id)
         {
-            var alunoExcluido = ObterPorId(id);
-
-            if (alunoExcluido != null) 
-            {
-                _context.Remove(alunoExcluido);
-                _context.SaveChanges();
-            }
-            
+            await _context.Alunos
+                .Where(a => a.Id == id)
+                .ExecuteDeleteAsync();         
         }
 
-        public Aluno ObterPorId(int id)
+        public async Task<Aluno> ObterPorIdAsync(int id)
         {
-            return _context.Alunos.FirstOrDefault(a => a.Id == id);
+            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public void Alterar(Aluno aluno)
+        public async Task AlterarAsync(Aluno aluno)
         {
             _context.Alunos.Update(aluno);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public bool ExistePeloCPF(string cpf)

@@ -8,9 +8,9 @@ namespace API.Service
     public interface IAlunoService
     {
         void AdicionarAluno(AlunoInputDTO aluno);
-        ListaPaginada<Aluno> ObterTodosOsAlunos(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
-        Aluno ObterPeloId(int id);
-        void ExcluirAluno(int id);
-        void Alterar(AlterarAlunoDTO aluno);
+        Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
+        Task<Aluno> ObterPeloIdAsync(int id);
+        Task ExcluirAlunoAsync(int id);
+        Task AlterarAsync(AlterarAlunoDTO aluno);
     }
 }

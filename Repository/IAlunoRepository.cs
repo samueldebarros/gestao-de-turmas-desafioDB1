@@ -8,11 +8,11 @@ namespace Repository
 {
     public interface IAlunoRepository
     {
-        Aluno ObterPorId(int id);
+        Task<Aluno> ObterPorIdAsync(int id);
         void Adicionar(Aluno aluno);
-        (List<Aluno> lista, int total) ObterTodosOsAluno(int pagina =1 , int tamanho = 10 , string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
-        void Excluir(int id);
-        void Alterar(Aluno aluno);
+        Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina =1 , int tamanho = 10 , string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
+        Task ExcluirAsync(int id);
+        Task AlterarAsync(Aluno aluno);
         bool ExistePeloCPF(string cpf);
     }
 }

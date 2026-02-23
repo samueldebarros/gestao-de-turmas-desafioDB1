@@ -47,9 +47,9 @@ namespace API.Service
             _alunoRepository.Adicionar(novoAluno);
         }
 
-        public ListaPaginada<Aluno> ObterTodosOsAlunos(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
-            var (alunos, total) = _alunoRepository.ObterTodosOsAluno(pagina, tamanho, pesquisa, sexo, ativo);
+            var (alunos, total) = await _alunoRepository.ObterTodosOsAlunoAsync(pagina, tamanho, pesquisa, sexo, ativo);
 
             var resultadoPaginado = new ListaPaginada<Aluno>(alunos, total, pagina, tamanho);
 
@@ -57,27 +57,27 @@ namespace API.Service
 
         }
 
-        public void ExcluirAluno(int id)
+        public async Task ExcluirAlunoAsync(int id)
         {
-            var alunoExistente = _alunoRepository.ObterPorId(id);
+            var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
 
             if (alunoExistente == null)
             {
                 throw new KeyNotFoundException("O aluno que você tentou excluir não foi encontrado.");
             }
 
-            _alunoRepository.Excluir(id);
+            await _alunoRepository.ExcluirAsync(id);
         }
 
-        public Aluno ObterPeloId(int id)
+        public async Task<Aluno> ObterPeloIdAsync(int id)
         {
-            return _alunoRepository.ObterPorId(id);
+            return await _alunoRepository.ObterPorIdAsync(id);
         }
 
-        public void Alterar(AlterarAlunoDTO aluno)
+        public async Task AlterarAsync(AlterarAlunoDTO aluno)
         {
 
-            var alunoExistente = _alunoRepository.ObterPorId(aluno.Id);
+            var alunoExistente = await _alunoRepository.ObterPorIdAsync(aluno.Id);
 
             if (alunoExistente == null)
             {
@@ -93,7 +93,7 @@ namespace API.Service
                 alunoExistente.DataNascimento = aluno.DataNascimento.Value;
             }
             
-            _alunoRepository.Alterar(alunoExistente);
+            await _alunoRepository.AlterarAsync(alunoExistente);
 
 
         }

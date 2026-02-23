@@ -20,13 +20,13 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
             ViewBag.PesquisaAtual = pesquisa;
             ViewBag.SexoAtual = sexo;
             ViewBag.AtivoAtual = ativo;
 
-            var alunosPaginados = _alunoService.ObterTodosOsAlunos(pagina, TAMANHO_PAGINA, pesquisa, sexo, ativo);
+            var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, TAMANHO_PAGINA, pesquisa, sexo, ativo);
 
             var alunosDomain = alunosPaginados.Select(a => a.ToListaViewModel()).ToList();
 
@@ -74,15 +74,15 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
-        public IActionResult Excluir(int id)
+        public async Task<IActionResult> Excluir(int id)
         {
-            _alunoService.ExcluirAluno(id);
+            await _alunoService.ExcluirAlunoAsync(id);
             return RedirectToAction("Index");
         }
 
-        public IActionResult Editar(int id)
+        public async Task<IActionResult> Editar(int id)
         {
-            var aluno = _alunoService.ObterPeloId(id);
+            var aluno = await _alunoService.ObterPeloIdAsync(id);
             if (aluno == null) return NotFound();
 
             AlunoEditarViewModel alunoEditarViewModel = aluno.ToEditarViewModel();
@@ -91,13 +91,13 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
-        public IActionResult Alterar(AlunoEditarViewModel model)
+        public async Task<IActionResult> Alterar(AlunoEditarViewModel model)
         {
             if (!ModelState.IsValid) return View("Editar", model);
             var alunoAlterado = model.ToAlterarDTO();
             try
             {
-                _alunoService.Alterar(alunoAlterado);
+                await _alunoService.AlterarAsync(alunoAlterado);
                 return RedirectToAction("Index");
             } catch (Exception ex)
             {
