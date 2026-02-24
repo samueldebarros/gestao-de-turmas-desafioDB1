@@ -20,28 +20,23 @@ namespace Repository
 
         public async Task AdicionarAsync(Aluno aluno)
         {
-            await _context.AddAsync(aluno);
-            _context.SaveChanges();
+            _context.Add(aluno);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
             var query = _context.Alunos.AsNoTracking().AsQueryable().IgnoreQueryFilters();
 
-            if (!string.IsNullOrEmpty(pesquisa))
-            {
-                query = query.Where(a => a.Nome.Contains(pesquisa) || a.Cpf.Contains(pesquisa) || a.Matricula.Contains(pesquisa));
-            }
+            if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(a => 
+            a.Nome.Contains(pesquisa) ||
+            a.Cpf.Contains(pesquisa) ||
+            a.Matricula.Contains(pesquisa));
+         
+            if (sexo.HasValue) query = query.Where(a => a.Sexo == sexo.Value);
 
-            if (sexo.HasValue)
-            {
-                query = query.Where(a => a.Sexo == sexo.Value);
-            }
-
-            if (ativo.HasValue)
-            {
-                query = query.Where(a => a.Ativo == ativo.Value);
-            }
+            if (ativo.HasValue) query = query.Where(a => a.Ativo == ativo.Value);        
 
             int total = await query.CountAsync();
 

@@ -27,11 +27,7 @@ namespace API.Service
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
-
-            if (await _alunoRepository.ExistePeloCPFAsync(aluno.Cpf))
-            {
-                throw new RegraDeNegocioException("Esse CPF já esta em uso.");
-            }
+            if (await _alunoRepository.ExistePeloCPFAsync(aluno.Cpf)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
 
             Aluno novoAluno = new Aluno
             {
@@ -62,11 +58,8 @@ namespace API.Service
         {
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
 
-            if (alunoExistente == null)
-            {
-                throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
-            }
-
+            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
+            
             await _alunoRepository.ExcluirAsync(id);
         }
 
@@ -80,11 +73,8 @@ namespace API.Service
 
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(aluno.Id);
 
-            if (alunoExistente == null)
-            {
-                throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
-            }
-
+            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
+            
             alunoExistente.Nome = aluno.Nome;
             alunoExistente.Email = aluno.Email;
             alunoExistente.Sexo = aluno.Sexo;
