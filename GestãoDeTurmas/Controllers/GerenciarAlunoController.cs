@@ -80,6 +80,7 @@ namespace GestãoDeTurmas.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
             var aluno = await _alunoService.ObterPeloIdAsync(id);
@@ -91,7 +92,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Alterar(AlunoEditarViewModel model)
+        public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
             if (!ModelState.IsValid) return View("Editar", model);
             var alunoAlterado = model.ToAlterarDTO();
@@ -104,7 +105,7 @@ namespace GestãoDeTurmas.Controllers
                 var mensagemErro = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
 
                 ModelState.AddModelError(string.Empty, mensagemErro);
-                return View("Editar", model);
+                return View(model);
             }
 
         }
