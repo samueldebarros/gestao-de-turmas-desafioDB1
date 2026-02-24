@@ -71,9 +71,9 @@ namespace Repository
             await _context.SaveChangesAsync();
         }
 
-        public bool ExistePeloCPF(string cpf)
+        public async Task<bool> ExistePeloCPFAsync(string cpf)
         {
-            return _context.Alunos.Any(a => a.Cpf == cpf);
+            return await _context.Alunos.AnyAsync(a => a.Cpf == cpf);
         }
     }
 }

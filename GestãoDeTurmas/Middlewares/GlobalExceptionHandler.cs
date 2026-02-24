@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Common.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace GestãoDeTurmas.Middlewares;
 
@@ -16,7 +17,15 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         _logger.LogError(exception, "Um erro inesperado aconteceu na aplicação: {Mensagem}", exception.Message);
 
-        httpContext.Response.Redirect("Home/Error");
+        if (exception is EntidadeNaoEncontradaException)
+        {
+            httpContext.Response.Redirect("/Home/NotFoundCustomizado");
+        }
+        else
+        {
+            httpContext.Response.Redirect("/Home/Error");
+        }    
+
         return true;
     }
 }

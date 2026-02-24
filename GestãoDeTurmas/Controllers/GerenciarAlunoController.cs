@@ -2,6 +2,7 @@
 using API.Service;
 using Common.Domains;
 using Common.Enums;
+using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -54,9 +55,8 @@ namespace GestãoDeTurmas.Controllers
         [HttpPost]
         public async Task<IActionResult> Adicionar(AlunoInputViewModel model)
         {
-            if (!ModelState.IsValid) {
-                return View(model);
-            }
+            if (!ModelState.IsValid) return View(model);
+            
             try
             {
                 var alunoDto = model.ToDTO();
@@ -65,11 +65,9 @@ namespace GestãoDeTurmas.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (RegraDeNegocioException ex)
             {
-                var mensagemErro = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
-                ModelState.AddModelError(string.Empty, mensagemErro);
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View("Adicionar", model);
             }
 
@@ -97,16 +95,16 @@ namespace GestãoDeTurmas.Controllers
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
             if (!ModelState.IsValid) return View("Editar", model);
+
             var alunoAlterado = model.ToAlterarDTO();
+
             try
             {
                 await _alunoService.AlterarAsync(alunoAlterado);
                 return RedirectToAction("Index");
-            } catch (Exception ex)
+            } catch (RegraDeNegocioException ex)
             {
-                var mensagemErro = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
-                ModelState.AddModelError(string.Empty, mensagemErro);
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View(model);
             }
 

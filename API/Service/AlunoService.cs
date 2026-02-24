@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using Common.Domains;
 using Common.Enums;
+using Common.Exceptions;
 using Repository;
 
 namespace API.Service
@@ -27,9 +28,9 @@ namespace API.Service
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
 
-            if (_alunoRepository.ExistePeloCPF(aluno.Cpf))
+            if (await _alunoRepository.ExistePeloCPFAsync(aluno.Cpf))
             {
-                throw new InvalidOperationException("Esse CPF já esta em uso");
+                throw new RegraDeNegocioException("Esse CPF já esta em uso.");
             }
 
             Aluno novoAluno = new Aluno
@@ -63,7 +64,7 @@ namespace API.Service
 
             if (alunoExistente == null)
             {
-                throw new KeyNotFoundException("O aluno que você tentou excluir não foi encontrado.");
+                throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
             }
 
             await _alunoRepository.ExcluirAsync(id);
@@ -81,7 +82,7 @@ namespace API.Service
 
             if (alunoExistente == null)
             {
-                throw new KeyNotFoundException("O aluno que você tentou editar não existe.");
+                throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
             }
 
             alunoExistente.Nome = aluno.Nome;
