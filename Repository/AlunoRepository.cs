@@ -26,7 +26,7 @@ namespace Repository
 
         public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
-            var query = _context.Alunos.AsNoTracking().AsQueryable();
+            var query = _context.Alunos.AsNoTracking().AsQueryable().IgnoreQueryFilters();
 
             if (!string.IsNullOrEmpty(pesquisa))
             {
