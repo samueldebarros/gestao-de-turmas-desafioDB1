@@ -63,12 +63,12 @@ namespace GestãoDeTurmas.Controllers
 
                 await _alunoService.AdicionarAlunoAsync(alunoDto);
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View("Adicionar", model);
+                return View(nameof(Adicionar), model);
             }
 
         }
@@ -77,7 +77,7 @@ namespace GestãoDeTurmas.Controllers
         public async Task<IActionResult> Excluir(int id)
         {
             await _alunoService.ExcluirAlunoAsync(id);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -94,14 +94,14 @@ namespace GestãoDeTurmas.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
-            if (!ModelState.IsValid) return View("Editar", model);
+            if (!ModelState.IsValid) return View(nameof(Editar), model);
 
             var alunoAlterado = model.ToAlterarDTO();
 
             try
             {
                 await _alunoService.AlterarAsync(alunoAlterado);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             } catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
