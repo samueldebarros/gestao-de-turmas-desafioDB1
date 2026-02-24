@@ -53,11 +53,11 @@ namespace Repository
             return (lista, total);
         }
 
-        public async Task ExcluirAsync(int id)
+        public async Task ExcluirAsync(int id) // fiz um soft delete ao inves de excluir do banco
         {
             await _context.Alunos
                 .Where(a => a.Id == id)
-                .ExecuteDeleteAsync();         
+                .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, false));
         }
 
         public async Task<Aluno> ObterPorIdAsync(int id)
