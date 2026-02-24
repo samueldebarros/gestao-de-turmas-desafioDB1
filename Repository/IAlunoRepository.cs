@@ -9,7 +9,7 @@ namespace Repository
     public interface IAlunoRepository
     {
         Task<Aluno> ObterPorIdAsync(int id);
-        void Adicionar(Aluno aluno);
+        Task AdicionarAsync(Aluno aluno);
         Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina =1 , int tamanho = 10 , string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
         Task ExcluirAsync(int id);
         Task AlterarAsync(Aluno aluno);

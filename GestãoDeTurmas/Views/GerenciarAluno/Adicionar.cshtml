@@ -1,4 +1,4 @@
-﻿@model GestãoDeTurmas.Models.GerenciarAlunoViewModel
+﻿@model GestãoDeTurmas.Models.AlunoInputViewModel
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -7,51 +7,51 @@
 
 <div class="card">
     <div class="card-body">
-        <form asp-controller="GerenciarAluno" asp-action="Criar" method="post">
+        <form method="post">
             <h1>Adicionar aluno</h1>
 
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
             <div class="form-group">
                 <label for="nome">Nome</label>
-                <input type="text" asp-for="@Model.NovoAluno.Nome" class="form-control" placeholder="Novo nome">
-                <span asp-validation-for="@Model.NovoAluno.Nome" class="text-danger"></span>
+                <input type="text" asp-for="@Model.Nome" class="form-control" placeholder="Novo nome">
+                <span asp-validation-for="@Model.Nome" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <input type="text" asp-for="@Model.NovoAluno.Cpf" class="form-control" placeholder="Novo CPF">
-                <span asp-validation-for="@Model.NovoAluno.Cpf" class="text-danger"></span>
+                <input type="text" asp-for="@Model.Cpf" class="form-control" placeholder="Novo CPF">
+                <span asp-validation-for="@Model.Cpf" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" asp-for="@Model.NovoAluno.Email" class="form-control" placeholder="exemplo@email.com">
+                <input type="email" asp-for="@Model.Email" class="form-control" placeholder="exemplo@email.com">
             </div>
 
             <div class="form-group">
                 <label for="dataNascimento">Data de Nascimento</label>
-                <input type="date" asp-for="@Model.NovoAluno.DataNascimento" class="form-control">
-                <span asp-validation-for="@Model.NovoAluno.DataNascimento" class="text-danger"></span>
+                <input type="date" asp-for="@Model.DataNascimento" class="form-control">
+                <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
             </div>
             <br />
 
             <h6>Sexo</h6>
 
             <div class="form-check">
-                <input class="form-check-input" type="radio" asp-for="NovoAluno.Sexo" value="Masculino" id="masculino">
+                <input class="form-check-input" type="radio" asp-for="Sexo" value="Masculino" id="masculino">
                 <label class="form-check-label" for="masculino">
                     Masculino
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" asp-for="NovoAluno.Sexo" value="Feminino" id="feminino">
+                <input class="form-check-input" type="radio" asp-for="Sexo" value="Feminino" id="feminino">
                 <label class="form-check-label" for="feminino">
                     Feminino
                 </label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" asp-for="NovoAluno.Sexo" value="Outro" id="outro">
+                <input class="form-check-input" type="radio" asp-for="Sexo" value="Outro" id="outro">
                 <label class="form-check-label" for="outro">
                     Outro
                 </label>

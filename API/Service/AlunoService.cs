@@ -24,7 +24,7 @@ namespace API.Service
             return matricula;
         }
 
-        public void AdicionarAluno(AlunoInputDTO aluno)
+        public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
 
             if (_alunoRepository.ExistePeloCPF(aluno.Cpf))
@@ -44,7 +44,7 @@ namespace API.Service
                 Matricula = GerarMatriculaUnica()
             };
 
-            _alunoRepository.Adicionar(novoAluno);
+            await _alunoRepository.AdicionarAsync(novoAluno);
         }
 
         public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)

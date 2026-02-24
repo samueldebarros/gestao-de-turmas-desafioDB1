@@ -45,21 +45,23 @@ namespace GestãoDeTurmas.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
         public IActionResult Adicionar()
         {
-            return View();
+            return View(new AlunoInputViewModel());
         }
 
         [HttpPost]
-        public IActionResult Criar(GerenciarAlunoViewModel model)
+        public async Task<IActionResult> Adicionar(AlunoInputViewModel model)
         {
             if (!ModelState.IsValid) {
-                return View("Adicionar", model);
+                return View(model);
             }
             try
             {
-                var alunoDto = model.NovoAluno.ToDTO();
-                _alunoService.AdicionarAluno(alunoDto);
+                var alunoDto = model.ToDTO();
+
+                await _alunoService.AdicionarAlunoAsync(alunoDto);
 
                 return RedirectToAction("Index");
             }

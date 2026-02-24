@@ -18,9 +18,9 @@ namespace Repository
             _context = context;
         }
 
-        public void Adicionar(Aluno aluno)
+        public async Task AdicionarAsync(Aluno aluno)
         {
-            _context.Add(aluno);
+            await _context.AddAsync(aluno);
             _context.SaveChanges();
         }
 
