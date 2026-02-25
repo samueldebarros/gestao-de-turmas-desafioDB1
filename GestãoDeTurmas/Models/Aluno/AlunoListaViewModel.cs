@@ -1,6 +1,6 @@
 ﻿using Common.Enums;
 
-namespace GestãoDeTurmas.Models
+namespace GestãoDeTurmas.Models.Aluno
 {
     public class AlunoListaViewModel
     {

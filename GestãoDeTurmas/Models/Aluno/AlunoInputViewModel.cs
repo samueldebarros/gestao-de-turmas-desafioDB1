@@ -1,7 +1,7 @@
 ﻿using Common.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace GestãoDeTurmas.Models
+namespace GestãoDeTurmas.Models.Aluno
 {
     public class AlunoInputViewModel
     {

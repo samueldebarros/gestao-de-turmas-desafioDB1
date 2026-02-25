@@ -1,6 +1,6 @@
 ﻿using API.DTOs;
 using Common.Domains;
-using GestãoDeTurmas.Models;
+using GestãoDeTurmas.Models.Aluno;
 
 namespace GestãoDeTurmas.Mappers
 {

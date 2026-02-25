@@ -5,6 +5,7 @@ using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models;
+using GestãoDeTurmas.Models.Aluno;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
