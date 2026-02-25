@@ -11,6 +11,7 @@ public class GestaoEscolarContext : DbContext
     public GestaoEscolarContext(DbContextOptions<GestaoEscolarContext> options) : base(options) { }
 
     public DbSet<Aluno> Alunos { get; set; }
+    public DbSet<Docente> Docentes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
