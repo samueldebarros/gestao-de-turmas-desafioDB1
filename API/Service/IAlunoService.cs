@@ -2,7 +2,6 @@
 using API.DTOs.AlunoDTOs;
 using Common.Domains;
 using Common.Enums;
-using Repository;
 
 namespace API.Service
 {

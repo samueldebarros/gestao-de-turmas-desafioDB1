@@ -1,7 +1,4 @@
-﻿using API.DTOs;
-using Common.Domains;
-
-namespace GestãoDeTurmas.Models.Aluno
+﻿namespace GestãoDeTurmas.Models.Aluno
 {
     public class GerenciarAlunoViewModel
     {

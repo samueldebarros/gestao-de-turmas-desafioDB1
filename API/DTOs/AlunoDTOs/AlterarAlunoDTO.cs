@@ -1,5 +1,4 @@
 ﻿using Common.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.AlunoDTOs
 {

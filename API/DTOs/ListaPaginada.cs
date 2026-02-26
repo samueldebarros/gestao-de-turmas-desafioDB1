@@ -1,5 +1,4 @@
 ﻿namespace API.DTOs;
-
 public class ListaPaginada<T> : List<T>
 {
     public int PaginaAtual {  get; private set; }

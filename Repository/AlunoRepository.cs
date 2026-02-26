@@ -1,11 +1,7 @@
 ﻿using Common.Domains;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Repository.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Repository
 {

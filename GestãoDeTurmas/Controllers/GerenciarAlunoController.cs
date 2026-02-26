@@ -1,13 +1,9 @@
-﻿using API.DTOs;
-using API.Service;
-using Common.Domains;
+﻿using API.Service;
 using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
-using GestãoDeTurmas.Models;
 using GestãoDeTurmas.Models.Aluno;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
 
 namespace GestãoDeTurmas.Controllers
 {
