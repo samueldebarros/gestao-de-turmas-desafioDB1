@@ -75,9 +75,9 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Excluir(int id)
+        public async Task<IActionResult> Inativar(int id)
         {
-            await _alunoService.ExcluirAlunoAsync(id);
+            await _alunoService.InativarAlunoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

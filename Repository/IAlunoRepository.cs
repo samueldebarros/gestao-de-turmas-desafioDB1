@@ -11,7 +11,7 @@ namespace Repository
         Task<Aluno> ObterPorIdAsync(int id);
         Task AdicionarAsync(Aluno aluno);
         Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina =1 , int tamanho = 10 , string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
-        Task ExcluirAsync(int id);
+        Task InativarAsync(int id);
         Task AlterarAsync(Aluno aluno);
         Task<bool> ExistePeloCPFAsync(string cpf);
     }

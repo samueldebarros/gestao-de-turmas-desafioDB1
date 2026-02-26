@@ -55,13 +55,13 @@ namespace API.Service
 
         }
 
-        public async Task ExcluirAlunoAsync(int id)
+        public async Task InativarAlunoAsync(int id)
         {
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
 
             if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
             
-            await _alunoRepository.ExcluirAsync(id);
+            await _alunoRepository.InativarAsync(id);
         }
 
         public async Task<Aluno> ObterPeloIdAsync(int id)

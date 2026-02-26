@@ -48,7 +48,7 @@ namespace Repository
             return (lista, total);
         }
 
-        public async Task ExcluirAsync(int id) // fiz um soft delete ao inves de excluir do banco
+        public async Task InativarAsync(int id) // fiz um soft delete ao inves de excluir do banco
         {
             await _context.Alunos
                 .Where(a => a.Id == id)
