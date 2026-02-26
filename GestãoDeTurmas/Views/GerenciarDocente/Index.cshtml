@@ -1,0 +1,64 @@
+﻿@model GestãoDeTurmas.Models.Docente.GerenciarDocenteViewModel
+@{
+}
+
+<link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
+
+<div class="card">
+	<div class="card-body">
+		<h1>Gerenciar docentes</h1> <br />
+
+		<table class="text-center">
+			<thead>
+				<tr class="text-center">
+					<th>Nome</th>
+					<th>Especialidade</th>
+					<th>CPF</th>
+					<th>Email</th>
+					<th>Data de Nascimento</th>
+					<th>Status</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@*
+				@foreach (var docente in Model.DocentesCadastrados)
+				{
+					<tr>
+						<td>@docente.Nome</td>
+						<td>@docente.Especialidade</td>
+						<td class="text-nowrap">@docente.Cpf</td>
+						<td>@(docente.Email ?? "-")</td>
+						<td>@docente.DataNascimento.ToString("dd/MM/yyyy")</td>
+						<td>
+							@if (docente.Ativo)
+							{
+								<span class="badge bg-success">Ativo</span>
+							}
+							else
+							{
+								<span class="badge bg-danger">Inativo</span>
+							}
+						</td>
+
+						<td><a role="button" class="btn btn-primary w-100">Editar</a></td>
+						<td>
+							<form>
+								<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+									Excluir
+								</button>
+							</form>
+						</td>
+					</tr>
+				}
+				*@
+			</tbody>
+		</table>
+
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<a role="button" class="btn btn-primary w-25" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar aluno</a>
+
+		</div>
+	</div>
+</div>
