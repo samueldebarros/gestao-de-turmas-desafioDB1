@@ -1,7 +1,7 @@
 ﻿using Common.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs
+namespace API.DTOs.AlunoDTOs
 {
     public class AlterarAlunoDTO
     {

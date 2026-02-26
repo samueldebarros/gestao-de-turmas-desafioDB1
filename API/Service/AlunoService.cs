@@ -1,4 +1,5 @@
 ﻿using API.DTOs;
+using API.DTOs.AlunoDTOs;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;

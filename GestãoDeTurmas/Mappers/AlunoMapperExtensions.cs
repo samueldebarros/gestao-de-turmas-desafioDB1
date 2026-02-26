@@ -1,4 +1,4 @@
-﻿using API.DTOs;
+﻿using API.DTOs.AlunoDTOs;
 using Common.Domains;
 using GestãoDeTurmas.Models.Aluno;
 

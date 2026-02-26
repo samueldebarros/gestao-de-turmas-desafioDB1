@@ -1,6 +1,6 @@
 ﻿using Common.Enums;
 
-namespace API.DTOs
+namespace API.DTOs.AlunoDTOs
 {
     public class AlunoInputDTO
     {
