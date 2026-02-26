@@ -29,4 +29,9 @@ public class DocenteService : IDocenteService
 
         await _docenteRepository.AdicionarDocenteAsync(novoDocente);
     }
+
+    public async Task<List<Docente>> ObterTodosOsDocentesAsync()
+    {
+        return await _docenteRepository.ObterTodosOsDocentesAsync();
+    }
 }

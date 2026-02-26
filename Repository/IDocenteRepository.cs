@@ -8,4 +8,5 @@ namespace Repository;
 public interface IDocenteRepository
 {
     Task AdicionarDocenteAsync(Docente docente);
+    Task<List<Docente>> ObterTodosOsDocentesAsync();
 }

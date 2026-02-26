@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 
 namespace Repository;
@@ -17,5 +18,10 @@ public class DocenteRepository : IDocenteRepository
         _context.Add(docente);
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<Docente>> ObterTodosOsDocentesAsync()
+    {
+        return await _context.Docentes.AsNoTracking().ToListAsync();
     }
 }

@@ -14,9 +14,19 @@ namespace GestãoDeTurmas.Controllers
             _docenteService = docenteService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var docentes = await _docenteService.ObterTodosOsDocentesAsync();
+
+            var docenteDomain = docentes.Select(a => a.ToListaViewModel()).ToList();
+
+            var viewModel = new GerenciarDocenteViewModel()
+            {
+                DocentesCadastrados = docenteDomain,
+                NovoDocente = new DocenteInputViewModel()
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]
