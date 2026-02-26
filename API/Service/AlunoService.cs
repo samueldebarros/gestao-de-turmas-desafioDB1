@@ -64,6 +64,15 @@ namespace API.Service
             await _alunoRepository.InativarAsync(id);
         }
 
+        public async Task ReativarAlunoAsync(int id)
+        {
+            var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
+
+            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
+
+            await _alunoRepository.ReativarAsync(id);
+        }
+
         public async Task<Aluno> ObterPeloIdAsync(int id)
         {
             return await _alunoRepository.ObterPorIdAsync(id);

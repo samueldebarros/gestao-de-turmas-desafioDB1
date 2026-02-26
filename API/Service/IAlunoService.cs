@@ -12,6 +12,7 @@ namespace API.Service
         Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null);
         Task<Aluno> ObterPeloIdAsync(int id);
         Task InativarAlunoAsync(int id);
+        Task ReativarAlunoAsync(int id);
         Task AlterarAsync(AlterarAlunoDTO aluno);
     }
 }

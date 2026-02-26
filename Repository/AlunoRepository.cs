@@ -55,9 +55,17 @@ namespace Repository
                 .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, false));
         }
 
+        public async Task ReativarAsync(int id)
+        {
+            await _context.Alunos
+                .IgnoreQueryFilters()
+                .Where(a => a.Id == id)
+                .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, true));
+        }
+
         public async Task<Aluno> ObterPorIdAsync(int id)
         {
-            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Alunos.IgnoreQueryFilters().FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task AlterarAsync(Aluno aluno)

@@ -92,11 +92,22 @@
 
 						<td><a role="button" class="btn btn-primary w-100" asp-route-id="@aluno.Id" asp-controller="GerenciarAluno" asp-action="Editar">Editar</a></td>
 						<td>
-							<form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
-								<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
-									Inativar
-								</button>
-							</form>
+							@if (aluno.Ativo)
+							{
+								<form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
+									<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+										Inativar
+									</button>
+								</form>
+							} else
+							{
+								<form asp-action="Reativar" asp-route-id="@aluno.Id" method="post">
+									<button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
+										Reativar
+									</button>
+								</form>
+							}
+
 						</td>
 					</tr>
 				}

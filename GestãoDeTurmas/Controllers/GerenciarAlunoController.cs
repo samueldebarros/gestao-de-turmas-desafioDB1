@@ -81,6 +81,13 @@ namespace GestãoDeTurmas.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Reativar(int id)
+        {
+            await _alunoService.ReativarAlunoAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpGet]
         public async Task<IActionResult> Editar(int id)
         {
