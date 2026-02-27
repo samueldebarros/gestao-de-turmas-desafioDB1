@@ -23,6 +23,7 @@ public static class DocenteMapperExtensions
     {
         return new DocenteListaViewModel
         {
+            Id = docente.Id,
             Nome = docente.Nome,
             Especialidade = docente.Especialidade,
             Cpf = docente.Cpf,

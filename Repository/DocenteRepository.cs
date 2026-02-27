@@ -20,6 +20,13 @@ public class DocenteRepository : IDocenteRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task InativarDocenteAsync(int id)
+    {
+        await _context.Docentes
+            .Where(d => d.Id == id)
+            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
+    }
+
     public async Task<List<Docente>> ObterTodosOsDocentesAsync()
     {
         return await _context.Docentes.AsNoTracking().ToListAsync();

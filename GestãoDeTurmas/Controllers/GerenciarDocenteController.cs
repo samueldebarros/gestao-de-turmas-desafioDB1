@@ -54,5 +54,12 @@ namespace GestãoDeTurmas.Controllers
                 return View(nameof(Adicionar), model);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Inativar(int id)
+        {
+            await _docenteService.InativarDocenteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -30,6 +30,11 @@ public class DocenteService : IDocenteService
         await _docenteRepository.AdicionarDocenteAsync(novoDocente);
     }
 
+    public async Task InativarDocenteAsync(int id)
+    {
+        await _docenteRepository.InativarDocenteAsync(id);
+    }
+
     public async Task<List<Docente>> ObterTodosOsDocentesAsync()
     {
         return await _docenteRepository.ObterTodosOsDocentesAsync();
