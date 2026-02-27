@@ -61,5 +61,12 @@ namespace GestãoDeTurmas.Controllers
             await _docenteService.InativarDocenteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Reativar(int id)
+        {
+            await _docenteService.ReativarDocenteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

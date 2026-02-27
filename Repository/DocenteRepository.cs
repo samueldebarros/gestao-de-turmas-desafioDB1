@@ -31,4 +31,11 @@ public class DocenteRepository : IDocenteRepository
     {
         return await _context.Docentes.AsNoTracking().ToListAsync();
     }
+
+    public async Task ReativarDocenteAsync(int id)
+    {
+        await _context.Docentes
+            .Where(d => d.Id == id)
+            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
+    }
 }

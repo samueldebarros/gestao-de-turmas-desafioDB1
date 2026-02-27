@@ -8,4 +8,5 @@ public interface IDocenteService
     Task AdicionarDocenteAsync(DocenteInputDTO docente);
     Task<List<Docente>> ObterTodosOsDocentesAsync();
     Task InativarDocenteAsync(int id);
+    Task ReativarDocenteAsync(int id);
 }

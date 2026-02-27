@@ -10,4 +10,5 @@ public interface IDocenteRepository
     Task AdicionarDocenteAsync(Docente docente);
     Task<List<Docente>> ObterTodosOsDocentesAsync();
     Task InativarDocenteAsync(int id);
+    Task ReativarDocenteAsync(int id);
 }
