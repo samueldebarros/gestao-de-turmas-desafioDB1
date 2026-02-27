@@ -12,6 +12,10 @@ public class DocenteRepository : IDocenteRepository
     {
         _context = context;
     }
+    public async Task<Docente> ObterPeloIdAsync(int id)
+    {
+        return await _context.Docentes.IgnoreQueryFilters().FirstOrDefaultAsync(d => d.Id == id);
+    }
 
     public async Task AdicionarDocenteAsync(Docente docente)
     {
@@ -37,5 +41,11 @@ public class DocenteRepository : IDocenteRepository
         await _context.Docentes
             .Where(d => d.Id == id)
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
+    }
+
+    public async Task EditarDocenteAsync(Docente docente)
+    {
+        _context.Docentes.Update(docente);
+        await _context.SaveChangesAsync();
     }
 }

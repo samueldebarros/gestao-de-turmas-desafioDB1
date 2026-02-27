@@ -55,6 +55,28 @@ namespace GestãoDeTurmas.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            var docente = await _docenteService.ObterPeloIdAsync(id);
+            if (docente == null) return NotFound();
+
+            DocenteEditarViewModel viewModel = docente.ToEditarViewModel();
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(DocenteEditarViewModel viewModel)
+        {
+            if (!ModelState.IsValid) return View(nameof(Editar),viewModel);
+
+            var docenteAlterado = viewModel.ToEditarDTO();
+
+            await _docenteService.EditarDocenteAsync(docenteAlterado);
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Inativar(int id)
         {

@@ -32,4 +32,29 @@ public static class DocenteMapperExtensions
             DataNascimento = docente.DataNascimento,
         };
     }
+
+    public static DocenteEditarViewModel ToEditarViewModel(this Docente docente)
+    {
+        return new DocenteEditarViewModel
+        {
+            Id = docente.Id,
+            Nome = docente.Nome,
+            Especialidade = docente.Especialidade,
+            Email = docente.Email,
+            DataNascimento = docente.DataNascimento,
+        };
+    }
+
+    public static EditarDocenteDTO ToEditarDTO(this DocenteEditarViewModel docente)
+    {
+        return new EditarDocenteDTO
+        {
+            Id = docente.Id,
+            Nome = docente.Nome,
+            Especialidade = docente.Especialidade,
+            Email = docente.Email,
+            DataNascimento = docente.DataNascimento,
+        };
+
+    }
 }
