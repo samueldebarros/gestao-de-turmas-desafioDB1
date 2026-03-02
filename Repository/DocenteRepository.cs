@@ -48,4 +48,9 @@ public class DocenteRepository : IDocenteRepository
         _context.Docentes.Update(docente);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> ExistePeloCpfAsync(string cpf)
+    {
+        return await _context.Docentes.IgnoreQueryFilters().AnyAsync(d => d.Cpf == cpf);
+    }
 }

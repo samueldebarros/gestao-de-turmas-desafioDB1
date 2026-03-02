@@ -20,7 +20,7 @@ public class DocenteService : IDocenteService
 
     public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
     {
-        //botar verificação de CPF repetido-----------------
+        if (await _docenteRepository.ExistePeloCpfAsync(docente.Cpf)) throw new RegraDeNegocioException("Este CPF já esta em uso.");
 
         Docente novoDocente = new Docente()
         {
@@ -37,10 +37,18 @@ public class DocenteService : IDocenteService
 
     public async Task InativarDocenteAsync(int id)
     {
+        var docente = _docenteRepository.ObterPeloIdAsync(id);
+
+        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
+
         await _docenteRepository.InativarDocenteAsync(id);
     }
     public async Task ReativarDocenteAsync(int id)
     {
+        var docente = _docenteRepository.ObterPeloIdAsync(id);
+
+        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
+
         await _docenteRepository.ReativarDocenteAsync(id);
     }
 

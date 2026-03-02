@@ -13,4 +13,5 @@ public interface IDocenteRepository
     Task ReativarDocenteAsync(int id);
     Task<Docente> ObterPeloIdAsync(int id);
     Task EditarDocenteAsync(Docente docente);
+    Task<bool> ExistePeloCpfAsync(string cpf);
 }
