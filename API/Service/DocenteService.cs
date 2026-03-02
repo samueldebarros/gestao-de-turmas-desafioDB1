@@ -20,7 +20,11 @@ public class DocenteService : IDocenteService
 
     public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
     {
-        if (await _docenteRepository.ExistePeloCpfAsync(docente.Cpf)) throw new RegraDeNegocioException("Este CPF já esta em uso.");
+        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
+        if (await _docenteRepository.ExistePeloCpfAsync(docente.Cpf)) 
+            throw new RegraDeNegocioException("Este CPF já esta em uso.");
 
         Docente novoDocente = new Docente()
         {
@@ -37,7 +41,7 @@ public class DocenteService : IDocenteService
 
     public async Task InativarDocenteAsync(int id)
     {
-        var docente = _docenteRepository.ObterPeloIdAsync(id);
+        var docente = await _docenteRepository.ObterPeloIdAsync(id);
 
         if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
 
@@ -45,9 +49,9 @@ public class DocenteService : IDocenteService
     }
     public async Task ReativarDocenteAsync(int id)
     {
-        var docente = _docenteRepository.ObterPeloIdAsync(id);
+        var docente = await _docenteRepository.ObterPeloIdAsync(id);
 
-        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
+        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser reativado não foi encontrado.");
 
         await _docenteRepository.ReativarDocenteAsync(id);
     }
@@ -59,9 +63,12 @@ public class DocenteService : IDocenteService
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)
     {
+        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
         var docenteExistente = await _docenteRepository.ObterPeloIdAsync(docente.Id);
 
-        if (docenteExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
+        if (docenteExistente == null) throw new EntidadeNaoEncontradaException("O docente que você tentou editar não foi encontrado.");
 
         docenteExistente.Id = docente.Id;
         docenteExistente.Nome = docente.Nome;

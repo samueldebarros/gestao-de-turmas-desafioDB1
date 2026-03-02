@@ -72,9 +72,22 @@ namespace GestãoDeTurmas.Controllers
             if (!ModelState.IsValid) return View(nameof(Editar),viewModel);
 
             var docenteAlterado = viewModel.ToEditarDTO();
+            try
+            {
+                await _docenteService.EditarDocenteAsync(docenteAlterado);
+                return RedirectToAction(nameof(Index));
+            } 
+            catch (RegraDeNegocioException ex)
+            {
+                ModelState.AddModelError(string.Empty,ex.Message);
+                return View(viewModel);
+            }
+            catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
 
-            await _docenteService.EditarDocenteAsync(docenteAlterado);
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]

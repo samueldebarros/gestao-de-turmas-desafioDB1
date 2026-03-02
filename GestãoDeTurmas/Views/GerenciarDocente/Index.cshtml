@@ -8,6 +8,13 @@
 	<div class="card-body">
 		<h1>Gerenciar docentes</h1> <br />
 
+		@if (TempData["MensagemErro"] != null)
+		{
+			<div class="alertaErro">
+				@TempData["MensagemErro"]
+			</div>
+		}
+
 		<table class="text-center">
 			<thead>
 				<tr class="text-center">
