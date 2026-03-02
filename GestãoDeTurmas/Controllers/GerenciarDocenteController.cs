@@ -93,15 +93,32 @@ namespace GestãoDeTurmas.Controllers
         [HttpPost]
         public async Task<IActionResult> Inativar(int id)
         {
-            await _docenteService.InativarDocenteAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _docenteService.InativarDocenteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         [HttpPost]
         public async Task<IActionResult> Reativar(int id)
         {
-            await _docenteService.ReativarDocenteAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _docenteService.ReativarDocenteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

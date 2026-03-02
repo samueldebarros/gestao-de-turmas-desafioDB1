@@ -70,7 +70,6 @@ public class DocenteService : IDocenteService
 
         if (docenteExistente == null) throw new EntidadeNaoEncontradaException("O docente que você tentou editar não foi encontrado.");
 
-        docenteExistente.Id = docente.Id;
         docenteExistente.Nome = docente.Nome;
         docenteExistente.DataNascimento = docente.DataNascimento;
         docenteExistente.Especialidade = docente.Especialidade;

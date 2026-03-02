@@ -33,13 +33,14 @@ public class DocenteRepository : IDocenteRepository
 
     public async Task<List<Docente>> ObterTodosOsDocentesAsync()
     {
-        return await _context.Docentes.AsNoTracking().ToListAsync();
+        return await _context.Docentes.AsNoTracking().IgnoreQueryFilters().ToListAsync();
     }
 
     public async Task ReativarDocenteAsync(int id)
     {
         await _context.Docentes
             .Where(d => d.Id == id)
+            .IgnoreQueryFilters()
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
     }
 
