@@ -28,7 +28,7 @@ public class DocenteService : IDocenteService
             Cpf = docente.Cpf,
             Email = docente.Email,
             Especialidade = docente.Especialidade,
-            DataNascimento = docente.DataNascimento,
+            DataNascimento = (DateOnly)docente.DataNascimento,
             Ativo = true
         };
 

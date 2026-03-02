@@ -18,5 +18,5 @@ public class DocenteInputViewModel
     public string Especialidade { get; set; }
 
     [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]
-    public DateOnly DataNascimento { get; set; }
+    public DateOnly? DataNascimento { get; set; }
 }

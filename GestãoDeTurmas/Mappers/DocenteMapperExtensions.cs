@@ -29,7 +29,7 @@ public static class DocenteMapperExtensions
             Cpf = docente.Cpf,
             Email = docente.Email,
             Ativo = docente.Ativo,
-            DataNascimento = docente.DataNascimento,
+            DataNascimento = (DateOnly)docente.DataNascimento,
         };
     }
 
