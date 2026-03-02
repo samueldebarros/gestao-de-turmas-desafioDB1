@@ -40,6 +40,6 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
         builder.HasIndex(d => d.Cpf)
             .IsUnique();
 
-        // builder.HasQueryFilter(d => d.Ativo); // comentado para facilitar o teste das funcionalidades
+        builder.HasQueryFilter(d => d.Ativo); // comentado para facilitar o teste das funcionalidades
     }
 }
