@@ -14,9 +14,12 @@ namespace GestãoDeTurmas.Controllers
             _docenteService = docenteService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? pesquisa, bool? ativo)
         {
-            var docentes = await _docenteService.ObterTodosOsDocentesAsync();
+            ViewBag.PesquisaAtual = pesquisa;
+            ViewBag.AtivoAtual = ativo;
+
+            var docentes = await _docenteService.ObterTodosOsDocentesAsync(pesquisa,ativo);
 
             var docenteDomain = docentes.Select(a => a.ToListaViewModel()).ToList();
 

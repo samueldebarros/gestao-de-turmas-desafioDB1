@@ -56,9 +56,9 @@ public class DocenteService : IDocenteService
         await _docenteRepository.ReativarDocenteAsync(id);
     }
 
-    public async Task<List<Docente>> ObterTodosOsDocentesAsync()
+    public async Task<List<Docente>> ObterTodosOsDocentesAsync(string? pesquisa = null, bool? ativo = null)
     {
-        return await _docenteRepository.ObterTodosOsDocentesAsync();
+        return await _docenteRepository.ObterTodosOsDocentesAsync(pesquisa,ativo);
     }
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)

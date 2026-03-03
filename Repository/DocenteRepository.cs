@@ -1,6 +1,7 @@
 ﻿using Common.Domains;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
+using System.Runtime.InteropServices;
 
 namespace Repository;
 
@@ -31,9 +32,17 @@ public class DocenteRepository : IDocenteRepository
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
     }
 
-    public async Task<List<Docente>> ObterTodosOsDocentesAsync()
+    public async Task<List<Docente>> ObterTodosOsDocentesAsync(string? pesquisa = null, bool? ativo = null)
     {
-        return await _context.Docentes.AsNoTracking().IgnoreQueryFilters().ToListAsync();
+        var query = _context.Docentes.AsNoTracking().AsQueryable().IgnoreQueryFilters();
+
+        if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(d => d.Nome.Contains(pesquisa)
+            || d.Cpf.Contains(pesquisa)
+            || d.Especialidade.Contains(pesquisa));
+
+        if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
+
+        return await query.OrderBy(d => d.Nome).ToListAsync();
     }
 
     public async Task ReativarDocenteAsync(int id)
