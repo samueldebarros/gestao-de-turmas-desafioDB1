@@ -50,6 +50,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adicionar(AlunoInputViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -71,6 +72,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inativar(int id)
         {
             await _alunoService.InativarAlunoAsync(id);
@@ -78,6 +80,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id)
         {
             await _alunoService.ReativarAlunoAsync(id);
@@ -96,6 +99,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
             if (!ModelState.IsValid) return View(nameof(Editar), model);

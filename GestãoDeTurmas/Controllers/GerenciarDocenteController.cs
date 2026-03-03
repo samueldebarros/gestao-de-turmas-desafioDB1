@@ -46,6 +46,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adicionar(DocenteInputViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -77,6 +78,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(DocenteEditarViewModel viewModel)
         {
             if (!ModelState.IsValid) return View(nameof(Editar),viewModel);
@@ -101,6 +103,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inativar(int id)
         {
             try
@@ -117,6 +120,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id)
         {
             try
