@@ -1,4 +1,5 @@
-﻿using API.DTOs.DocenteDTOs;
+﻿using API.DTOs;
+using API.DTOs.DocenteDTOs;
 using Common.Domains;
 using Common.Exceptions;
 using Repository;
@@ -56,9 +57,13 @@ public class DocenteService : IDocenteService
         await _docenteRepository.ReativarDocenteAsync(id);
     }
 
-    public async Task<List<Docente>> ObterTodosOsDocentesAsync(string? pesquisa = null, bool? ativo = null)
+    public async Task<ListaPaginada<Docente>> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
-        return await _docenteRepository.ObterTodosOsDocentesAsync(pesquisa,ativo);
+        var (docentes, total) = await _docenteRepository.ObterTodosOsDocentesAsync(pagina, tamanho, pesquisa,ativo);
+
+        var docentesPaginados = new ListaPaginada<Docente>(docentes, total, pagina, tamanho);
+
+        return docentesPaginados;
     }
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)

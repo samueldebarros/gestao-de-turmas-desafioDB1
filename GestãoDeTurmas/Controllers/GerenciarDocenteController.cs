@@ -9,24 +9,31 @@ namespace GestãoDeTurmas.Controllers
     public class GerenciarDocenteController : Controller
     {
         private readonly IDocenteService _docenteService;
+        private const int TAMANHO_PAGINA = 5;
         public GerenciarDocenteController(IDocenteService docenteService)
         {
             _docenteService = docenteService;
         }
 
-        public async Task<IActionResult> Index(string? pesquisa, bool? ativo)
+        public async Task<IActionResult> Index(int pagina = 1,string? pesquisa = null, bool? ativo = null)
         {
+            ViewBag.PaginaAtual = pagina;
             ViewBag.PesquisaAtual = pesquisa;
             ViewBag.AtivoAtual = ativo;
 
-            var docentes = await _docenteService.ObterTodosOsDocentesAsync(pesquisa,ativo);
+            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, TAMANHO_PAGINA,pesquisa,ativo);
 
-            var docenteDomain = docentes.Select(a => a.ToListaViewModel()).ToList();
+            var docenteDomain = docentesPaginados.Select(a => a.ToListaViewModel()).ToList();
 
             var viewModel = new GerenciarDocenteViewModel()
             {
                 DocentesCadastrados = docenteDomain,
-                NovoDocente = new DocenteInputViewModel()
+                NovoDocente = new DocenteInputViewModel(),
+
+                PaginaAtual = pagina,
+                TotalPaginas = docentesPaginados.TotalPaginas,
+                TemProximaPagina = docentesPaginados.TemProximaPagina,
+                TemPaginaAnterior = docentesPaginados.TemPaginaAnterior
             };
 
             return View(viewModel);

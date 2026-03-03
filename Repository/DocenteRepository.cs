@@ -32,7 +32,7 @@ public class DocenteRepository : IDocenteRepository
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
     }
 
-    public async Task<List<Docente>> ObterTodosOsDocentesAsync(string? pesquisa = null, bool? ativo = null)
+    public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
         var query = _context.Docentes.AsNoTracking().AsQueryable().IgnoreQueryFilters();
 
@@ -42,7 +42,14 @@ public class DocenteRepository : IDocenteRepository
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
 
-        return await query.OrderBy(d => d.Nome).ToListAsync();
+        int total = query.Count();
+
+        var docentesPaginados = await query.OrderBy(d => d.Nome)
+            .Skip((pagina - 1) * tamanho)
+            .Take(tamanho)
+            .ToListAsync();
+
+        return (docentesPaginados, total);
     }
 
     public async Task ReativarDocenteAsync(int id)

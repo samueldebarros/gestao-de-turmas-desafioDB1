@@ -111,6 +111,50 @@
 
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<a role="button" class="btn btn-primary w-25" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar docente</a>
+
+			@if (Model.TotalPaginas > 1)
+			{
+				<nav aria-label="Navegação de página">
+					<ul class="pagination mb-0">
+
+						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-pagina="@(Model.PaginaAtual - 1)"
+							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+							   asp-route-ativo="@ViewBag.AtivoAtual">
+								Anterior
+							</a>
+						</li>
+
+						@for (int i = 1; i <= Model.TotalPaginas; i++)
+						{
+							<li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+								<a class="page-link"
+								   asp-action="Index"
+								   asp-route-pagina="@i"
+								   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+								   asp-route-sexo="@ViewBag.SexoAtual"
+								   asp-route-ativo="@ViewBag.AtivoAtual">
+									@i
+								</a>
+							</li>
+						}
+
+						<li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-pagina="@(Model.PaginaAtual + 1)"
+							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+							   asp-route-sexo="@ViewBag.SexoAtual"
+							   asp-route-ativo="@ViewBag.AtivoAtual">
+								Próximo
+							</a>
+						</li>
+
+					</ul>
+				</nav>
+			}
 		</div>
 	</div>
 </div>
