@@ -15,7 +15,11 @@ public class DocenteRepository : IDocenteRepository
     }
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
-        return await _context.Docentes.IgnoreQueryFilters().FirstOrDefaultAsync(d => d.Id == id);
+        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id);
+    }
+    public async Task<Docente> ObterInativoPeloIdAsync(int id)
+    {
+        return await _context.Docentes.IgnoreQueryFilters().FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
     public async Task AdicionarDocenteAsync(Docente docente)

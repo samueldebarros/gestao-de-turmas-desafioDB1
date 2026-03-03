@@ -50,7 +50,7 @@ public class DocenteService : IDocenteService
     }
     public async Task ReativarDocenteAsync(int id)
     {
-        var docente = await _docenteRepository.ObterPeloIdAsync(id);
+        var docente = await _docenteRepository.ObterInativoPeloIdAsync(id);
 
         if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser reativado não foi encontrado.");
 
