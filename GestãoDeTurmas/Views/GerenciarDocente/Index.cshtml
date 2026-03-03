@@ -110,7 +110,10 @@
 		</table>
 
 		<div class="d-flex justify-content-between align-items-center mb-3">
-			<a role="button" class="btn btn-primary w-25" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar docente</a>
+			<div class="d-flex gap-2">
+				<a role="button" class="btn btn-primary" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar</a>
+				<a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
+			</div>
 
 			@if (Model.TotalPaginas > 1)
 			{
