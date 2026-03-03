@@ -66,7 +66,7 @@ namespace API.Service
 
         public async Task ReativarAlunoAsync(int id)
         {
-            var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
+            var alunoExistente = await _alunoRepository.ObterInativoPorIdAsync(id);
 
             if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
 

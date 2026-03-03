@@ -44,7 +44,7 @@ namespace Repository
             return (lista, total);
         }
 
-        public async Task InativarAsync(int id) // fiz um soft delete ao inves de excluir do banco
+        public async Task InativarAsync(int id) 
         {
             await _context.Alunos
                 .Where(a => a.Id == id)
@@ -61,7 +61,11 @@ namespace Repository
 
         public async Task<Aluno> ObterPorIdAsync(int id)
         {
-            return await _context.Alunos.IgnoreQueryFilters().FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id);
+        }
+        public async Task<Aluno> ObterInativoPorIdAsync(int id)
+        {
+            return await _context.Alunos.IgnoreQueryFilters().FirstOrDefaultAsync(a => a.Id == id && !a.Ativo);
         }
 
         public async Task AlterarAsync(Aluno aluno)
