@@ -1,7 +1,6 @@
 ﻿using Common.Domains;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
-using System.Runtime.InteropServices;
 
 namespace Repository;
 
