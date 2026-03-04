@@ -54,7 +54,5 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
         builder.HasIndex(x => x.Matricula)
             .IsUnique();
 
-        builder.HasQueryFilter(x => x.Ativo);
-
     }
 }

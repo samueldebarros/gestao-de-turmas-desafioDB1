@@ -14,11 +14,11 @@ public class DocenteRepository : IDocenteRepository
     }
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
-        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id);
+        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
     }
     public async Task<Docente> ObterInativoPeloIdAsync(int id)
     {
-        return await _context.Docentes.IgnoreQueryFilters().FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
+        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
     public async Task AdicionarDocenteAsync(Docente docente)
@@ -37,7 +37,7 @@ public class DocenteRepository : IDocenteRepository
 
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
-        var query = _context.Docentes.AsNoTracking().AsQueryable().IgnoreQueryFilters();
+        var query = _context.Docentes.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(d => d.Nome.Contains(pesquisa)
             || d.Cpf.Contains(pesquisa)
@@ -59,7 +59,6 @@ public class DocenteRepository : IDocenteRepository
     {
         await _context.Docentes
             .Where(d => d.Id == id)
-            .IgnoreQueryFilters()
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
     }
 
@@ -71,6 +70,6 @@ public class DocenteRepository : IDocenteRepository
 
     public async Task<bool> ExistePeloCpfAsync(string cpf)
     {
-        return await _context.Docentes.IgnoreQueryFilters().AnyAsync(d => d.Cpf == cpf);
+        return await _context.Docentes.AnyAsync(d => d.Cpf == cpf);
     }
 }

@@ -23,7 +23,7 @@ namespace Repository
 
         public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
-            var query = _context.Alunos.AsNoTracking().AsQueryable().IgnoreQueryFilters();
+            var query = _context.Alunos.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(a => 
             a.Nome.Contains(pesquisa) ||
@@ -54,18 +54,17 @@ namespace Repository
         public async Task ReativarAsync(int id)
         {
             await _context.Alunos
-                .IgnoreQueryFilters()
                 .Where(a => a.Id == id)
                 .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, true));
         }
 
         public async Task<Aluno> ObterPorIdAsync(int id)
         {
-            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id);
+            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id && a.Ativo);
         }
         public async Task<Aluno> ObterInativoPorIdAsync(int id)
         {
-            return await _context.Alunos.IgnoreQueryFilters().FirstOrDefaultAsync(a => a.Id == id && !a.Ativo);
+            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id && !a.Ativo);
         }
 
         public async Task AlterarAsync(Aluno aluno)

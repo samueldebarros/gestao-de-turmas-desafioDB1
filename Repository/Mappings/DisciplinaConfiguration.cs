@@ -26,8 +26,6 @@ namespace Repository.Mappings
             builder.Property(d => d.Ativo)
                 .IsRequired()
                 .HasDefaultValue(true);
-
-            //builder.HasQueryFilter(d => d.Ativo);
         }
     }
 }
