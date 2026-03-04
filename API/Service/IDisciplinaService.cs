@@ -7,7 +7,7 @@ public interface IDisciplinaService
 {
     Task<Disciplina> ObterDisciplinaPorIdAsync();
     Task<Disciplina> ObterInativoPorIdAsync();
-    Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync();
+    Task<List<Disciplina>> ObterTodasAsDisciplinasAsync();
     Task AdicionarDisciplinaAsync(DisciplinaInputDTO disciplina);
     Task EditarDisciplinaAsync();
     Task InativarDisciplinaAsync();

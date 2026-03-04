@@ -46,9 +46,9 @@ public class DisciplinaService : IDisciplinaService
         throw new NotImplementedException();
     }
 
-    public Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync()
+    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()
     {
-        throw new NotImplementedException();
+        return await _disciplinaRepository.ObterTodasAsDisciplinasAsync();
     }
 
     public Task ReativarDisciplinaAsync()

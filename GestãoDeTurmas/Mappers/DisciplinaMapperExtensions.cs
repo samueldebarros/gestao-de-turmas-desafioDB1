@@ -1,4 +1,5 @@
 ﻿using API.DTOs.DisciplinaDTOs;
+using Common.Domains;
 using GestãoDeTurmas.Models.Disciplina;
 
 namespace GestãoDeTurmas.Mappers;
@@ -12,6 +13,18 @@ public static class DisciplinaMapperExtensions
             Nome = model.Nome,
             CargaHoraria = model.CargaHoraria,
             Ementa = model.Ementa
+        };
+    }
+
+    public static DisciplinaListaViewModel ToListaViewModel(this Disciplina disciplina)
+    {
+        return new DisciplinaListaViewModel
+        {
+            Id = disciplina.Id,
+            Nome = disciplina.Nome,
+            CargaHoraria = disciplina.CargaHoraria,
+            Ementa = disciplina.Ementa,
+            Ativo = disciplina.Ativo
         };
     }
 

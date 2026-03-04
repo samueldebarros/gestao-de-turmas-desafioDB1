@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using System;
 using System.Collections.Generic;
@@ -42,9 +43,9 @@ public class DisciplinaRepository : IDisciplinaRepository
         throw new NotImplementedException();
     }
 
-    public Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync()
+    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Disciplinas.AsNoTracking().ToListAsync();
     }
 
     public Task ReativarDisciplinaAsync()

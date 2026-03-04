@@ -15,9 +15,19 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync();
+
+        var disciplinasDomain = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList();
+
+        var viewModel = new GerenciarDisciplinaViewModel()
+        {
+            DisciplinasCadastradas = disciplinasDomain,
+            NovaDisciplina = new DisciplinaInputViewModel()
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet]
