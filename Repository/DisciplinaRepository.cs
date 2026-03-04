@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Repository.Context;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,9 +8,18 @@ namespace Repository;
 
 public class DisciplinaRepository : IDisciplinaRepository
 {
-    public Task AdicionarDisciplinaAsync()
+    public readonly GestaoEscolarContext _context;
+
+    public DisciplinaRepository(GestaoEscolarContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+
+    public async Task AdicionarDisciplinaAsync(Disciplina disciplina)
+    {
+        _context.Add(disciplina);
+        await _context.SaveChangesAsync();
+
     }
 
     public Task EditarDisciplinaAsync()
