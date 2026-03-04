@@ -3,6 +3,12 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.mascara-cpf').mask('000.000.000-00');
+            });
+        </script>
 }
 
 <div class="card">
@@ -20,7 +26,7 @@
 
             <div class="form-group">
                 <label for="cpf">CPF</label>
-                <input type="text" asp-for="@Model.Cpf" class="form-control" placeholder="Novo CPF">
+                <input type="text" asp-for="@Model.Cpf" class="form-control mascara-cpf" placeholder="000.000.000-00">
                 <span asp-validation-for="@Model.Cpf" class="text-danger"></span>
             </div>
 
