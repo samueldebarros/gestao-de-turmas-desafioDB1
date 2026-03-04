@@ -3,6 +3,7 @@ using API.DTOs.AlunoDTOs;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
+using Common.Utils;
 using Repository;
 
 namespace API.Service
@@ -28,12 +29,16 @@ namespace API.Service
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
+            var cpfLimpo = aluno.Cpf.Replace(".", "").Replace("-", "").Trim();
+
+            if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+
             if (await _alunoRepository.ExistePeloCPFAsync(aluno.Cpf)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
 
             Aluno novoAluno = new Aluno
             {
                 Nome = aluno.Nome,
-                Cpf = aluno.Cpf,
+                Cpf = cpfLimpo,
                 Email = aluno.Email,
                 DataNascimento = aluno.DataNascimento,
                 Sexo = aluno.Sexo,
@@ -80,7 +85,6 @@ namespace API.Service
 
         public async Task AlterarAsync(AlterarAlunoDTO aluno)
         {
-
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(aluno.Id);
 
             if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");

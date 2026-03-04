@@ -2,6 +2,7 @@
 using API.DTOs.DocenteDTOs;
 using Common.Domains;
 using Common.Exceptions;
+using Common.Utils;
 using Repository;
 
 namespace API.Service;
@@ -24,13 +25,17 @@ public class DocenteService : IDocenteService
         if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
             throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
 
+        var cpfLimpo = docente.Cpf.Replace(".", "").Replace("-", "").Trim();
+
+        if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+
         if (await _docenteRepository.ExistePeloCpfAsync(docente.Cpf)) 
             throw new RegraDeNegocioException("Este CPF já esta em uso.");
 
         Docente novoDocente = new Docente()
         {
             Nome = docente.Nome,
-            Cpf = docente.Cpf,
+            Cpf = cpfLimpo,
             Email = docente.Email,
             Especialidade = docente.Especialidade,
             DataNascimento = (DateOnly)docente.DataNascimento,
