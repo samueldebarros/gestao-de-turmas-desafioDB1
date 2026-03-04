@@ -24,9 +24,9 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
 
         builder.Property(x => x.Cpf)
             .IsRequired()
-            .HasMaxLength(14)
-            .HasColumnType("CHAR(14)");
-        
+            .HasColumnType("CHAR(11)")
+            .HasMaxLength(11);
+            
         builder.Property(x => x.DataNascimento)
             .IsRequired()
             .HasColumnType("date")

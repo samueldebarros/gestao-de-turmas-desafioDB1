@@ -18,8 +18,8 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
 
         builder.Property(d => d.Cpf)
             .IsRequired()
-            .HasColumnType("VARCHAR(14)")
-            .HasMaxLength(14);
+            .HasColumnType("CHAR(11)")
+            .HasMaxLength(11);
 
         builder.Property(d => d.Email)
             .IsRequired(false)
