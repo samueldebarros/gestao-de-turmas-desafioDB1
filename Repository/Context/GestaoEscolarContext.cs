@@ -9,6 +9,7 @@ public class GestaoEscolarContext : DbContext
 
     public DbSet<Aluno> Alunos { get; set; }
     public DbSet<Docente> Docentes { get; set; }
+    public DbSet<Disciplina> Disciplinas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
