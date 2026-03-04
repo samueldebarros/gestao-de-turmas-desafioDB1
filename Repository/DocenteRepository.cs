@@ -39,9 +39,13 @@ public class DocenteRepository : IDocenteRepository
     {
         var query = _context.Docentes.AsNoTracking().AsQueryable();
 
-        if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(d => d.Nome.Contains(pesquisa)
-            || d.Cpf.Contains(pesquisa)
-            || d.Especialidade.Contains(pesquisa));
+        if (!string.IsNullOrEmpty(pesquisa))
+        {
+            var pesquisaLimpaCpf = pesquisa.Replace(".", "").Replace("-", "");
+            query = query.Where(d => d.Nome.Contains(pesquisa)
+                || d.Cpf.Contains(pesquisaLimpaCpf)
+                || d.Especialidade.Contains(pesquisa));
+        }
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
 

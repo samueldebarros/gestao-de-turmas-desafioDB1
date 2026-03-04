@@ -25,10 +25,14 @@ namespace Repository
         {
             var query = _context.Alunos.AsNoTracking().AsQueryable();
 
-            if (!string.IsNullOrEmpty(pesquisa)) query = query.Where(a => 
-            a.Nome.Contains(pesquisa) ||
-            a.Cpf.Contains(pesquisa) ||
-            a.Matricula.Contains(pesquisa));
+            if (!string.IsNullOrEmpty(pesquisa)) 
+            {
+                var pesquisaLimpaCpf = pesquisa.Replace(".", "").Replace("-", "");
+                query = query.Where(a =>
+                    a.Nome.Contains(pesquisa) ||
+                    a.Cpf.Contains(pesquisaLimpaCpf) ||
+                    a.Matricula.Contains(pesquisa));
+            } 
          
             if (sexo.HasValue) query = query.Where(a => a.Sexo == sexo.Value);
 

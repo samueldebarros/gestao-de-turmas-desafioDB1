@@ -33,7 +33,7 @@ namespace API.Service
 
             if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
 
-            if (await _alunoRepository.ExistePeloCPFAsync(aluno.Cpf)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+            if (await _alunoRepository.ExistePeloCPFAsync(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
 
             Aluno novoAluno = new Aluno
             {

@@ -1,4 +1,6 @@
-﻿namespace GestãoDeTurmas.Models.Docente;
+﻿using Common.Utils;
+
+namespace GestãoDeTurmas.Models.Docente;
 
 public class DocenteListaViewModel
 {
@@ -9,4 +11,6 @@ public class DocenteListaViewModel
     public DateOnly DataNascimento { get; set; }
     public string Especialidade { get; set; }
     public bool Ativo { get; set; } = true;
+
+    public string CpfFormatado => Cpf.FormatarCpf();
 }

@@ -29,7 +29,7 @@ public class DocenteService : IDocenteService
 
         if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
 
-        if (await _docenteRepository.ExistePeloCpfAsync(docente.Cpf)) 
+        if (await _docenteRepository.ExistePeloCpfAsync(cpfLimpo)) 
             throw new RegraDeNegocioException("Este CPF já esta em uso.");
 
         Docente novoDocente = new Docente()

@@ -1,4 +1,5 @@
 ﻿using Common.Enums;
+using Common.Utils;
 
 namespace GestãoDeTurmas.Models.Aluno
 {
@@ -12,5 +13,7 @@ namespace GestãoDeTurmas.Models.Aluno
         public SexoEnum Sexo {  get; set; }
         public DateOnly DataNascimento { get; set; }
         public bool Ativo { get; set; }
+
+        public string CpfFormatado => Cpf.FormatarCpf();
     }
 }
