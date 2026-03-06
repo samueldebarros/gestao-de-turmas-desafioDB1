@@ -15,4 +15,5 @@ public interface IDocenteRepository
     Task<Docente> ObterInativoPeloIdAsync(int id);
     Task EditarDocenteAsync(Docente docente);
     Task<bool> ExistePeloCpfAsync(string cpf);
+    Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
 }

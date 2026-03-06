@@ -39,5 +39,8 @@ public static class ValidacaoCpf
         // Verifica se os dígitos calculados conferem
         return (cpf[9] - '0') == digit1 && (cpf[10] - '0') == digit2;
     }
+
+    public static string Limpar(string cpf) => cpf.Replace(".", "").Replace("-", "").Trim();
+
 }
 

@@ -12,6 +12,7 @@ namespace Repository
         Task InativarAsync(int id);
         Task ReativarAsync(int id);
         Task AlterarAsync(Aluno aluno);
-        Task<bool> ExistePeloCPFAsync(string cpf);
+        Task<bool> ExistePeloCpfAsync(string cpf);
+        Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
     }
 }

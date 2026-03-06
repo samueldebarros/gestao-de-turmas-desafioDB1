@@ -8,162 +8,166 @@
 <link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
 
 <div class="card">
-	<div class="card-body">
-		<h1>Gerenciar alunos</h1> <br />
+    <div class="card-body">
+        <h1>Gerenciar alunos</h1> <br />
 
-		<form asp-action="Index" method="get">
-			<div class="row mb-3 align-items-end">
+        <form asp-action="Index" method="get">
+            <div class="row mb-3 align-items-end">
 
-				<div class="col-4">
-					<label class="form-label">Pesquisar</label>
-					<input type="text" name="pesquisa" class="form-control"
-						   placeholder="Nome, CPF ou Matricula" value="@ViewBag.PesquisaAtual" />
-				</div>
+                <div class="col-4">
+                    <label class="form-label">Pesquisar</label>
+                    <input type="text" name="pesquisa" class="form-control"
+                           placeholder="Nome, CPF ou Matricula" value="@ViewBag.PesquisaAtual" />
+                </div>
 
-				<div class="col-3">
-					<label class="form-label">Sexo</label>
-					<select name="sexo" class="form-select">
-						<option value="">Todos</option>
-						<!option value="1" @(ViewBag.SexoAtual == SexoEnum.Masculino ? "selected" : "")>Masculino</!option>
-						<!option value="2" @(ViewBag.SexoAtual == SexoEnum.Feminino ? "selected" : "")>Feminino</!option>
-						<!option value="3" @(ViewBag.SexoAtual == SexoEnum.Outro ? "selected" : "")>Outro</!option>
-					</select>
-				</div>
+                <div class="col-3">
+                    <label class="form-label">Sexo</label>
+                    <select name="sexo" class="form-select">
+                        <option value="">Todos</option>
+                        <!option value="1" @(ViewBag.SexoAtual == SexoEnum.Masculino ? "selected" : "")>Masculino</!option>
+                        <!option value="2" @(ViewBag.SexoAtual == SexoEnum.Feminino ? "selected" : "")>Feminino</!option>
+                        <!option value="3" @(ViewBag.SexoAtual == SexoEnum.Outro ? "selected" : "")>Outro</!option>
+                    </select>
+                </div>
 
-				<div class="col-3">
-					<label class="form-label">Status</label>
-					<select name="ativo" class="form-select">
-						<option value="">Todos</option>
-						<!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
-						<!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
-					</select>
-				</div>
+                <div class="col-3">
+                    <label class="form-label">Status</label>
+                    <select name="ativo" class="form-select">
+                        <option value="">Todos</option>
+                        <!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
+                        <!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
+                    </select>
+                </div>
 
-				<div class="col-2">
-					<button type="submit" class="btn btn-primary w-100"> Filtrar </button>
-				</div>
-			</div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary w-100"> Filtrar </button>
+                </div>
+            </div>
 
-			@if (ViewBag.PesquisaAtual != null || ViewBag.SexoAtual != null || ViewBag.AtivoAtual != null)
-			{
-				<div class="row mb-3">
-					<div class="col-12">
-						<small>Filtros aplicados.</small>
-						<a asp-action="Index" class="text-danger text-decoration-none">Limpar tudo ✖</a>
-					</div>
-				</div>
-			}
-		</form>
+            @if (ViewBag.PesquisaAtual != null || ViewBag.SexoAtual != null || ViewBag.AtivoAtual != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <small>Filtros aplicados.</small>
+                        <a asp-action="Index" class="text-danger text-decoration-none">Limpar tudo ✖</a>
+                    </div>
+                </div>
+            }
+        </form>
 
-		<table class="text-center">
-			<thead>
-				<tr class="text-center">
-					<th>Matricula</th>
-					<th>Nome</th>
-					<th>CPF</th>
-					<th>Email</th>
-					<th>Data de Nascimento</th>
-					<th>Sexo</th>
-					<th>Status</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var aluno in Model.AlunosCadastrados)
-				{
-					<tr>
-						<td><strong>@aluno.Matricula</strong></td>
-						<td>@aluno.NomeExibicao</td>
-						<td class="text-nowrap">@aluno.CpfFormatado</td>
-						<td>@(aluno.Email ?? "-")</td>
-						<td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
-						<td>@aluno.Sexo</td>
-						<td>
-							@if (aluno.Ativo)
-							{
-								<span class="badge bg-success">Ativo</span>
-							}
-							else
-							{
-								<span class="badge bg-danger">Inativo</span>
-							}
-						</td>
+        <table class="text-center">
+            <thead>
+                <tr class="text-center">
+                    <th>Matricula</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Email</th>
+                    <th>Data de Nascimento</th>
+                    <th>Sexo</th>
+                    <th>Status</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var aluno in Model.AlunosCadastrados)
+                {
+                    <tr>
+                        <td><strong>@aluno.Matricula</strong></td>
+                        <td>@aluno.NomeExibicao</td>
+                        <td class="text-nowrap">@aluno.CpfFormatado</td>
+                        <td>@(aluno.Email ?? "-")</td>
+                        <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
+                        <td>@aluno.Sexo</td>
+                        <td>
+                            @if (aluno.Ativo)
+                            {
+                                <span class="badge bg-success">Ativo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inativo</span>
+                            }
+                        </td>
 
-						<td><a role="button" class="btn btn-primary w-100" asp-route-id="@aluno.Id" asp-controller="GerenciarAluno" asp-action="Editar">Editar</a></td>
-						<td>
-							@if (aluno.Ativo)
-							{
-								<form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
-									<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
-										Inativar
-									</button>
-								</form>
-							} else
-							{
-								<form asp-action="Reativar" asp-route-id="@aluno.Id" method="post">
-									<button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
-										Reativar
-									</button>
-								</form>
-							}
+                        @if (aluno.Ativo)
+                        {
+                            <td><a role="button" class="btn btn-primary w-100" asp-route-id="@aluno.Id" asp-controller="GerenciarAluno" asp-action="Editar">Editar</a></td>
+                            <td>
+                                <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
+                                    <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+                                        Inativar
+                                    </button>
+                                </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="2" class="text-center">
+                                <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post">
+                                    <button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
+                                        Reativar
+                                    </button>
+                                </form>
+                            </td>
+                        }
 
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
 
-		<div class="d-flex justify-content-between align-items-center mb-3">
-			<div class="d-flex gap-2">
-				<a role="button" class="btn btn-primary" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar</a>
-				<a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
-			</div>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-			@if (Model.TotalPaginas > 1)
-			{
-				<nav aria-label="Navegação de página">
-					<ul class="pagination mb-0">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-2">
+                <a role="button" class="btn btn-primary" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar</a>
+                <a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
+            </div>
 
-						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="@(Model.PaginaAtual - 1)"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-sexo="@ViewBag.SexoAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								Anterior
-							</a>
-						</li>
+            @if (Model.TotalPaginas > 1)
+            {
+                <nav aria-label="Navegação de página">
+                    <ul class="pagination mb-0">
 
-						@for (int i = 1; i <= Model.TotalPaginas; i++)
-						{
-							<li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
-								<a class="page-link"
-								   asp-action="Index"
-								   asp-route-pagina="@i"
-								   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-								   asp-route-sexo="@ViewBag.SexoAtual"
-								   asp-route-ativo="@ViewBag.AtivoAtual">
-									@i
-								</a>
-							</li>
-						}
+                        <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@(Model.PaginaAtual - 1)"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-sexo="@ViewBag.SexoAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                Anterior
+                            </a>
+                        </li>
 
-						<li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="@(Model.PaginaAtual + 1)"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-sexo="@ViewBag.SexoAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								Próximo
-							</a>
-						</li>
+                        @for (int i = 1; i <= Model.TotalPaginas; i++)
+                        {
+                            <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-pagina="@i"
+                                   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                                   asp-route-sexo="@ViewBag.SexoAtual"
+                                   asp-route-ativo="@ViewBag.AtivoAtual">
+                                    @i
+                                </a>
+                            </li>
+                        }
 
-					</ul>
-				</nav>
-			}
-		</div>
-	</div>
+                        <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@(Model.PaginaAtual + 1)"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-sexo="@ViewBag.SexoAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                Próximo
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
 </div>

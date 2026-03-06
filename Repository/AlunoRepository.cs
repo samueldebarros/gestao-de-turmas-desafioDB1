@@ -77,9 +77,18 @@ namespace Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistePeloCPFAsync(string cpf)
+        public async Task<bool> ExistePeloCpfAsync(string cpf)
         {
             return await _context.Alunos.AnyAsync(a => a.Cpf == cpf);
+        }
+        public async Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null)
+        {
+            var query = _context.Alunos.Where(a => a.Email == email);
+
+            if(ignorarId.HasValue) 
+                query = query.Where(a => a.Id != ignorarId.Value);
+
+            return await query.AnyAsync();
         }
     }
 }

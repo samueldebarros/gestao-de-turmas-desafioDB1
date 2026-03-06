@@ -17,6 +17,17 @@ namespace API.Service
             _alunoRepository = alunoRepository;
         }
 
+        private async Task<string> ValidarEProcessarCpfAsync(string cpfSujo)
+        {
+            var cpfLimpo = ValidacaoCpf.Limpar(cpfSujo);
+
+            if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+
+            if (await _alunoRepository.ExistePeloCpfAsync(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+
+            return cpfLimpo;
+        }
+
         private string GerarMatriculaUnica()
         {
             string prefixo = DateTime.Now.ToString("yyyyMM");
@@ -32,11 +43,10 @@ namespace API.Service
             if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
                 throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
 
-            var cpfLimpo = aluno.Cpf.Replace(".", "").Replace("-", "").Trim();
+            var cpfLimpo = await ValidarEProcessarCpfAsync(aluno.Cpf);
 
-            if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
-
-            if (await _alunoRepository.ExistePeloCPFAsync(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+            if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email))
+                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
 
             Aluno novoAluno = new Aluno
             {
@@ -90,8 +100,18 @@ namespace API.Service
         {
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(aluno.Id);
 
-            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
-            
+            if (alunoExistente == null)
+                throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
+
+            if (!alunoExistente.Ativo)
+                throw new RegraDeNegocioException("Não é possivel editar um aluno inativo.");
+
+            if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
+            if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email, aluno.Id))
+                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+
             alunoExistente.Nome = aluno.Nome;
             alunoExistente.Email = aluno.Email;
             alunoExistente.Sexo = aluno.Sexo;
@@ -102,8 +122,6 @@ namespace API.Service
             }
             
             await _alunoRepository.AlterarAsync(alunoExistente);
-
-
         }
     }
 }

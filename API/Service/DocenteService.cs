@@ -20,17 +20,27 @@ public class DocenteService : IDocenteService
         return await _docenteRepository.ObterPeloIdAsync(id);
     }
 
+    private async Task<string> ValidarEProcessarCpfAsync(string cpfSujo)
+    {
+        var cpfLimpo = ValidacaoCpf.Limpar(cpfSujo);
+
+        if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+
+        if (await _docenteRepository.ExistePeloCpfAsync(cpfLimpo)) 
+            throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+
+        return cpfLimpo;
+    }
+
     public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
     {
         if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
             throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
 
-        var cpfLimpo = docente.Cpf.Replace(".", "").Replace("-", "").Trim();
+        if (await _docenteRepository.ExistePeloEmailAsync(docente.Email)) 
+            throw new RegraDeNegocioException("Este e-mail já esta em uso.");
 
-        if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
-
-        if (await _docenteRepository.ExistePeloCpfAsync(cpfLimpo)) 
-            throw new RegraDeNegocioException("Este CPF já esta em uso.");
+        var cpfLimpo = await ValidarEProcessarCpfAsync(docente.Cpf);
 
         Docente novoDocente = new Docente()
         {
@@ -49,7 +59,8 @@ public class DocenteService : IDocenteService
     {
         var docente = await _docenteRepository.ObterPeloIdAsync(id);
 
-        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
+        if (docente == null) 
+            throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
 
         await _docenteRepository.InativarDocenteAsync(id);
     }
@@ -57,7 +68,8 @@ public class DocenteService : IDocenteService
     {
         var docente = await _docenteRepository.ObterInativoPeloIdAsync(id);
 
-        if (docente == null) throw new EntidadeNaoEncontradaException("Erro: O docente a ser reativado não foi encontrado.");
+        if (docente == null) 
+            throw new EntidadeNaoEncontradaException("Erro: O docente a ser reativado não foi encontrado.");
 
         await _docenteRepository.ReativarDocenteAsync(id);
     }
@@ -73,12 +85,20 @@ public class DocenteService : IDocenteService
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)
     {
-        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
 
         var docenteExistente = await _docenteRepository.ObterPeloIdAsync(docente.Id);
 
-        if (docenteExistente == null) throw new EntidadeNaoEncontradaException("O docente que você tentou editar não foi encontrado.");
+        if (docenteExistente == null)
+            throw new EntidadeNaoEncontradaException("O docente que você tentou editar não foi encontrado.");
+
+        if (!docenteExistente.Ativo)
+            throw new RegraDeNegocioException("Não é possivel editar um docente inativo.");
+
+        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
+        if (await _docenteRepository.ExistePeloEmailAsync(docente.Email, docente.Id)) 
+            throw new RegraDeNegocioException("Este e-mail já esta em uso.");
 
         docenteExistente.Nome = docente.Nome;
         docenteExistente.DataNascimento = docente.DataNascimento;

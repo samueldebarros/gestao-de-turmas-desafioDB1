@@ -76,4 +76,13 @@ public class DocenteRepository : IDocenteRepository
     {
         return await _context.Docentes.AnyAsync(d => d.Cpf == cpf);
     }
+    public async Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null)
+    {
+        var query = _context.Docentes.Where(d => d.Email == email);
+
+        if (ignorarId.HasValue)
+            query = query.Where(d => d.Id != ignorarId.Value);
+
+        return await query.AnyAsync();
+    }
 }
