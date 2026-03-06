@@ -64,7 +64,7 @@ namespace API.Service
         {
             var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
 
-            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
+            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou inativar não foi encontrado.");
             
             await _alunoRepository.InativarAsync(id);
         }
@@ -73,7 +73,7 @@ namespace API.Service
         {
             var alunoExistente = await _alunoRepository.ObterInativoPorIdAsync(id);
 
-            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou excluir não foi encontrado.");
+            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou reativar não foi encontrado.");
 
             await _alunoRepository.ReativarAsync(id);
         }
