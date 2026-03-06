@@ -1,0 +1,34 @@
+﻿@model GestãoDeTurmas.Models.Disciplina.DisciplinaEditarViewModel
+
+@{
+}
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            <h1>Editar Disciplina</h1>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" asp-for="Nome" class="form-control" placeholder="Novo nome">
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="cargaHoraria">Carga Horária</label>
+                <input type="number" asp-for="CargaHoraria" class="form-control" placeholder="Nova Carga Horária">
+                <span asp-validation-for="CargaHoraria" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="ementa">Ementa</label>
+                <input type="text" asp-for="Ementa" class="form-control">
+                <span asp-validation-for="Ementa" class="text-danger"></span>
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Editar</button>
+            <a class="btn btn-primary" asp-controller="GerenciarDisciplina" asp-action="Index">Voltar</a>
+        </form>
+    </div>
+</div>

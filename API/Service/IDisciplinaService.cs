@@ -5,11 +5,11 @@ namespace API.Service;
 
 public interface IDisciplinaService
 {
-    Task<Disciplina> ObterDisciplinaPorIdAsync();
+    Task<Disciplina> ObterDisciplinaPorIdAsync(int id);
     Task<Disciplina> ObterInativoPorIdAsync();
     Task<List<Disciplina>> ObterTodasAsDisciplinasAsync();
     Task AdicionarDisciplinaAsync(DisciplinaInputDTO disciplina);
-    Task EditarDisciplinaAsync();
+    Task EditarDisciplinaAsync(EditarDisciplinaDTO disciplinaDTO);
     Task InativarDisciplinaAsync();
     Task ReativarDisciplinaAsync();
 }

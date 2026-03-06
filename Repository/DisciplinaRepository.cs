@@ -6,7 +6,7 @@ namespace Repository;
 
 public class DisciplinaRepository : IDisciplinaRepository
 {
-    public readonly GestaoEscolarContext _context;
+    private readonly GestaoEscolarContext _context;
 
     public DisciplinaRepository(GestaoEscolarContext context)
     {
@@ -20,9 +20,10 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     }
 
-    public Task EditarDisciplinaAsync()
+    public async Task EditarDisciplinaAsync(Disciplina disciplina)
     {
-        throw new NotImplementedException();
+        _context.Disciplinas.Update(disciplina);
+        await _context.SaveChangesAsync();
     }
 
     public Task InativarDisciplinaAsync()
@@ -30,14 +31,14 @@ public class DisciplinaRepository : IDisciplinaRepository
         throw new NotImplementedException();
     }
 
-    public Task<Disciplina> ObterDisciplinaPorIdAsync()
+    public async Task<Disciplina> ObterDisciplinaPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
     }
 
-    public Task<Disciplina> ObterInativoPorIdAsync()
+    public async Task<Disciplina> ObterInativoPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
     public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()

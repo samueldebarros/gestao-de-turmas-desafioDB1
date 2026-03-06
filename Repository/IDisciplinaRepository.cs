@@ -4,13 +4,12 @@ namespace Repository;
 
 public interface IDisciplinaRepository
 {
-    Task<Disciplina> ObterDisciplinaPorIdAsync();
-    Task<Disciplina> ObterInativoPorIdAsync();
+    Task<Disciplina> ObterDisciplinaPorIdAsync(int id);
+    Task<Disciplina> ObterInativoPorIdAsync(int id);
     Task<List<Disciplina>> ObterTodasAsDisciplinasAsync();
     Task AdicionarDisciplinaAsync(Disciplina disciplina);
-    Task EditarDisciplinaAsync();
+    Task EditarDisciplinaAsync(Disciplina disciplina);
     Task InativarDisciplinaAsync();
     Task ReativarDisciplinaAsync();
-    
     
 }

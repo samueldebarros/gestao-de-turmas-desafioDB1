@@ -1,4 +1,5 @@
 ﻿using API.Service;
+using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Disciplina;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +45,41 @@ public class GerenciarDisciplinaController : Controller
         await _disciplinaService.AdicionarDisciplinaAsync(docente);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Editar(int id)
+    {
+        var disciplina = await _disciplinaService.ObterDisciplinaPorIdAsync(id);
+        if (disciplina == null) return NotFound();
+
+        var viewModel = disciplina.ToEditarViewModel();
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Editar(DisciplinaEditarViewModel viewModel)
+    {
+        if (!ModelState.IsValid) return View(nameof(Editar), viewModel);
+
+        var disciplina = viewModel.ToEditarDTO();
+        try
+        {
+            await _disciplinaService.EditarDisciplinaAsync(disciplina);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(viewModel);
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            TempData["MensagemErro"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 
 }
