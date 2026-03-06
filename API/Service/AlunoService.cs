@@ -43,6 +43,14 @@ namespace API.Service
             if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
                 throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
 
+            var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
+
+            if (aluno.DataNascimento < dataMinimaAceitavel)
+            {
+                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
+                    "Verifique se o ano foi digitado corretamente.");
+            }
+
             var cpfLimpo = await ValidarEProcessarCpfAsync(aluno.Cpf);
 
             if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email))
@@ -108,6 +116,14 @@ namespace API.Service
 
             if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
                 throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
+            var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
+
+            if (aluno.DataNascimento < dataMinimaAceitavel)
+            {
+                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
+                    "Verifique se o ano foi digitado corretamente.");
+            }
 
             if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email, aluno.Id))
                 throw new RegraDeNegocioException("Este e-mail já esta em uso.");
