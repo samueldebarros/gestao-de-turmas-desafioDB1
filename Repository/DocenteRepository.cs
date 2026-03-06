@@ -49,7 +49,7 @@ public class DocenteRepository : IDocenteRepository
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
 
-        int total = query.Count();
+        int total = await query.CountAsync();
 
         var docentesPaginados = await query.OrderBy(d => d.Nome)
             .Skip((pagina - 1) * tamanho)
