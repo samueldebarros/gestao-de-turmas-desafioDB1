@@ -29,6 +29,9 @@ namespace API.Service
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
+            if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+
             var cpfLimpo = aluno.Cpf.Replace(".", "").Replace("-", "").Trim();
 
             if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
