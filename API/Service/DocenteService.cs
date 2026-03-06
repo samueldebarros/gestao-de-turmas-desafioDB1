@@ -32,18 +32,19 @@ public class DocenteService : IDocenteService
         return cpfLimpo;
     }
 
-    public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
+    private void ValidarDataNascimento(DateOnly? dataNascimento)
     {
-        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
+        if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual à data atual.");
 
         var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
+        if (dataNascimento < dataMinimaAceitavel)
+            throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
+    }
 
-        if (docente.DataNascimento < dataMinimaAceitavel)
-        {
-            throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
-                "Verifique se o ano foi digitado corretamente.");
-        }
+    public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
+    {
+        ValidarDataNascimento(docente.DataNascimento);
 
         if (await _docenteRepository.ExistePeloEmailAsync(docente.Email)) 
             throw new RegraDeNegocioException("Este e-mail já esta em uso.");
@@ -93,7 +94,6 @@ public class DocenteService : IDocenteService
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)
     {
-
         var docenteExistente = await _docenteRepository.ObterPeloIdAsync(docente.Id);
 
         if (docenteExistente == null)
@@ -102,16 +102,7 @@ public class DocenteService : IDocenteService
         if (!docenteExistente.Ativo)
             throw new RegraDeNegocioException("Não é possivel editar um docente inativo.");
 
-        if (docente.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
-
-        var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
-
-        if (docente.DataNascimento < dataMinimaAceitavel)
-        {
-            throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
-                "Verifique se o ano foi digitado corretamente.");
-        }
+        ValidarDataNascimento(docente.DataNascimento);
 
         if (await _docenteRepository.ExistePeloEmailAsync(docente.Email, docente.Id)) 
             throw new RegraDeNegocioException("Este e-mail já esta em uso.");

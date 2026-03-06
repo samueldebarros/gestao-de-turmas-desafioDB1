@@ -28,6 +28,16 @@ namespace API.Service
             return cpfLimpo;
         }
 
+        private void ValidarDataNascimento(DateOnly? dataNascimento)
+        {
+            if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))
+                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual à data atual.");
+
+            var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
+            if (dataNascimento < dataMinimaAceitavel)
+                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
+        }
+
         private string GerarMatriculaUnica()
         {
             string prefixo = DateTime.Now.ToString("yyyyMM");
@@ -40,16 +50,7 @@ namespace API.Service
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
-            if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
-
-            var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
-
-            if (aluno.DataNascimento < dataMinimaAceitavel)
-            {
-                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
-                    "Verifique se o ano foi digitado corretamente.");
-            }
+            ValidarDataNascimento(aluno.DataNascimento);
 
             var cpfLimpo = await ValidarEProcessarCpfAsync(aluno.Cpf);
 
@@ -114,16 +115,7 @@ namespace API.Service
             if (!alunoExistente.Ativo)
                 throw new RegraDeNegocioException("Não é possivel editar um aluno inativo.");
 
-            if (aluno.DataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual a data de atual");
-
-            var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
-
-            if (aluno.DataNascimento < dataMinimaAceitavel)
-            {
-                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos). " +
-                    "Verifique se o ano foi digitado corretamente.");
-            }
+            ValidarDataNascimento(aluno.DataNascimento);
 
             if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email, aluno.Id))
                 throw new RegraDeNegocioException("Este e-mail já esta em uso.");
