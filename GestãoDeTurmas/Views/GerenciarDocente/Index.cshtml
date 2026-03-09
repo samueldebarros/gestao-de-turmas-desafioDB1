@@ -89,6 +89,8 @@
 							<td><a role="button" class="btn btn-primary w-100" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
 							<td>
 								<form asp-action="Inativar" asp-route-id="@docente.Id" method="post">
+									<input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+									<input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
 									<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
 										Inativar
 									</button>
@@ -99,6 +101,8 @@
 						{
 							<td colspan="2" class="text-center">
 								<form asp-action="Reativar" asp-route-id="@docente.Id" method="post">
+									<input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+									<input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
 									<button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
 										Reativar
 									</button>

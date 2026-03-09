@@ -104,34 +104,34 @@ namespace GestãoDeTurmas.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Inativar(int id)
+        public async Task<IActionResult> Inativar(int id, string? pesquisa, bool? ativo)
         {
             try
             {
                 await _docenteService.InativarDocenteAsync(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {pesquisa, ativo});
             }
             catch (EntidadeNaoEncontradaException ex)
             {
                 TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
             }
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reativar(int id)
+        public async Task<IActionResult> Reativar(int id, string? pesquisa, bool? ativo)
         {
             try
             {
                 await _docenteService.ReativarDocenteAsync(id);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
             }
             catch (EntidadeNaoEncontradaException ex)
             {
                 TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
             }
         }
     }
