@@ -47,9 +47,12 @@ public class DisciplinaService : IDisciplinaService
         await _disciplinaRepository.EditarDisciplinaAsync(disciplinaExistente);
     }
 
-    public Task InativarDisciplinaAsync()
+    public async Task InativarDisciplinaAsync(int id)
     {
-        throw new NotImplementedException();
+        var disciplina = await ObterDisciplinaPorIdAsync(id);
+        if (disciplina == null) throw new EntidadeNaoEncontradaException("A disciplina que voce tentou inativar não foi encontrada.");
+
+        await _disciplinaRepository.InativarDisciplinaAsync(id);
     }
 
     public async Task<Disciplina> ObterDisciplinaPorIdAsync(int id)

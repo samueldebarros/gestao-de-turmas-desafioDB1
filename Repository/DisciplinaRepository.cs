@@ -26,9 +26,11 @@ public class DisciplinaRepository : IDisciplinaRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task InativarDisciplinaAsync()
+    public async Task InativarDisciplinaAsync(int id)
     {
-        throw new NotImplementedException();
+        await _context.Disciplinas
+            .Where(d => d.Id == id)
+            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
     }
 
     public async Task<Disciplina> ObterDisciplinaPorIdAsync(int id)
@@ -46,7 +48,7 @@ public class DisciplinaRepository : IDisciplinaRepository
         return await _context.Disciplinas.AsNoTracking().ToListAsync();
     }
 
-    public Task ReativarDisciplinaAsync()
+    public Task ReativarDisciplinaAsync(int id)
     {
         throw new NotImplementedException();
     }

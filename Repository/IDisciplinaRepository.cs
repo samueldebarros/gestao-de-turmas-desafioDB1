@@ -9,7 +9,7 @@ public interface IDisciplinaRepository
     Task<List<Disciplina>> ObterTodasAsDisciplinasAsync();
     Task AdicionarDisciplinaAsync(Disciplina disciplina);
     Task EditarDisciplinaAsync(Disciplina disciplina);
-    Task InativarDisciplinaAsync();
-    Task ReativarDisciplinaAsync();
+    Task InativarDisciplinaAsync(int id);
+    Task ReativarDisciplinaAsync(int id);
     
 }

@@ -10,6 +10,6 @@ public interface IDisciplinaService
     Task<List<Disciplina>> ObterTodasAsDisciplinasAsync();
     Task AdicionarDisciplinaAsync(DisciplinaInputDTO disciplina);
     Task EditarDisciplinaAsync(EditarDisciplinaDTO disciplinaDTO);
-    Task InativarDisciplinaAsync();
+    Task InativarDisciplinaAsync(int id);
     Task ReativarDisciplinaAsync();
 }

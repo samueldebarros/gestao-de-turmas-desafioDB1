@@ -82,4 +82,20 @@ public class GerenciarDisciplinaController : Controller
 
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Inativar(int id)
+    {
+        try
+        {
+            await _disciplinaService.InativarDisciplinaAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            TempData["MensagemErro"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
+
+    }
+
 }
