@@ -26,6 +26,9 @@ namespace GestãoDeTurmas.Controllers
 
             var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, TAMANHO_PAGINA, pesquisa, sexo, ativo);
 
+            if(pagina > alunosPaginados.TotalPaginas && alunosPaginados.TotalPaginas > 0)
+                return RedirectToAction(nameof(Index), new {pagina = alunosPaginados.TotalPaginas, pesquisa, sexo, ativo});
+
             var alunosDomain = alunosPaginados.Select(a => a.ToListaViewModel()).ToList();
 
             var viewModel = new GerenciarAlunoViewModel
@@ -73,18 +76,18 @@ namespace GestãoDeTurmas.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Inativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo)
+        public async Task<IActionResult> Inativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo, int pagina = 1)
         {
             await _alunoService.InativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index), new {pesquisa, sexo, ativo});
+            return RedirectToAction(nameof(Index), new {pagina, pesquisa, sexo, ativo});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo)
+        public async Task<IActionResult> Reativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo, int pagina = 1)
         {
             await _alunoService.ReativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index), new {pesquisa, sexo, ativo});
+            return RedirectToAction(nameof(Index), new {pagina, pesquisa, sexo, ativo});
         }
 
         [HttpGet]
