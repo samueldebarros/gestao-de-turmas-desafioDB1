@@ -159,7 +159,7 @@
                         <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
                             <a class="page-link"
                                asp-action="Index"
-                               asp-route-pagina="@(Model.TotalPaginas - Model.TotalPaginas + 1)"
+                               asp-route-pagina="@((Model.TotalPaginas + 1) - Model.TotalPaginas)"
                                asp-route-pesquisa="@ViewBag.PesquisaAtual"
                                asp-route-sexo="@ViewBag.SexoAtual"
                                asp-route-ativo="@ViewBag.AtivoAtual">

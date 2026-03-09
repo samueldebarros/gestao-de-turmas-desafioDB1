@@ -141,10 +141,20 @@
 						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
 							<a class="page-link"
 							   asp-action="Index"
+							   asp-route-pagina="@((Model.TotalPaginas + 1) - Model.TotalPaginas)"
+							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+							   asp-route-ativo="@ViewBag.AtivoAtual">
+								&lt&lt
+							</a>
+						</li>
+
+						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+							<a class="page-link"
+							   asp-action="Index"
 							   asp-route-pagina="@(Model.PaginaAtual - 1)"
 							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
 							   asp-route-ativo="@ViewBag.AtivoAtual">
-								Anterior
+								&lt
 							</a>
 						</li>
 
@@ -169,7 +179,18 @@
 							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
 							   asp-route-sexo="@ViewBag.SexoAtual"
 							   asp-route-ativo="@ViewBag.AtivoAtual">
-								Próximo
+								&gt
+							</a>
+						</li>
+
+						<li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-pagina="@(Model.TotalPaginas)"
+							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+							   asp-route-sexo="@ViewBag.SexoAtual"
+							   asp-route-ativo="@ViewBag.AtivoAtual">
+								&gt&gt
 							</a>
 						</li>
 
