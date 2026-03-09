@@ -50,7 +50,8 @@ public class DisciplinaService : IDisciplinaService
     public async Task InativarDisciplinaAsync(int id)
     {
         var disciplina = await ObterDisciplinaPorIdAsync(id);
-        if (disciplina == null) throw new EntidadeNaoEncontradaException("A disciplina que voce tentou inativar não foi encontrada.");
+        if (disciplina == null) 
+            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
 
         await _disciplinaRepository.InativarDisciplinaAsync(id);
     }
@@ -60,9 +61,9 @@ public class DisciplinaService : IDisciplinaService
         return await _disciplinaRepository.ObterDisciplinaPorIdAsync(id);
     }
 
-    public Task<Disciplina> ObterInativoPorIdAsync()
+    public async Task<Disciplina> ObterInativoPorIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _disciplinaRepository.ObterInativoPorIdAsync(id);
     }
 
     public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()
@@ -70,8 +71,12 @@ public class DisciplinaService : IDisciplinaService
         return await _disciplinaRepository.ObterTodasAsDisciplinasAsync();
     }
 
-    public Task ReativarDisciplinaAsync()
+    public async Task ReativarDisciplinaAsync(int id)
     {
-        throw new NotImplementedException();
+        var disciplina = await ObterInativoPorIdAsync(id);
+        if (disciplina == null) 
+            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
+
+        await _disciplinaRepository.ReativarDisciplinaAsync(id);
     }
 }
