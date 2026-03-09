@@ -78,16 +78,32 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo, int pagina = 1)
         {
-            await _alunoService.InativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index), new {pagina, pesquisa, sexo, ativo});
+            try
+            {
+                await _alunoService.InativarAlunoAsync(id);
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+            } catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+            }
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo, int pagina = 1)
         {
-            await _alunoService.ReativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index), new {pagina, pesquisa, sexo, ativo});
+            try
+            {
+                await _alunoService.ReativarAlunoAsync(id);
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+            }
+            catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+            }
         }
 
         [HttpGet]

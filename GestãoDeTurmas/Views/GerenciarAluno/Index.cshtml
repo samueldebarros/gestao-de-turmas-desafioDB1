@@ -11,6 +11,13 @@
     <div class="card-body">
         <h1>Gerenciar alunos</h1> <br />
 
+        @if (TempData["MensagemErro"] != null)
+        {
+            <div class="alertaErro">
+                @TempData["MensagemErro"]
+            </div>
+        }
+
         <form asp-action="Index" method="get">
             <div class="row mb-3 align-items-end">
 
