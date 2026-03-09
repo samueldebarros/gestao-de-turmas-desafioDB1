@@ -134,6 +134,11 @@ namespace GestãoDeTurmas.Controllers
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(model);
             }
+            catch (EntidadeNaoEncontradaException ex)
+            {
+                TempData["MensagemErro"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
 
         }
     }

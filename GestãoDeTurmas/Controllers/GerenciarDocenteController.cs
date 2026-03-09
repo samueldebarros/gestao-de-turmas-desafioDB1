@@ -15,9 +15,9 @@ namespace GestãoDeTurmas.Controllers
             _docenteService = docenteService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(int pagina = 1,string? pesquisa = null, bool? ativo = null)
         {
-            ViewBag.PaginaAtual = pagina;
             ViewBag.PesquisaAtual = pesquisa;
             ViewBag.AtivoAtual = ativo;
 
