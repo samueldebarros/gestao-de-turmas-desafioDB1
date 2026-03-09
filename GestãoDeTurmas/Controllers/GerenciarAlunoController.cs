@@ -73,18 +73,18 @@ namespace GestãoDeTurmas.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Inativar(int id)
+        public async Task<IActionResult> Inativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo)
         {
             await _alunoService.InativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {pesquisa, sexo, ativo});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reativar(int id)
+        public async Task<IActionResult> Reativar(int id, string? pesquisa, SexoEnum? sexo, bool? ativo)
         {
             await _alunoService.ReativarAlunoAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {pesquisa, sexo, ativo});
         }
 
         [HttpGet]
