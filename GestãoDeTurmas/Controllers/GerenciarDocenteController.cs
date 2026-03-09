@@ -23,6 +23,9 @@ namespace GestãoDeTurmas.Controllers
 
             var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, TAMANHO_PAGINA,pesquisa,ativo);
 
+            if (pagina > docentesPaginados.TotalPaginas && docentesPaginados.TotalPaginas > 0)
+                return RedirectToAction(nameof(Index), new { pagina = docentesPaginados.TotalPaginas, pesquisa, ativo });
+
             var docenteDomain = docentesPaginados.Select(a => a.ToListaViewModel()).ToList();
 
             var viewModel = new GerenciarDocenteViewModel()
@@ -104,34 +107,34 @@ namespace GestãoDeTurmas.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Inativar(int id, string? pesquisa, bool? ativo)
+        public async Task<IActionResult> Inativar(int id, string? pesquisa, bool? ativo, int pagina = 1)
         {
             try
             {
                 await _docenteService.InativarDocenteAsync(id);
-                return RedirectToAction(nameof(Index), new {pesquisa, ativo});
+                return RedirectToAction(nameof(Index), new {pagina, pesquisa, ativo});
             }
             catch (EntidadeNaoEncontradaException ex)
             {
                 TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
+                return RedirectToAction(nameof(Index), new {pagina, pesquisa, ativo });
             }
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reativar(int id, string? pesquisa, bool? ativo)
+        public async Task<IActionResult> Reativar(int id, string? pesquisa, bool? ativo, int pagina = 1)
         {
             try
             {
                 await _docenteService.ReativarDocenteAsync(id);
-                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
             catch (EntidadeNaoEncontradaException ex)
             {
                 TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index), new { pesquisa, ativo });
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
         }
     }
