@@ -56,83 +56,97 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <small>Filtros aplicados.</small>
-                        <a asp-action="Index" class="text-danger text-decoration-none">Limpar tudo ✖</a>
+                        <a asp-action="Index" class="btn btn-outline-primary">Limpar Busca</a>
                     </div>
                 </div>
             }
         </form>
 
-        <table class="text-center">
-            <thead>
-                <tr class="text-center">
-                    <th>Matricula</th>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Email</th>
-                    <th>Data de Nascimento</th>
-                    <th>Sexo</th>
-                    <th>Status</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var aluno in Model.AlunosCadastrados)
-                {
-                    <tr>
-                        <td><strong>@aluno.Matricula</strong></td>
-                        <td>@aluno.NomeExibicao</td>
-                        <td class="text-nowrap">@aluno.CpfFormatado</td>
-                        <td>@(aluno.Email ?? "-")</td>
-                        <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
-                        <td>@aluno.Sexo</td>
-                        <td>
+        @if (!Model.AlunosCadastrados.Any())
+        {
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-search fs-1 text-muted"></i>
+                    <h4 class="mt-3">Nenhum aluno encontrado</h4>
+                    <p class="text-muted">Tente ajustar seus filtros de pesquisa.</p>
+                    <a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
+                </div>
+            }
+        }
+        else
+        {
+            <table class="text-center">
+                <thead>
+                    <tr class="text-center">
+                        <th>Matricula</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Email</th>
+                        <th>Data de Nascimento</th>
+                        <th>Sexo</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var aluno in Model.AlunosCadastrados)
+                    {
+                        <tr>
+                            <td><strong>@aluno.Matricula</strong></td>
+                            <td>@aluno.NomeExibicao</td>
+                            <td class="text-nowrap">@aluno.CpfFormatado</td>
+                            <td>@(aluno.Email ?? "-")</td>
+                            <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
+                            <td>@aluno.Sexo</td>
+                            <td>
+                                @if (aluno.Ativo)
+                                {
+                                    <span class="badge bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inativo</span>
+                                }
+                            </td>
+
                             @if (aluno.Ativo)
                             {
-                                <span class="badge bg-success">Ativo</span>
+                                <td><a role="button" class="btn btn-primary w-100" asp-route-id="@aluno.Id" asp-controller="GerenciarAluno" asp-action="Editar">Editar</a></td>
+                                <td>
+                                    <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
+                                        <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
+                                        <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+                                        <input type="hidden" name="sexo" value="@ViewBag.SexoAtual" />
+                                        <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+                                            Inativar
+                                        </button>
+                                    </form>
+                                </td>
                             }
                             else
                             {
-                                <span class="badge bg-danger">Inativo</span>
+                                <td colspan="2" class="text-center">
+                                    <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post">
+                                        <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
+                                        <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+                                        <input type="hidden" name="sexo" value="@ViewBag.SexoAtual" />
+                                        <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                        <button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
+                                            Reativar
+                                        </button>
+                                    </form>
+                                </td>
                             }
-                        </td>
-
-                        @if (aluno.Ativo)
-                        {
-                            <td><a role="button" class="btn btn-primary w-100" asp-route-id="@aluno.Id" asp-controller="GerenciarAluno" asp-action="Editar">Editar</a></td>
-                            <td>
-                                <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post">
-                                    <input type="hidden" name="pagina" value="@Model.PaginaAtual"/>
-                                    <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                    <input type="hidden" name="sexo" value="@ViewBag.SexoAtual" />
-                                    <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-                                    <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
-                                        Inativar
-                                    </button>
-                                </form>
-                            </td>
-                        }
-                        else
-                        {
-                            <td colspan="2" class="text-center">
-                                <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post">
-                                    <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                    <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                    <input type="hidden" name="sexo" value="@ViewBag.SexoAtual" />
-                                    <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-                                    <button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
-                                        Reativar
-                                    </button>
-                                </form>
-                            </td>
-                        }
 
 
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </tr>
+                    }
+                </tbody>
 
+            </table>
+        }
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex gap-2">
                 <a role="button" class="btn btn-primary" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar</a>
