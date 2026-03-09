@@ -66,9 +66,9 @@ public class DisciplinaService : IDisciplinaService
         return await _disciplinaRepository.ObterInativoPorIdAsync(id);
     }
 
-    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()
+    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync(string? pesquisa = null, bool? ativo = null)
     {
-        return await _disciplinaRepository.ObterTodasAsDisciplinasAsync();
+        return await _disciplinaRepository.ObterTodasAsDisciplinasAsync(pesquisa,ativo);
     }
 
     public async Task ReativarDisciplinaAsync(int id)

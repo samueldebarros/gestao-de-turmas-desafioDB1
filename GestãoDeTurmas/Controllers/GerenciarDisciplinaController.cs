@@ -16,9 +16,12 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? pesquisa = null, bool? ativo = null)
     {
-        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync();
+        ViewBag.PesquisaAtual = pesquisa;
+        ViewBag.AtivoAtual = ativo;
+
+        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pesquisa, ativo);
 
         var disciplinasDomain = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList();
 

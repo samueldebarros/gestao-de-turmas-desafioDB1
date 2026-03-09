@@ -43,9 +43,17 @@ public class DisciplinaRepository : IDisciplinaRepository
         return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
-    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync()
+    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync(string? pesquisa = null, bool? ativo = null)
     {
-        return await _context.Disciplinas.AsNoTracking().ToListAsync();
+        var query = _context.Disciplinas.AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrEmpty(pesquisa)) 
+            query = query.Where(d => d.Nome.Contains(pesquisa)
+            || d.Ementa.Contains(pesquisa));
+
+        if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
+        
+        return await query.OrderBy(d => d.Nome).ToListAsync();
     }
 
     public async Task ReativarDisciplinaAsync(int id)
