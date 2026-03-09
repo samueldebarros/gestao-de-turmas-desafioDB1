@@ -39,5 +39,8 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
 
         builder.HasIndex(d => d.Cpf)
             .IsUnique();
+
+        builder.HasIndex(d => d.Email)
+            .IsUnique();
     }
 }

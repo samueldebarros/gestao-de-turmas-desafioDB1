@@ -54,5 +54,7 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
         builder.HasIndex(x => x.Matricula)
             .IsUnique();
 
+        builder.HasIndex(d => d.Email)
+            .IsUnique();
     }
 }

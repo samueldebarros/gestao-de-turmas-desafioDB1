@@ -81,6 +81,7 @@ namespace Repository
         {
             return await _context.Alunos.AnyAsync(a => a.Cpf == cpf);
         }
+
         public async Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null)
         {
             var query = _context.Alunos.Where(a => a.Email == email);
@@ -89,6 +90,11 @@ namespace Repository
                 query = query.Where(a => a.Id != ignorarId.Value);
 
             return await query.AnyAsync();
+        }
+
+        public async Task<bool> ExisteMatriculaAsync(string matricula)
+        {
+            return await _context.Alunos.AnyAsync(d => d.Matricula == matricula);
         }
     }
 }

@@ -38,14 +38,19 @@ namespace API.Service
                 throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
         }
 
-        private string GerarMatriculaUnica()
+        private async Task<string> GerarMatriculaUnicaAsync()
         {
-            string prefixo = DateTime.Now.ToString("yyyyMM");
-            string aleatorio = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
+            for (int tentativa = 0; tentativa < 5; tentativa++)
+            {
+                string prefixo = DateTime.Now.ToString("yyyyMM");
+                string aleatorio = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
+                string matricula = $"{prefixo}{aleatorio}";
 
-            string matricula = $"{prefixo}{aleatorio}";
+                if (!await _alunoRepository.ExisteMatriculaAsync(matricula))
+                    return matricula;
+            }
+            throw new RegraDeNegocioException("Não foi possível gerar uma matrícula única. Tente novamente!!");
 
-            return matricula;
         }
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
@@ -66,7 +71,7 @@ namespace API.Service
                 Sexo = aluno.Sexo,
 
                 Ativo = true,
-                Matricula = GerarMatriculaUnica()
+                Matricula = await GerarMatriculaUnicaAsync()
             };
 
             await _alunoRepository.AdicionarAsync(novoAluno);

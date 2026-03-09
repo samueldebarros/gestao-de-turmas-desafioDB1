@@ -14,5 +14,6 @@ namespace Repository
         Task AlterarAsync(Aluno aluno);
         Task<bool> ExistePeloCpfAsync(string cpf);
         Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
+        Task<bool> ExisteMatriculaAsync(string matricula);
     }
 }
