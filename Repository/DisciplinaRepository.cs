@@ -43,7 +43,7 @@ public class DisciplinaRepository : IDisciplinaRepository
         return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
-    public async Task<List<Disciplina>> ObterTodasAsDisciplinasAsync(string? pesquisa = null, bool? ativo = null)
+    public async Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
         var query = _context.Disciplinas.AsNoTracking().AsQueryable();
 
@@ -52,8 +52,15 @@ public class DisciplinaRepository : IDisciplinaRepository
             || d.Ementa.Contains(pesquisa));
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
+
+        int total = await query.CountAsync();
         
-        return await query.OrderBy(d => d.Nome).ToListAsync();
+        var disciplinas = await query.OrderBy(d => d.Nome)
+            .Skip((pagina - 1) * tamanho)
+            .Take(tamanho)
+            .ToListAsync();
+
+        return (disciplinas, total);
     }
 
     public async Task ReativarDisciplinaAsync(int id)

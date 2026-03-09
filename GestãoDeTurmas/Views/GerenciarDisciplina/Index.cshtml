@@ -108,6 +108,65 @@
                 <a role="button" class="btn btn-primary" asp-controller="GerenciarDisciplina" asp-action="Adicionar">Adicionar</a>
                 <a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
             </div>
+
+            <nav aria-label="Navegação de página">
+                <ul class="pagination mb-0">
+
+                    <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pagina="@((Model.TotalPaginas + 1) - Model.TotalPaginas)"
+                           asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                           asp-route-ativo="@ViewBag.AtivoAtual">
+                            &lt&lt
+                        </a>
+                    </li>
+
+                    <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaAtual - 1)"
+                           asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                           asp-route-ativo="@ViewBag.AtivoAtual">
+                            &lt
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPaginas; i++)
+                    {
+                        <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@i"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pagina="@(Model.PaginaAtual + 1)"
+                           asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                           asp-route-ativo="@ViewBag.AtivoAtual">
+                            &gt
+                        </a>
+                    </li>
+
+                    <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pagina="@(Model.TotalPaginas)"
+                           asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                           asp-route-ativo="@ViewBag.AtivoAtual">
+                            &gt&gt
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

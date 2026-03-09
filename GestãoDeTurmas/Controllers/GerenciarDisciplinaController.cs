@@ -9,6 +9,7 @@ namespace GestãoDeTurmas.Controllers;
 public class GerenciarDisciplinaController : Controller
 {
     private readonly IDisciplinaService _disciplinaService;
+    private const int TAMANHO_PAGINA = 5;
 
     public GerenciarDisciplinaController(IDisciplinaService disciplinaService)
     {
@@ -16,19 +17,24 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string? pesquisa = null, bool? ativo = null)
+    public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null)
     {
         ViewBag.PesquisaAtual = pesquisa;
         ViewBag.AtivoAtual = ativo;
 
-        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pesquisa, ativo);
+        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, TAMANHO_PAGINA, pesquisa, ativo);
 
         var disciplinasDomain = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList();
 
         var viewModel = new GerenciarDisciplinaViewModel()
         {
             DisciplinasCadastradas = disciplinasDomain,
-            NovaDisciplina = new DisciplinaInputViewModel()
+            NovaDisciplina = new DisciplinaInputViewModel(),
+
+            TemProximaPagina = listaDisciplinas.TemProximaPagina,
+            TemPaginaAnterior = listaDisciplinas.TemPaginaAnterior,
+            PaginaAtual = pagina,
+            TotalPaginas = listaDisciplinas.TotalPaginas,
         };
 
         return View(viewModel);

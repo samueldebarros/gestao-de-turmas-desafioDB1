@@ -6,7 +6,7 @@ public interface IDisciplinaRepository
 {
     Task<Disciplina> ObterDisciplinaPorIdAsync(int id);
     Task<Disciplina> ObterInativoPorIdAsync(int id);
-    Task<List<Disciplina>> ObterTodasAsDisciplinasAsync(string? pesquisa = null, bool? ativo = null);
+    Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1 , int tamanho = 5, string? pesquisa = null, bool? ativo = null);
     Task AdicionarDisciplinaAsync(Disciplina disciplina);
     Task EditarDisciplinaAsync(Disciplina disciplina);
     Task InativarDisciplinaAsync(int id);
