@@ -25,6 +25,9 @@ public class GerenciarDisciplinaController : Controller
 
         var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, TAMANHO_PAGINA, pesquisa, ativo);
 
+        if (pagina > listaDisciplinas.TotalPaginas && listaDisciplinas.TotalPaginas > 0)
+            return RedirectToAction(nameof(Index), new { pagina = listaDisciplinas.TotalPaginas, pesquisa, ativo });
+
         var disciplinasDomain = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList();
 
         var viewModel = new GerenciarDisciplinaViewModel()
@@ -112,34 +115,34 @@ public class GerenciarDisciplinaController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Inativar(int id)
+    public async Task<IActionResult> Inativar(int id, string? pesquisa = null, bool? ativo = null, int pagina = 1)
     {
         try
         {
             await _disciplinaService.InativarDisciplinaAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina});
         }
         catch (EntidadeNaoEncontradaException ex)
         {
             TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
         }
 
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Reativar(int id)
+    public async Task<IActionResult> Reativar(int id, string? pesquisa = null, bool? ativo = null, int pagina = 1)
     {
         try
         {
             await _disciplinaService.ReativarDisciplinaAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
         }
         catch (EntidadeNaoEncontradaException ex)
         {
             TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
         }
 
     }

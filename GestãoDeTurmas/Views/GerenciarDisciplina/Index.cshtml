@@ -90,6 +90,9 @@
                             @if (disciplina.Ativo)
                             {
                                 <form asp-action="Inativar" asp-route-id="@disciplina.Id" method="post">
+                                    <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual"/>
+                                    <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                    <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                     <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
                                         Inativar
                                     </button>
@@ -98,6 +101,9 @@
                             else
                             {
                                 <form asp-action="Reativar" asp-route-id="@disciplina.Id" method="post">
+                                    <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+                                    <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                    <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                     <button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
                                         Reativar
                                     </button>
