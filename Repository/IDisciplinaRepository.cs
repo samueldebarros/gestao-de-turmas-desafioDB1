@@ -11,5 +11,7 @@ public interface IDisciplinaRepository
     Task EditarDisciplinaAsync(Disciplina disciplina);
     Task InativarDisciplinaAsync(int id);
     Task ReativarDisciplinaAsync(int id);
-    
+    Task<bool> ExistePeloNomeAsync(string nome, int? ignorarId = null);
+
+
 }

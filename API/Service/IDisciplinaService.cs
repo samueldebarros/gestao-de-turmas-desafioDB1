@@ -13,4 +13,5 @@ public interface IDisciplinaService
     Task EditarDisciplinaAsync(EditarDisciplinaDTO disciplinaDTO);
     Task InativarDisciplinaAsync(int id);
     Task ReativarDisciplinaAsync(int id);
+    void ValidarCargaHoraria(int cargaHoraria);
 }

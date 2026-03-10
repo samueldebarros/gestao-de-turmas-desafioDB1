@@ -69,4 +69,15 @@ public class DisciplinaRepository : IDisciplinaRepository
             .Where(d => d.Id == id)
             .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
     }
+
+    public async Task<bool> ExistePeloNomeAsync(string nome, int? ignorarId = null)
+    {
+        var query = _context.Disciplinas
+            .Where(d => d.Nome.ToLower() == nome.ToLower());
+
+        if (ignorarId.HasValue)
+            query = query.Where(d => d.Id != ignorarId.Value);
+
+        return await query.AnyAsync();
+    }
 }

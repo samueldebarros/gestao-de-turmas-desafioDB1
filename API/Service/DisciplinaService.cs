@@ -8,7 +8,7 @@ namespace API.Service;
 
 public class DisciplinaService : IDisciplinaService
 {
-    public readonly IDisciplinaRepository _disciplinaRepository;
+    private readonly IDisciplinaRepository _disciplinaRepository;
 
     public DisciplinaService(IDisciplinaRepository disciplinaRepository)
     {
@@ -17,9 +17,16 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task AdicionarDisciplinaAsync(DisciplinaInputDTO disciplina)
     {
+        ValidarCargaHoraria(disciplina.CargaHoraria);
+
+        var nomeTratado = disciplina.Nome.Trim();
+
+        if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado))
+            throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
+
         var novaDisciplina = new Disciplina()
         {
-            Nome = disciplina.Nome,
+            Nome = nomeTratado,
             CargaHoraria = disciplina.CargaHoraria,
             Ementa = disciplina.Ementa,
             Ativo = true
@@ -38,10 +45,14 @@ public class DisciplinaService : IDisciplinaService
         if (!disciplinaExistente.Ativo)
             throw new RegraDeNegocioException("Não é possivel editar uma disciplina inativada.");
 
-        if (disciplinaDTO.CargaHoraria <= 0)
-            throw new RegraDeNegocioException("Uma disciplina não pode ter carga horária igual ou inferior a 0");
+        ValidarCargaHoraria(disciplinaDTO.CargaHoraria);
 
-        disciplinaExistente.Nome = disciplinaDTO.Nome;
+        var nomeTratado = disciplinaDTO.Nome.Trim();
+
+        if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado, disciplinaDTO.Id))
+            throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
+
+        disciplinaExistente.Nome = nomeTratado;
         disciplinaExistente.CargaHoraria = disciplinaDTO.CargaHoraria;
         disciplinaExistente.Ementa = disciplinaDTO.Ementa;
 
@@ -83,5 +94,13 @@ public class DisciplinaService : IDisciplinaService
             throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
 
         await _disciplinaRepository.ReativarDisciplinaAsync(id);
+    }
+
+    public void ValidarCargaHoraria(int cargaHoraria)
+    {
+        if (cargaHoraria <= 0)
+            throw new RegraDeNegocioException("Uma disciplina não pode ter carga horária igual ou inferior a 0.");
+        if (cargaHoraria > 999)
+            throw new RegraDeNegocioException("A carga horária informada é inválida.");
     }
 }

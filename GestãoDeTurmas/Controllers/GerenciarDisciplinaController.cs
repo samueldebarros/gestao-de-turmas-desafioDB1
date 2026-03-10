@@ -3,6 +3,7 @@ using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Disciplina;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestãoDeTurmas.Controllers;
 
@@ -48,13 +49,29 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(DisciplinaInputViewModel model)
     {
-        var docente = model.ToInputDTO();
+        if (!ModelState.IsValid) return View(model);
 
-        await _disciplinaService.AdicionarDisciplinaAsync(docente);
+        var disciplina = model.ToInputDTO();
+        try
+        {
+            await _disciplinaService.AdicionarDisciplinaAsync(disciplina);
+            return RedirectToAction(nameof(Index));
+        }
+        catch(RegraDeNegocioException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return View(model);
 
-        return RedirectToAction(nameof(Index));
+        }
+        catch (DbUpdateException)
+        {
+            ModelState.AddModelError(string.Empty, "Já existe uma disciplina com este nome.");
+            return View(model);
+        }
+
     }
 
     [HttpGet]
@@ -69,6 +86,7 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(DisciplinaEditarViewModel viewModel)
     {
         if (!ModelState.IsValid) return View(nameof(Editar), viewModel);
@@ -93,6 +111,7 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Inativar(int id)
     {
         try
@@ -109,6 +128,7 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Reativar(int id)
     {
         try
