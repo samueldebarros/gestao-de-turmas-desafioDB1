@@ -20,12 +20,16 @@ namespace Repository.Mappings
                 .IsRequired();
 
             builder.Property(d => d.Ementa)
+                .IsRequired(false)
                 .HasColumnType("VARCHAR(500)")
                 .HasMaxLength(500);
 
             builder.Property(d => d.Ativo)
                 .IsRequired()
                 .HasDefaultValue(true);
+
+            builder.HasIndex(d => d.Nome)
+                .IsUnique();
         }
     }
 }
