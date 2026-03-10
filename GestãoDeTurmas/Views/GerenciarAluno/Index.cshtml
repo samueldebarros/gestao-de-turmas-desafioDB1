@@ -13,8 +13,13 @@
 
         @if (TempData["MensagemErro"] != null)
         {
-            <div>
-                @TempData["MensagemErro"]
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                <strong>Atenção!</strong> @TempData["MensagemErro"]
+
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
         }
 
