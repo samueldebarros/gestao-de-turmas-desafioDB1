@@ -35,6 +35,7 @@ namespace GestãoDeTurmas.Controllers
 
                 PaginaAtual = pagina,
                 TotalPaginas = docentesPaginados.TotalPaginas,
+                TotalResultados = docentesPaginados.TotalResultados,
                 TemProximaPagina = docentesPaginados.TemProximaPagina,
                 TemPaginaAnterior = docentesPaginados.TemPaginaAnterior
             };

@@ -33,6 +33,7 @@ public class GerenciarDisciplinaController : Controller
 
             TemProximaPagina = listaDisciplinas.TemProximaPagina,
             TemPaginaAnterior = listaDisciplinas.TemPaginaAnterior,
+            TotalResultados = listaDisciplinas.TotalResultados,
             PaginaAtual = pagina,
             TotalPaginas = listaDisciplinas.TotalPaginas,
         };

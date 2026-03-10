@@ -38,6 +38,7 @@ namespace GestãoDeTurmas.Controllers
                 PaginaAtual = alunosPaginados.PaginaAtual,
                 TotalPaginas = alunosPaginados.TotalPaginas,
                 TemPaginaAnterior = alunosPaginados.TemPaginaAnterior,
+                TotalResultados = alunosPaginados.TotalResultados,
                 TemProximaPagina = alunosPaginados.TemProximaPagina,
 
                 NovoAluno = new AlunoInputViewModel()

@@ -9,5 +9,6 @@ public class GerenciarDisciplinaViewModel
     public int PaginaAtual { get; set; }
     public bool TemProximaPagina { get; set; }
     public bool TemPaginaAnterior { get; set; }
+    public int TotalResultados { get; set; }
 
 }

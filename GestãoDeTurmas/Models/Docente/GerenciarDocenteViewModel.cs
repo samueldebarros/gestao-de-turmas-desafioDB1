@@ -7,6 +7,7 @@ public class GerenciarDocenteViewModel
 
     public int PaginaAtual { get; set; }
     public int TotalPaginas { get; set; }
+    public int TotalResultados { get; set; }
     public bool TemProximaPagina { get; set; }
     public bool TemPaginaAnterior { get; set; }
 }

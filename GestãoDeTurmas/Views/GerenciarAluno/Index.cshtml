@@ -151,6 +151,8 @@
                 <a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
             </div>
 
+            <small class="text-muted">Resultados: @Model.TotalResultados</small>
+
             @if (Model.TotalPaginas > 1)
             {
                 <nav aria-label="Navegação de página">
@@ -159,7 +161,7 @@
                         <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
                             <a class="page-link"
                                asp-action="Index"
-                               asp-route-pagina="@((Model.TotalPaginas + 1) - Model.TotalPaginas)"
+                               asp-route-pagina="1"
                                asp-route-pesquisa="@ViewBag.PesquisaAtual"
                                asp-route-sexo="@ViewBag.SexoAtual"
                                asp-route-ativo="@ViewBag.AtivoAtual">
