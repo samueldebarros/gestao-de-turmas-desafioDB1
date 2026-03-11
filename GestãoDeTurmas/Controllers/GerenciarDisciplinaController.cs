@@ -127,6 +127,11 @@ public class GerenciarDisciplinaController : Controller
             TempData["MensagemErro"] = ex.Message;
             return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
         }
+        catch (RegraDeNegocioException ex)
+        {
+            TempData["MensagemErro"] = ex.Message;
+            return RedirectToAction(nameof(Index), new {pesquisa, ativo, pagina});
+        }
 
     }
 

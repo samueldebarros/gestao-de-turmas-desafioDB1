@@ -83,6 +83,16 @@ public class DisciplinaRepository : IDisciplinaRepository
         return await query.AnyAsync();
     }
 
+    public async Task<bool> ExisteAtivaAsync(int id)
+    {
+        return await _context.Disciplinas.AnyAsync(d=> d.Id == id && d.Ativo);
+    }
+
+    public async Task<bool> PossuiDocentesAtivosAsync(int disciplinaId)
+    {
+        return await _context.Docentes.AnyAsync(d => d.DisciplinaId == disciplinaId && d.Ativo);
+    }
+
     public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
     {
         Console.WriteLine("Passei por aqui Obter ATivas");
@@ -92,4 +102,5 @@ public class DisciplinaRepository : IDisciplinaRepository
             .OrderBy(d => d.Nome)
             .ToListAsync();
     }
+
 }

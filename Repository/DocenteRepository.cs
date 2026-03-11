@@ -34,7 +34,9 @@ public class DocenteRepository : IDocenteRepository
     {
         await _context.Docentes
             .Where(d => d.Id == id)
-            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
+            .ExecuteUpdateAsync(d => d
+            .SetProperty(d => d.Ativo, false)
+            .SetProperty(d => d.DisciplinaId, (int?)null));
     }
 
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
@@ -45,9 +47,8 @@ public class DocenteRepository : IDocenteRepository
         {
             var pesquisaLimpaCpf = pesquisa.Replace(".", "").Replace("-", "");
             query = query.Where(d => d.Nome.Contains(pesquisa)
-                || d.Cpf.Contains(pesquisaLimpaCpf));
-            // TODO: Especialidade removida de ObterTodosOsDocentes
-            // || d.Especialidade.Contains(pesquisa)
+                || d.Cpf.Contains(pesquisaLimpaCpf)
+                || d.Disciplina.Nome.Contains(pesquisa));
         }
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);

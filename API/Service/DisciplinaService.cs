@@ -48,14 +48,14 @@ public class DisciplinaService : IDisciplinaService
         ValidarCargaHoraria(disciplinaDTO.CargaHoraria);
 
         var nomeTratado = disciplinaDTO.Nome.Trim();
-        Console.WriteLine("Passei por aqui Editar service");
+
         if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado, disciplinaDTO.Id))
             throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
 
         disciplinaExistente.Nome = nomeTratado;
         disciplinaExistente.CargaHoraria = disciplinaDTO.CargaHoraria;
         disciplinaExistente.Ementa = disciplinaDTO.Ementa;
-        Console.WriteLine("Passei por aqui Editar service antes de chamar repository");
+
         await _disciplinaRepository.EditarDisciplinaAsync(disciplinaExistente);
     }
 
@@ -64,6 +64,9 @@ public class DisciplinaService : IDisciplinaService
         var disciplina = await ObterDisciplinaPorIdAsync(id);
         if (disciplina == null) 
             throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
+
+        if (await _disciplinaRepository.PossuiDocentesAtivosAsync(id))
+            throw new RegraDeNegocioException("Não é possivel inativar uma disciplina com docentes ativos vinculados.");
 
         await _disciplinaRepository.InativarDisciplinaAsync(id);
     }
@@ -75,7 +78,6 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
     {
-        Console.WriteLine("Passei por aqui Service");
         return await _disciplinaRepository.ObterDisciplinasAtivasAsync();
     }
 

@@ -10,10 +10,12 @@ namespace API.Service;
 public class DocenteService : IDocenteService
 {
     private readonly IDocenteRepository _docenteRepository;
+    private readonly IDisciplinaRepository _disciplinaRepository;
 
-    public DocenteService(IDocenteRepository docenteRepository)
+    public DocenteService(IDocenteRepository docenteRepository, IDisciplinaRepository disciplinaRepository)
     {
         _docenteRepository = docenteRepository;
+        _disciplinaRepository = disciplinaRepository;
     }
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
@@ -48,6 +50,12 @@ public class DocenteService : IDocenteService
 
         if (await _docenteRepository.ExistePeloEmailAsync(docente.Email)) 
             throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+
+        if (docente.DisciplinaId.HasValue)
+        {
+            if (!await _disciplinaRepository.ExisteAtivaAsync(docente.DisciplinaId.Value))
+                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa");
+        }
 
         var cpfLimpo = await ValidarEProcessarCpfAsync(docente.Cpf);
 
@@ -101,6 +109,12 @@ public class DocenteService : IDocenteService
 
         if (!docenteExistente.Ativo)
             throw new RegraDeNegocioException("Não é possivel editar um docente inativo.");
+
+        if (docente.DisciplinaId.HasValue)
+        {
+            if (!await _disciplinaRepository.ExisteAtivaAsync(docente.DisciplinaId.Value))
+                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa");
+        }
 
         ValidarDataNascimento(docente.DataNascimento);
 
