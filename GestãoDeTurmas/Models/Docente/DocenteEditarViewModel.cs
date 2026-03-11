@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestãoDeTurmas.Models.Docente;
 
@@ -16,4 +17,6 @@ public class DocenteEditarViewModel
 
     [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]
     public DateOnly DataNascimento { get; set; }
+    public int? DisciplinaId { get; set; }
+    public IEnumerable<SelectListItem>? Disciplinas { get; set; }
 }

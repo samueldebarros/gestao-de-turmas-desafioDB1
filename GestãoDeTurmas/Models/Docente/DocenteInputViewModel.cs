@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestãoDeTurmas.Models.Docente;
 
@@ -14,9 +15,8 @@ public class DocenteInputViewModel
 
     public string? Email { get; set; }
 
-    [Required(ErrorMessage = "A especialidade do docente é obrigatória!")]
-    public string Especialidade { get; set; }
-
     [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]
     public DateOnly? DataNascimento { get; set; }
+    public int? DisciplinaId { get; set; }
+    public IEnumerable<SelectListItem>? Disciplinas { get; set; }
 }
