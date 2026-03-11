@@ -40,7 +40,7 @@ public class DisciplinaService : IDisciplinaService
         var disciplinaExistente = await _disciplinaRepository.ObterDisciplinaPorIdAsync(disciplinaDTO.Id);
 
         if (disciplinaExistente == null)
-            throw new EntidadeNaoEncontradaException("A disciplina que você tentou editar não foi encontrado.");
+            throw new EntidadeNaoEncontradaException("A disciplina que você tentou editar não foi encontrada.");
 
         if (!disciplinaExistente.Ativo)
             throw new RegraDeNegocioException("Não é possivel editar uma disciplina inativada.");
