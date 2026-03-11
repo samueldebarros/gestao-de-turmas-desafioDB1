@@ -33,9 +33,9 @@
             </div>
 
             <div class="form-group">
-                <label for="especialidade">Especialidade</label>
-                <input type="text" asp-for="@Model.Especialidade" class="form-control" placeholder="Matemática">
-                <span asp-validation-for="@Model.Especialidade" class="text-danger"></span>
+                <select asp-for="DisciplinaId" asp-items="ViewBag.Disciplinas" class="form-select">
+                    <option value="">Nenhuma</option>
+                </select>
             </div>
 
             <div class="form-group">

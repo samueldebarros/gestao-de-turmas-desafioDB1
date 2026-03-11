@@ -3,6 +3,7 @@ using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Docente;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestãoDeTurmas.Controllers
 {
@@ -94,8 +95,17 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(DocenteEditarViewModel viewModel)
         {
+
             if (!ModelState.IsValid)
             {
+                foreach (var entry in ModelState)
+                {
+                    foreach (var error in entry.Value.Errors)
+                    {
+                        Console.WriteLine($"Campo: {entry.Key} | Erro: {error.ErrorMessage}");
+                    }
+                }
+                Console.WriteLine("Passei por aqui Editar controller erro");
                 await PopularDisciplinasAsync();
                 return View(nameof(Editar), viewModel);
             }
@@ -103,6 +113,7 @@ namespace GestãoDeTurmas.Controllers
             var docenteAlterado = viewModel.ToEditarDTO();
             try
             {
+                Console.WriteLine("Passei por aqui Editar controller");
                 await _docenteService.EditarDocenteAsync(docenteAlterado);
                 return RedirectToAction(nameof(Index));
             } 
@@ -152,11 +163,12 @@ namespace GestãoDeTurmas.Controllers
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
         }
-
+        
         private async Task PopularDisciplinasAsync()
         {
             var disciplinas = await _disciplinaService.ObterDisciplinasAtivasAsync();
-            ViewBag.Disciplinas = disciplinas;
+            ViewBag.Disciplinas = new SelectList(disciplinas, "Id", "Nome");
+
         }
     }
 }

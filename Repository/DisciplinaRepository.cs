@@ -15,6 +15,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task AdicionarDisciplinaAsync(Disciplina disciplina)
     {
+        Console.WriteLine("Passei por aqui Editar");
         _context.Add(disciplina);
         await _context.SaveChangesAsync();
 
@@ -22,6 +23,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task EditarDisciplinaAsync(Disciplina disciplina)
     {
+        Console.WriteLine("Passei por aqui Editar");
         _context.Disciplinas.Update(disciplina);
         await _context.SaveChangesAsync();
     }
@@ -83,6 +85,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
     {
+        Console.WriteLine("Passei por aqui Obter ATivas");
         return await _context.Disciplinas
             .AsNoTracking()
             .Where(d => d.Ativo)

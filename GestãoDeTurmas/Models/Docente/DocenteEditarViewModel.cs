@@ -12,9 +12,6 @@ public class DocenteEditarViewModel
 
     public string? Email { get; set; }
 
-    [Required(ErrorMessage = "A especialidade do docente é obrigatória!")]
-    public string Especialidade { get; set; }
-
     [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]
     public DateOnly DataNascimento { get; set; }
     public int? DisciplinaId { get; set; }

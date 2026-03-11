@@ -26,7 +26,7 @@
 				<div class="col-4">
 					<label class="form-label">Pesquisar</label>
 					<input type="text" name="pesquisa" class="form-control"
-						   placeholder="Nome, CPF ou Especialidade" value="@ViewBag.PesquisaAtual" />
+						   placeholder="Nome, CPF" value="@ViewBag.PesquisaAtual" />
 				</div>
 
 				<div class="col-3">
@@ -69,7 +69,7 @@
 			<thead>
 				<tr class="text-center">
 					<th>Nome</th>
-					<th>Especialidade</th>
+					<th>Disciplina</th>
 					<th>CPF</th>
 					<th>Email</th>
 					<th>Data de Nascimento</th>
@@ -84,7 +84,7 @@
 				{
 					<tr>
 						<td>@docente.Nome</td>
-						<td>@docente.Especialidade</td>
+						<td>@(docente.NomeDisciplina ?? "Não vinculada")</td>
 						<td class="text-nowrap">@docente.CpfFormatado</td>
 						<td>@(docente.Email ?? "-")</td>
 						<td>@docente.DataNascimento.ToString("dd/MM/yyyy")</td>
