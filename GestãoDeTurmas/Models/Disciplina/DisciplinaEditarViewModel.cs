@@ -11,5 +11,5 @@ public class DisciplinaEditarViewModel
     public string Nome { get; set; }
     [Required(ErrorMessage = "A carga horária é obrigatória")]
     public int CargaHoraria { get; set; }
-    public string Ementa { get; set; }
+    public string? Ementa { get; set; }
 }

@@ -9,6 +9,7 @@ namespace GestãoDeTurmas.Models.Aluno
         [Required(ErrorMessage ="O nome é obrigatório!")]
         [StringLength(100,MinimumLength = 3, ErrorMessage ="O nome deve ter entre 3 e 100 caracteres")]
         public string Nome { get; set; }
+        [EmailAddress(ErrorMessage = "O e-mail informado não é válido.")]
         public string? Email { get; set; }
         [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]
         public DateOnly? DataNascimento { get; set; }

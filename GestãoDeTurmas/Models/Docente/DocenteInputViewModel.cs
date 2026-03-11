@@ -12,7 +12,7 @@ public class DocenteInputViewModel
     [Required(ErrorMessage = "O CPF é obrigatório!")]
     [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "CPF inválido!")]
     public string Cpf { get; set; }
-
+    [EmailAddress(ErrorMessage = "O e-mail informado não é válido.")]
     public string? Email { get; set; }
 
     [Required(ErrorMessage = "A Data de Nascimento é obrigatória!")]

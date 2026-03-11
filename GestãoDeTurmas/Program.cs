@@ -8,7 +8,14 @@ using Repository.Context;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+        _ => "Este campo é obrigatório.");
+    options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor(
+        (_, _) => "O valor informado é inválido.");
+});
+
 
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IAlunoService, AlunoService>();
@@ -23,6 +30,7 @@ builder.Services.AddDbContext<GestaoEscolarContext>(options => options.UseSqlSer
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
 
 var app = builder.Build();
 
