@@ -30,9 +30,6 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
             .IsRequired()
             .HasColumnType("DATE");
 
-        builder.Property(d => d.Especialidade)
-            .HasColumnType("VARCHAR(50)");
-
         builder.Property(d => d.Ativo)
             .IsRequired()
             .HasDefaultValue(true);
@@ -42,5 +39,11 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
 
         builder.HasIndex(d => d.Email)
             .IsUnique();
+
+        builder.HasOne(d => d.Disciplina)
+            .WithMany(disc => disc.Docentes)
+            .HasForeignKey(d => d.DisciplinaId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
     }
 }

@@ -56,7 +56,7 @@ public class DocenteService : IDocenteService
             Nome = docente.Nome,
             Cpf = cpfLimpo,
             Email = docente.Email,
-            Especialidade = docente.Especialidade,
+            // TODO: Disciplina em AdicionarDocenteDTO Especialidade = docente.Especialidade,
             DataNascimento = (DateOnly)docente.DataNascimento,
             Ativo = true
         };
@@ -109,7 +109,7 @@ public class DocenteService : IDocenteService
 
         docenteExistente.Nome = docente.Nome;
         docenteExistente.DataNascimento = docente.DataNascimento;
-        docenteExistente.Especialidade = docente.Especialidade;
+        // TODO: Disciplina em EditarDocente docenteExistente.Especialidade = docente.Especialidade;
         docenteExistente.Email = docente.Email;
 
         await _docenteRepository.EditarDocenteAsync(docenteExistente);

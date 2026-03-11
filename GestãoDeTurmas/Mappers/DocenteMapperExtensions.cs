@@ -25,7 +25,7 @@ public static class DocenteMapperExtensions
         {
             Id = docente.Id,
             Nome = docente.Nome,
-            Especialidade = docente.Especialidade,
+            // TODO: Disciplina em ToListaViewModel Especialidade = docente.Especialidade,
             Cpf = docente.Cpf,
             Email = docente.Email,
             Ativo = docente.Ativo,
@@ -39,7 +39,7 @@ public static class DocenteMapperExtensions
         {
             Id = docente.Id,
             Nome = docente.Nome,
-            Especialidade = docente.Especialidade,
+            // TODO: disciplina em ToEditarViewModel Especialidade = docente.Especialidade,
             Email = docente.Email,
             DataNascimento = docente.DataNascimento,
         };

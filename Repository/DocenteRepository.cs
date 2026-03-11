@@ -14,7 +14,9 @@ public class DocenteRepository : IDocenteRepository
     }
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
-        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
+        return await _context.Docentes
+            .Include(d => d.Disciplina)
+            .FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
     }
     public async Task<Docente> ObterInativoPeloIdAsync(int id)
     {
@@ -37,14 +39,15 @@ public class DocenteRepository : IDocenteRepository
 
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
-        var query = _context.Docentes.AsNoTracking().AsQueryable();
+        var query = _context.Docentes.Include(d => d.Disciplina).AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(pesquisa))
         {
             var pesquisaLimpaCpf = pesquisa.Replace(".", "").Replace("-", "");
             query = query.Where(d => d.Nome.Contains(pesquisa)
-                || d.Cpf.Contains(pesquisaLimpaCpf)
-                || d.Especialidade.Contains(pesquisa));
+                || d.Cpf.Contains(pesquisaLimpaCpf));
+            // TODO: Especialidade removida de ObterTodosOsDocentes
+            // || d.Especialidade.Contains(pesquisa)
         }
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);

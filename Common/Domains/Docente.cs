@@ -7,6 +7,7 @@ public class Docente
     public string Cpf { get; set; }
     public string? Email { get; set; }
     public DateOnly DataNascimento { get; set; }
-    public string Especialidade { get; set; }
+    public int? DisciplinaId { get; set; }
+    public Disciplina? Disciplina { get; set; }
     public bool Ativo { get; set; } = true;
 }
