@@ -12,6 +12,5 @@ public interface IDisciplinaRepository
     Task InativarDisciplinaAsync(int id);
     Task ReativarDisciplinaAsync(int id);
     Task<bool> ExistePeloNomeAsync(string nome, int? ignorarId = null);
-
-
+    Task<List<Disciplina>> ObterDisciplinasAtivasAsync();
 }

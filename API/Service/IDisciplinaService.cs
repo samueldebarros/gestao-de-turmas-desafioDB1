@@ -14,4 +14,5 @@ public interface IDisciplinaService
     Task InativarDisciplinaAsync(int id);
     Task ReativarDisciplinaAsync(int id);
     void ValidarCargaHoraria(int cargaHoraria);
+    Task<List<Disciplina>> ObterDisciplinasAtivasAsync();
 }

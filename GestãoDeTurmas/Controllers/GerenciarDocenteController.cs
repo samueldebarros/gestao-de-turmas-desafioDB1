@@ -9,10 +9,12 @@ namespace GestãoDeTurmas.Controllers
     public class GerenciarDocenteController : Controller
     {
         private readonly IDocenteService _docenteService;
+        private readonly IDisciplinaService _disciplinaService;
         private const int TAMANHO_PAGINA = 5;
-        public GerenciarDocenteController(IDocenteService docenteService)
+        public GerenciarDocenteController(IDocenteService docenteService, IDisciplinaService disciplinaService)
         {
             _docenteService = docenteService;
+            _disciplinaService = disciplinaService;
         }
 
         [HttpGet]
@@ -44,8 +46,9 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Adicionar()
+        public async Task<IActionResult> Adicionar()
         {
+            await PopularDisciplinasAsync();
             return View(new DocenteInputViewModel());
         }
 
@@ -53,7 +56,11 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adicionar(DocenteInputViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                await PopularDisciplinasAsync();
+                return View(model);
+            }
             
             try
             {
@@ -65,6 +72,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
+                await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View(nameof(Adicionar), model);
             }
@@ -78,6 +86,7 @@ namespace GestãoDeTurmas.Controllers
 
             DocenteEditarViewModel viewModel = docente.ToEditarViewModel();
 
+            await PopularDisciplinasAsync();
             return View(viewModel);
         }
 
@@ -85,7 +94,11 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(DocenteEditarViewModel viewModel)
         {
-            if (!ModelState.IsValid) return View(nameof(Editar),viewModel);
+            if (!ModelState.IsValid)
+            {
+                await PopularDisciplinasAsync();
+                return View(nameof(Editar), viewModel);
+            }
 
             var docenteAlterado = viewModel.ToEditarDTO();
             try
@@ -95,6 +108,7 @@ namespace GestãoDeTurmas.Controllers
             } 
             catch (RegraDeNegocioException ex)
             {
+                await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty,ex.Message);
                 return View(viewModel);
             }
@@ -137,6 +151,12 @@ namespace GestãoDeTurmas.Controllers
                 TempData["MensagemErro"] = ex.Message;
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
+        }
+
+        private async Task PopularDisciplinasAsync()
+        {
+            var disciplinas = await _disciplinaService.ObterDisciplinasAtivasAsync();
+            ViewBag.Disciplinas = disciplinas;
         }
     }
 }

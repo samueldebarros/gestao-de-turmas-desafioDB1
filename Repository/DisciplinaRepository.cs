@@ -80,4 +80,13 @@ public class DisciplinaRepository : IDisciplinaRepository
 
         return await query.AnyAsync();
     }
+
+    public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
+    {
+        return await _context.Disciplinas
+            .AsNoTracking()
+            .Where(d => d.Ativo)
+            .OrderBy(d => d.Nome)
+            .ToListAsync();
+    }
 }
