@@ -40,9 +40,9 @@ namespace API.Service
 
         private async Task<string> GerarMatriculaUnicaAsync()
         {
+            string prefixo = DateTime.Now.ToString("yyyyMM");
             for (int tentativa = 0; tentativa < 5; tentativa++)
             {
-                string prefixo = DateTime.Now.ToString("yyyyMM");
                 string aleatorio = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
                 string matricula = $"{prefixo}{aleatorio}";
 
@@ -50,17 +50,38 @@ namespace API.Service
                     return matricula;
             }
             throw new RegraDeNegocioException("Não foi possível gerar uma matrícula única. Tente novamente!!");
+        }
 
+        private async Task<Aluno> ObterAlunoAtivoOuLancarErroAsync(int id)
+        {
+            var aluno = await _alunoRepository.ObterPorIdAsync(id);
+            if (aluno == null)
+                throw new EntidadeNaoEncontradaException("O aluno não foi encontrado.");
+            return aluno;
+        }
+
+        private async Task<Aluno> ObterAlunoInativoOuLancarErroAsync(int id)
+        {
+            var aluno = await _alunoRepository.ObterInativoPorIdAsync(id);
+            if (aluno == null)
+                throw new EntidadeNaoEncontradaException("O aluno não foi encontrado.");
+            return aluno;
+        }
+
+        private async Task ValidarDadosAlunoAsync(DateOnly? dataNascimento, string? email, int? ignorarId = null)
+        {
+            ValidarDataNascimento(dataNascimento);
+
+            if (!string.IsNullOrEmpty(email))
+                if (await _alunoRepository.ExistePeloEmailAsync(email, ignorarId))
+                    throw new RegraDeNegocioException("Este e-mail já esta em uso.");
         }
 
         public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
-            ValidarDataNascimento(aluno.DataNascimento);
+            await ValidarDadosAlunoAsync(aluno.DataNascimento, aluno.Email);
 
             var cpfLimpo = await ValidarEProcessarCpfAsync(aluno.Cpf);
-
-            if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email))
-                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
 
             Aluno novoAluno = new Aluno
             {
@@ -89,19 +110,13 @@ namespace API.Service
 
         public async Task InativarAlunoAsync(int id)
         {
-            var alunoExistente = await _alunoRepository.ObterPorIdAsync(id);
-
-            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou inativar não foi encontrado.");
-            
+            await ObterAlunoAtivoOuLancarErroAsync(id);
             await _alunoRepository.InativarAsync(id);
         }
 
         public async Task ReativarAlunoAsync(int id)
         {
-            var alunoExistente = await _alunoRepository.ObterInativoPorIdAsync(id);
-
-            if (alunoExistente == null) throw new EntidadeNaoEncontradaException("O aluno que você tentou reativar não foi encontrado.");
-
+            await ObterAlunoInativoOuLancarErroAsync(id);
             await _alunoRepository.ReativarAsync(id);
         }
 
@@ -112,18 +127,12 @@ namespace API.Service
 
         public async Task AlterarAsync(AlterarAlunoDTO aluno)
         {
-            var alunoExistente = await _alunoRepository.ObterPorIdAsync(aluno.Id);
-
-            if (alunoExistente == null)
-                throw new EntidadeNaoEncontradaException("O aluno que você tentou editar não foi encontrado.");
+            var alunoExistente = await ObterAlunoAtivoOuLancarErroAsync(aluno.Id);
 
             if (!alunoExistente.Ativo)
                 throw new RegraDeNegocioException("Não é possivel editar um aluno inativo.");
 
-            ValidarDataNascimento(aluno.DataNascimento);
-
-            if (await _alunoRepository.ExistePeloEmailAsync(aluno.Email, aluno.Id))
-                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+            await ValidarDadosAlunoAsync(aluno.DataNascimento, aluno.Email, aluno.Id);
 
             alunoExistente.Nome = aluno.Nome;
             alunoExistente.Email = aluno.Email;
