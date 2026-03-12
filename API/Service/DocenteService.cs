@@ -17,10 +17,6 @@ public class DocenteService : IDocenteService
         _docenteRepository = docenteRepository;
         _disciplinaRepository = disciplinaRepository;
     }
-    public async Task<Docente> ObterPeloIdAsync(int id)
-    {
-        return await _docenteRepository.ObterPeloIdAsync(id);
-    }
 
     private async Task<string> ValidarEProcessarCpfAsync(string cpfSujo)
     {
@@ -44,18 +40,42 @@ public class DocenteService : IDocenteService
             throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
     }
 
+    private async Task<Docente> ObterDocenteAtivoOuLancarErroAsync(int id)
+    {
+        var docente = await _docenteRepository.ObterPeloIdAsync(id);
+        if (docente == null)
+            throw new EntidadeNaoEncontradaException("O docente não foi encontrado.");
+        return docente;
+    }
+
+    private async Task<Docente> ObterDocenteInativoOuLancarErroAsync(int id)
+    {
+        var docente = await _docenteRepository.ObterInativoPeloIdAsync(id);
+        if (docente == null)
+            throw new EntidadeNaoEncontradaException("O docente não foi encontrado.");
+        return docente;
+    }
+
+    private async Task ValidarDisciplinaSeInformadaAsync(int? disciplinaId)
+    {
+        if (disciplinaId.HasValue)
+            if (!await _disciplinaRepository.ExisteAtivaAsync(disciplinaId.Value))
+                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa.");
+    }
+
+    private async Task ValidarDadosDocenteAsync(DateOnly? dataNascimento, string? email, int? disciplinaId, int? ignorarId = null)
+    {
+        ValidarDataNascimento(dataNascimento);
+        await ValidarDisciplinaSeInformadaAsync(disciplinaId);
+
+        if (!string.IsNullOrEmpty(email))
+            if (await _docenteRepository.ExistePeloEmailAsync(email, ignorarId))
+                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+    }
+
     public async Task AdicionarDocenteAsync(DocenteInputDTO docente)
     {
-        ValidarDataNascimento(docente.DataNascimento);
-
-        if (await _docenteRepository.ExistePeloEmailAsync(docente.Email)) 
-            throw new RegraDeNegocioException("Este e-mail já esta em uso.");
-
-        if (docente.DisciplinaId.HasValue)
-        {
-            if (!await _disciplinaRepository.ExisteAtivaAsync(docente.DisciplinaId.Value))
-                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa");
-        }
+        await ValidarDadosDocenteAsync(docente.DataNascimento, docente.Email, docente.DisciplinaId);
 
         var cpfLimpo = await ValidarEProcessarCpfAsync(docente.Cpf);
 
@@ -74,20 +94,12 @@ public class DocenteService : IDocenteService
 
     public async Task InativarDocenteAsync(int id)
     {
-        var docente = await _docenteRepository.ObterPeloIdAsync(id);
-
-        if (docente == null) 
-            throw new EntidadeNaoEncontradaException("Erro: O docente a ser inativado não foi encontrado.");
-
+        await ObterDocenteAtivoOuLancarErroAsync(id);
         await _docenteRepository.InativarDocenteAsync(id);
     }
     public async Task ReativarDocenteAsync(int id)
     {
-        var docente = await _docenteRepository.ObterInativoPeloIdAsync(id);
-
-        if (docente == null) 
-            throw new EntidadeNaoEncontradaException("Erro: O docente a ser reativado não foi encontrado.");
-
+        await ObterDocenteInativoOuLancarErroAsync(id);
         await _docenteRepository.ReativarDocenteAsync(id);
     }
 
@@ -102,24 +114,9 @@ public class DocenteService : IDocenteService
 
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)
     {
-        var docenteExistente = await _docenteRepository.ObterPeloIdAsync(docente.Id);
+        var docenteExistente = await ObterDocenteAtivoOuLancarErroAsync(docente.Id);
 
-        if (docenteExistente == null)
-            throw new EntidadeNaoEncontradaException("O docente que você tentou editar não foi encontrado.");
-
-        if (!docenteExistente.Ativo)
-            throw new RegraDeNegocioException("Não é possivel editar um docente inativo.");
-
-        if (docente.DisciplinaId.HasValue)
-        {
-            if (!await _disciplinaRepository.ExisteAtivaAsync(docente.DisciplinaId.Value))
-                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa");
-        }
-
-        ValidarDataNascimento(docente.DataNascimento);
-
-        if (await _docenteRepository.ExistePeloEmailAsync(docente.Email, docente.Id)) 
-            throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+        await ValidarDadosDocenteAsync(docente.DataNascimento, docente.Email, docente.DisciplinaId, docente.Id);
 
         docenteExistente.Nome = docente.Nome;
         docenteExistente.DataNascimento = docente.DataNascimento;
@@ -127,5 +124,9 @@ public class DocenteService : IDocenteService
         docenteExistente.Email = docente.Email;
 
         await _docenteRepository.EditarDocenteAsync(docenteExistente);
+    }
+    public async Task<Docente> ObterPeloIdAsync(int id)
+    {
+        return await _docenteRepository.ObterPeloIdAsync(id);
     }
 }
