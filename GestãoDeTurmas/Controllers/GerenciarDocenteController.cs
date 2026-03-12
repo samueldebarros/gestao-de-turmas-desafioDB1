@@ -40,6 +40,7 @@ namespace GestãoDeTurmas.Controllers
                 TotalPaginas = docentesPaginados.TotalPaginas,
                 TotalResultados = docentesPaginados.TotalResultados,
                 TemProximaPagina = docentesPaginados.TemProximaPagina,
+                TamanhoPagina = docentesPaginados.TamanhoPagina,
                 TemPaginaAnterior = docentesPaginados.TemPaginaAnterior
             };
 

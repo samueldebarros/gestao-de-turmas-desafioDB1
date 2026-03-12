@@ -1,5 +1,8 @@
 ﻿@model GestãoDeTurmas.Models.Disciplina.GerenciarDisciplinaViewModel
-
+@{
+    var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
+    var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
+}
 
 <link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
 
@@ -144,11 +147,11 @@
         }
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex gap-2">
-                <a role="button" class="btn btn-primary" asp-controller="GerenciarDisciplina" asp-action="Adicionar">Adicionar</a>
-                <a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
+                <a role="button" class="btn btn-primary btn-acao" asp-controller="GerenciarDisciplina" asp-action="Adicionar">Adicionar</a>
+                <a class="btn btn-outline-secondary btn-acao" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
             </div>
 
-            <small class="text-muted">Resultados: @Model.TotalResultados</small>
+            <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
 
             @if (Model.TotalPaginas > 1)
             {

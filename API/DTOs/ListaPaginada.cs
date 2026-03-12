@@ -4,11 +4,13 @@ public class ListaPaginada<T> : List<T>
     public int PaginaAtual {  get; private set; }
     public int TotalPaginas { get; private set; }
     public int TotalResultados { get; private set; }
+    public int TamanhoPagina { get; private set; }
 
     public ListaPaginada(List<T> lista, int contagem, int paginaAtual, int tamanhoPagina)
     {
         PaginaAtual = paginaAtual;
         TotalResultados = contagem;
+        TamanhoPagina = tamanhoPagina;
         TotalPaginas = (int)Math.Ceiling(contagem / (double)tamanhoPagina);
 
         this.AddRange(lista);
