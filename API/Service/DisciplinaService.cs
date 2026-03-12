@@ -17,12 +17,9 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task AdicionarDisciplinaAsync(DisciplinaInputDTO disciplina)
     {
-        ValidarCargaHoraria(disciplina.CargaHoraria);
-
         var nomeTratado = disciplina.Nome.Trim();
 
-        if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado))
-            throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
+        await ValidarDadosDisciplinaAsync(nomeTratado, disciplina.CargaHoraria);
 
         var novaDisciplina = new Disciplina()
         {
@@ -37,20 +34,14 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task EditarDisciplinaAsync(EditarDisciplinaDTO disciplinaDTO)
     {
-        var disciplinaExistente = await _disciplinaRepository.ObterDisciplinaPorIdAsync(disciplinaDTO.Id);
-
-        if (disciplinaExistente == null)
-            throw new EntidadeNaoEncontradaException("A disciplina que você tentou editar não foi encontrada.");
+        var disciplinaExistente = await ObterDisciplinaAtivaOuLancarErroAsync(disciplinaDTO.Id);
 
         if (!disciplinaExistente.Ativo)
             throw new RegraDeNegocioException("Não é possivel editar uma disciplina inativada.");
 
-        ValidarCargaHoraria(disciplinaDTO.CargaHoraria);
-
         var nomeTratado = disciplinaDTO.Nome.Trim();
 
-        if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado, disciplinaDTO.Id))
-            throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
+        await ValidarDadosDisciplinaAsync(nomeTratado, disciplinaDTO.CargaHoraria, disciplinaDTO.Id);
 
         disciplinaExistente.Nome = nomeTratado;
         disciplinaExistente.CargaHoraria = disciplinaDTO.CargaHoraria;
@@ -61,9 +52,7 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task InativarDisciplinaAsync(int id)
     {
-        var disciplina = await ObterDisciplinaPorIdAsync(id);
-        if (disciplina == null) 
-            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
+        await ObterDisciplinaAtivaOuLancarErroAsync(id);
 
         if (await _disciplinaRepository.PossuiDocentesAtivosAsync(id))
             throw new RegraDeNegocioException("Não é possivel inativar uma disciplina com docentes ativos vinculados.");
@@ -97,18 +86,39 @@ public class DisciplinaService : IDisciplinaService
 
     public async Task ReativarDisciplinaAsync(int id)
     {
-        var disciplina = await ObterInativoPorIdAsync(id);
-        if (disciplina == null) 
-            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
-
+        await ObterDisciplinaInativaOuLancarErroAsync(id);
         await _disciplinaRepository.ReativarDisciplinaAsync(id);
     }
 
-    public void ValidarCargaHoraria(int cargaHoraria)
+    private void ValidarCargaHoraria(int cargaHoraria)
     {
         if (cargaHoraria <= 0)
             throw new RegraDeNegocioException("Uma disciplina não pode ter carga horária igual ou inferior a 0.");
         if (cargaHoraria > 999)
             throw new RegraDeNegocioException("A carga horária informada é inválida.");
+    }
+
+    private async Task<Disciplina> ObterDisciplinaAtivaOuLancarErroAsync(int id)
+    {
+        var disciplina = await _disciplinaRepository.ObterDisciplinaPorIdAsync(id);
+        if (disciplina == null)
+            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
+        return disciplina;
+    }
+
+    private async Task<Disciplina> ObterDisciplinaInativaOuLancarErroAsync(int id)
+    {
+        var disciplina = await _disciplinaRepository.ObterInativoPorIdAsync(id);
+        if (disciplina == null)
+            throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
+        return disciplina;
+    }
+
+    private async Task ValidarDadosDisciplinaAsync(string nomeTratado, int cargaHoraria, int? ignorarId = null)
+    {
+        ValidarCargaHoraria(cargaHoraria);
+
+        if (await _disciplinaRepository.ExistePeloNomeAsync(nomeTratado, ignorarId))
+            throw new RegraDeNegocioException("Já existe uma Disciplina com este nome!");
     }
 }
