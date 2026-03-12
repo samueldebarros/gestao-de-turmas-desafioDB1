@@ -5,217 +5,217 @@
 <link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
 
 <div class="card">
-	<div class="card-body">
-		<h1>Gerenciar docentes</h1> <br />
+    <div class="card-body">
+        <h1>Gerenciar docentes</h1> <br />
 
-		@if (TempData["MensagemErro"] != null)
-		{
-			<div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        @if (TempData["MensagemErro"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
 
-				<i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
 
-				<strong>Atenção!</strong> @TempData["MensagemErro"]
+                <strong>Atenção!</strong> @TempData["MensagemErro"]
 
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-			</div>
-		}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        }
 
-		@if (TempData["MensagemSucesso"] != null)
-		{
-			<div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        @if (TempData["MensagemSucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
 
-				<i class="bi bi-check-circle-fill me-2"></i>
+                <i class="bi bi-check-circle-fill me-2"></i>
 
-				<strong>Sucesso!</strong> @TempData["MensagemSucesso"]
+                <strong>Sucesso!</strong> @TempData["MensagemSucesso"]
 
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-			</div>
-		}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        }
 
-		<form asp-action="Index" method="get">
-			<div class="row mb-3 align-items-end">
+        <form asp-action="Index" method="get">
+            <div class="row mb-3 align-items-end">
 
-				<div class="col-4">
-					<label class="form-label">Pesquisar</label>
-					<input type="text" name="pesquisa" class="form-control"
-						   placeholder="Nome, CPF ou Disciplina" value="@ViewBag.PesquisaAtual" />
-				</div>
+                <div class="col-4">
+                    <label class="form-label">Pesquisar</label>
+                    <input type="text" name="pesquisa" class="form-control"
+                           placeholder="Nome, CPF ou Disciplina" value="@ViewBag.PesquisaAtual" />
+                </div>
 
-				<div class="col-3">
-					<label class="form-label">Status</label>
-					<select name="ativo" class="form-select">
-						<option value="">Todos</option>
-						<!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
-						<!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
-					</select>
-				</div>
+                <div class="col-3">
+                    <label class="form-label">Status</label>
+                    <select name="ativo" class="form-select">
+                        <option value="">Todos</option>
+                        <!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
+                        <!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
+                    </select>
+                </div>
 
-				<div class="col-5">
-					<button type="submit" class="btn btn-primary w-100"> Filtrar </button>
-				</div>
-			</div>
+                <div class="col-5">
+                    <button type="submit" class="btn btn-primary w-100"> Filtrar </button>
+                </div>
+            </div>
 
-			@if (ViewBag.PesquisaAtual != null || ViewBag.SexoAtual != null || ViewBag.AtivoAtual != null)
-			{
-				<div class="row mb-3">
-					<div class="col-12">
-						<small>Filtros aplicados.</small>
-						<a asp-action="Index" class="text-danger text-decoration-none">Limpar tudo ✖</a>
-					</div>
-				</div>
-			}
-		</form>
+            @if (ViewBag.PesquisaAtual != null || ViewBag.SexoAtual != null || ViewBag.AtivoAtual != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <small>Filtros aplicados.</small>
+                        <a asp-action="Index" class="text-danger text-decoration-none">Limpar tudo ✖</a>
+                    </div>
+                </div>
+            }
+        </form>
 
-		@if (!Model.DocentesCadastrados.Any())
-		{
-			<div class="text-center py-5">
-				<i class="bi bi-search fs-1 text-muted"></i>
-				<h4 class="mt-3">Nenhum docente encontrado</h4>
-				<p class="text-muted">Tente ajustar seus filtros de pesquisa.</p>
-				<a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
-			</div>
-		} 
-		else
-		{
-		<table class="text-center">
-			<thead>
-				<tr class="text-center">
-					<th>Nome</th>
-					<th>Disciplina</th>
-					<th>CPF</th>
-					<th>Email</th>
-					<th>Data de Nascimento</th>
-					<th>Status</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				
-				@foreach (var docente in Model.DocentesCadastrados)
-				{
-					<tr>
-						<td>@docente.Nome</td>
-						<td>@(docente.NomeDisciplina ?? "Não vinculada")</td>
-						<td class="text-nowrap">@docente.CpfFormatado</td>
-						<td>@(docente.Email ?? "-")</td>
-						<td>@docente.DataNascimento.ToString("dd/MM/yyyy")</td>
-						<td>
-							@if (docente.Ativo)
-							{
-								<span class="badge bg-success">Ativo</span>
-							}
-							else
-							{
-								<span class="badge bg-danger">Inativo</span>
-							}
-						</td>
+        @if (!Model.DocentesCadastrados.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-search fs-1 text-muted"></i>
+                <h4 class="mt-3">Nenhum docente encontrado</h4>
+                <p class="text-muted">Tente ajustar seus filtros de pesquisa.</p>
+                <a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
+            </div>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Disciplina</th>
+                        <th>CPF</th>
+                        <th>Email</th>
+                        <th>Data de Nascimento</th>
+                        <th class="text-center">Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
 
-						@if (docente.Ativo)
-						{
-							<td><a role="button" class="btn btn-primary w-100" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
-							<td>
-								<form asp-action="Inativar" asp-route-id="@docente.Id" method="post">
-									<input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-									<input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-									<input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-									<button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
-										Inativar
-									</button>
-								</form>
-							</td>
-						}
-						else
-						{
-							<td colspan="2" class="text-center">
-								<form asp-action="Reativar" asp-route-id="@docente.Id" method="post">
-									<input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-									<input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-									<input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-									<button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
-										Reativar
-									</button>
-								</form>
-							</td>
-						}
-					</tr>
-				}
-				
-			</tbody>
-		</table>
-		}
-		<div class="d-flex justify-content-between align-items-center mb-3">
-			<div class="d-flex gap-2">
-				<a role="button" class="btn btn-primary" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar</a>
-				<a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
-			</div>
+                    @foreach (var docente in Model.DocentesCadastrados)
+                    {
+                        <tr>
+                            <td>@docente.Nome</td>
+                            <td>@(docente.NomeDisciplina ?? "Não vinculada")</td>
+                            <td class="text-nowrap">@docente.CpfFormatado</td>
+                            <td>@(docente.Email ?? "-")</td>
+                            <td>@docente.DataNascimento.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                @if (docente.Ativo)
+                                {
+                                    <span class="badge bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inativo</span>
+                                }
+                            </td>
 
-			<small class="text-muted">Resultados: @Model.TotalResultados</small>
+                            @if (docente.Ativo)
+                            {
+                                <td><a role="button" class="btn btn-primary w-100" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
+                                <td>
+                                    <form asp-action="Inativar" asp-route-id="@docente.Id" method="post">
+                                        <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
+                                        <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+                                        <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+                                            Inativar
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="2" class="text-center">
+                                    <form asp-action="Reativar" asp-route-id="@docente.Id" method="post">
+                                        <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
+                                        <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
+                                        <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                        <button type="submit" class="btn btn-success w-100" onclick="return confirm('Tem certeza?')">
+                                            Reativar
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        </tr>
+                    }
 
-			@if (Model.TotalPaginas > 1)
-			{
-				<nav aria-label="Navegação de página">
-					<ul class="pagination mb-0">
+                </tbody>
+            </table>
+        }
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-2">
+                <a role="button" class="btn btn-primary" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar</a>
+                <a class="btn btn-primary" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
+            </div>
 
-						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="1"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								&lt&lt
-							</a>
-						</li>
+            <small class="text-muted">Resultados: @Model.TotalResultados</small>
 
-						<li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="@(Model.PaginaAtual - 1)"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								&lt
-							</a>
-						</li>
+            @if (Model.TotalPaginas > 1)
+            {
+                <nav aria-label="Navegação de página">
+                    <ul class="pagination mb-0">
 
-						@for (int i = 1; i <= Model.TotalPaginas; i++)
-						{
-							<li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
-								<a class="page-link"
-								   asp-action="Index"
-								   asp-route-pagina="@i"
-								   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-								   asp-route-sexo="@ViewBag.SexoAtual"
-								   asp-route-ativo="@ViewBag.AtivoAtual">
-									@i
-								</a>
-							</li>
-						}
+                        <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="1"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                &lt&lt
+                            </a>
+                        </li>
 
-						<li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="@(Model.PaginaAtual + 1)"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-sexo="@ViewBag.SexoAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								&gt
-							</a>
-						</li>
+                        <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@(Model.PaginaAtual - 1)"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                &lt
+                            </a>
+                        </li>
 
-						<li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
-							<a class="page-link"
-							   asp-action="Index"
-							   asp-route-pagina="@(Model.TotalPaginas)"
-							   asp-route-pesquisa="@ViewBag.PesquisaAtual"
-							   asp-route-sexo="@ViewBag.SexoAtual"
-							   asp-route-ativo="@ViewBag.AtivoAtual">
-								&gt&gt
-							</a>
-						</li>
+                        @for (int i = 1; i <= Model.TotalPaginas; i++)
+                        {
+                            <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-pagina="@i"
+                                   asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                                   asp-route-sexo="@ViewBag.SexoAtual"
+                                   asp-route-ativo="@ViewBag.AtivoAtual">
+                                    @i
+                                </a>
+                            </li>
+                        }
 
-					</ul>
-				</nav>
-			}
-		</div>
-	</div>
+                        <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@(Model.PaginaAtual + 1)"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-sexo="@ViewBag.SexoAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                &gt
+                            </a>
+                        </li>
+
+                        <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pagina="@(Model.TotalPaginas)"
+                               asp-route-pesquisa="@ViewBag.PesquisaAtual"
+                               asp-route-sexo="@ViewBag.SexoAtual"
+                               asp-route-ativo="@ViewBag.AtivoAtual">
+                                &gt&gt
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
 </div>

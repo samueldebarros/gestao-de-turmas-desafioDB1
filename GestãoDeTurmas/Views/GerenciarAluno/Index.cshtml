@@ -90,16 +90,16 @@
         }
         else
         {
-            <table class="text-center">
+            <table>
                 <thead>
-                    <tr class="text-center">
+                    <tr>
                         <th>Matricula</th>
                         <th>Nome</th>
                         <th>CPF</th>
                         <th>Email</th>
                         <th>Data de Nascimento</th>
-                        <th>Sexo</th>
-                        <th>Status</th>
+                        <th class="text-center">Sexo</th>
+                        <th class="text-center">Status</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -113,8 +113,8 @@
                             <td class="text-nowrap">@aluno.CpfFormatado</td>
                             <td>@(aluno.Email ?? "-")</td>
                             <td>@aluno.DataNascimento.ToString("dd/MM/yyyy")</td>
-                            <td>@aluno.Sexo</td>
-                            <td>
+                            <td class="text-center">@aluno.Sexo</td>
+                            <td class="text-center">
                                 @if (aluno.Ativo)
                                 {
                                     <span class="badge bg-success">Ativo</span>
