@@ -64,13 +64,14 @@ namespace GestãoDeTurmas.Controllers
                 var alunoDto = model.ToDTO();
 
                 await _alunoService.AdicionarAlunoAsync(alunoDto);
+                TempData["MensagemSucesso"] = "Aluno cadastrado com sucesso!";
 
                 return RedirectToAction(nameof(Index));
             }
             catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(nameof(Adicionar), model);
+                return View(model);
             }
 
         }
@@ -82,6 +83,7 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _alunoService.InativarAlunoAsync(id);
+                TempData["MensagemSucesso"] = "Aluno inativado com sucesso!";
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
             } catch (EntidadeNaoEncontradaException ex)
             {
@@ -98,6 +100,7 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _alunoService.ReativarAlunoAsync(id);
+                TempData["MensagemSucesso"] = "Aluno reativado com sucesso!";
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
             }
             catch (EntidadeNaoEncontradaException ex)
@@ -129,6 +132,7 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _alunoService.AlterarAsync(alunoAlterado);
+                TempData["MensagemSucesso"] = "Aluno editado com sucesso!";
                 return RedirectToAction(nameof(Index));
             } catch (RegraDeNegocioException ex)
             {

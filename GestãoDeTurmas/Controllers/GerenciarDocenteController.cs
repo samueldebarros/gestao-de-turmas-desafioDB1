@@ -68,7 +68,7 @@ namespace GestãoDeTurmas.Controllers
                 var docenteDTO = model.ToDTO();
 
                 await _docenteService.AdicionarDocenteAsync(docenteDTO);
-
+                TempData["MensagemSucesso"] = "Docente cadastrado com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
             catch (RegraDeNegocioException ex)
@@ -98,14 +98,6 @@ namespace GestãoDeTurmas.Controllers
 
             if (!ModelState.IsValid)
             {
-                foreach (var entry in ModelState)
-                {
-                    foreach (var error in entry.Value.Errors)
-                    {
-                        Console.WriteLine($"Campo: {entry.Key} | Erro: {error.ErrorMessage}");
-                    }
-                }
-                Console.WriteLine("Passei por aqui Editar controller erro");
                 await PopularDisciplinasAsync();
                 return View(nameof(Editar), viewModel);
             }
@@ -113,8 +105,8 @@ namespace GestãoDeTurmas.Controllers
             var docenteAlterado = viewModel.ToEditarDTO();
             try
             {
-                Console.WriteLine("Passei por aqui Editar controller");
                 await _docenteService.EditarDocenteAsync(docenteAlterado);
+                TempData["MensagemSucesso"] = "Docente editado com sucesso!";
                 return RedirectToAction(nameof(Index));
             } 
             catch (RegraDeNegocioException ex)
@@ -138,6 +130,7 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _docenteService.InativarDocenteAsync(id);
+                TempData["MensagemSucesso"] = "Docente inativado com sucesso!";
                 return RedirectToAction(nameof(Index), new {pagina, pesquisa, ativo});
             }
             catch (EntidadeNaoEncontradaException ex)
@@ -155,6 +148,7 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _docenteService.ReativarDocenteAsync(id);
+                TempData["MensagemSucesso"] = "Docente reativado com sucesso!";
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
             catch (EntidadeNaoEncontradaException ex)
