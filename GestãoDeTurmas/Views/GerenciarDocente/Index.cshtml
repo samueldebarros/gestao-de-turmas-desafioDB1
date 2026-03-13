@@ -115,13 +115,13 @@
 
                             @if (docente.Ativo)
                             {
-                                <td><a role="button" class="btn btn-primary w-100" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
+                                <td><a role="button" class="btn btn-primary btn-acao" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
                                 <td>
                                     <form asp-action="Inativar" asp-route-id="@docente.Id" method="post">
                                         <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                         <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
                                         <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-                                        <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Tem certeza?')">
+                                        <button type="submit" class="btn btn-danger btn-acao" onclick="return confirm('Tem certeza?')">
                                             Inativar
                                         </button>
                                     </form>
