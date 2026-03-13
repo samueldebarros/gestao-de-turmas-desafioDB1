@@ -1,4 +1,4 @@
-﻿ @model GestãoDeTurmas.Models.Docente.DocenteInputViewModel
+﻿@model GestãoDeTurmas.Models.Docente.DocenteInputViewModel
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
@@ -8,45 +8,45 @@
     </script>
 }
 
-<div class="card">
-    <div class="card-body">
-        <form method="post">
-            <h1>Adicionar Docente</h1>
 
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<form method="post" class="form-container">
+    <h1>Adicionar Docente</h1>
 
-            <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" asp-for="@Model.Nome" class="form-control" placeholder="Novo nome">
-                <span asp-validation-for="@Model.Nome" class="text-danger"></span>
-            </div>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-            <div class="form-group">
-                <label for="cpf">CPF</label>
-                <input type="text" asp-for="@Model.Cpf" class="form-control mascara-cpf" placeholder="000.000.000-00">
-                <span asp-validation-for="@Model.Cpf" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" asp-for="@Model.Email" class="form-control" placeholder="exemplo@email.com">
-            </div>
-
-            <div class="form-group">
-                <label for="disciplina">Disciplina</label>
-                <select asp-for="DisciplinaId" asp-items="ViewBag.Disciplinas" class="form-select">
-                    <option value="">Nenhuma</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="dataNascimento">Data de Nascimento</label>
-                <input type="date" asp-for="@Model.DataNascimento" class="form-control">
-                <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
-            </div>
-            <br />
-            <button type="submit" class="btn btn-primary">Adicionar</button>
-            <a class="btn btn-primary" asp-controller="GerenciarDocente" asp-action="Index">Voltar</a>
-        </form>
+    <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" asp-for="@Model.Nome" class="form-control" placeholder="Novo nome">
+        <span asp-validation-for="@Model.Nome" class="text-danger"></span>
     </div>
-</div>
+
+    <div class="form-group">
+        <label for="cpf">CPF</label>
+        <input type="text" asp-for="@Model.Cpf" class="form-control mascara-cpf" placeholder="000.000.000-00">
+        <span asp-validation-for="@Model.Cpf" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" asp-for="@Model.Email" class="form-control" placeholder="exemplo@email.com">
+    </div>
+
+    <div class="form-group">
+        <label for="disciplina">Disciplina</label>
+        <select asp-for="DisciplinaId" asp-items="ViewBag.Disciplinas" class="form-select">
+            <option value="">Nenhuma</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="dataNascimento">Data de Nascimento</label>
+        <input type="date" asp-for="@Model.DataNascimento" class="form-control">
+        <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="d-flex gap-2">
+        <button type="submit" class="botao botao-primario botao-acao">Adicionar</button>
+        <a class="btn btn-outline-secondary botao-acao" asp-controller="GerenciarDocente" asp-action="Index">Voltar</a>
+    </div>
+</form>
+

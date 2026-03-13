@@ -1,3 +1,53 @@
+:root {
+    /* cores primarias */
+    --cor-identidade: #b91c1c;
+    --cor-primaria: #0d6efd;
+    --cor-primaria-hover: #0d64e4;
+    --cor-primaria-texto: #ffffff;
+    --cor-perigo: #c53030;
+    --cor-perigo-hover: #a82828;
+    --cor-perigo-suave: #fef2f2;
+    --cor-sucesso: #1a7a45;
+    --cor-sucesso-hover: #155f37;
+    --cor-sucesso-suave: #f0fdf4;
+    --cor-aviso: #ca8a04;
+    --cor-secundaria: #6b7280;
+    --cor-secundaria-hover: #4b5563;
+    /* superficie e fundo */
+    --cor-fundo: #f4f4f5;
+    --cor-superficie: #ffffff;
+    --cor-borda: #e4e4e7;
+    /*texto*/
+    --cor-texto: #1a1a1a;
+    --cor-texto-suave: #6b7280;
+    /*espaçamento*/
+    --raio-borda: 6px;
+    --sombra-card: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+
+    .btn-primary {
+        --bs-btn-bg: var(--cor-acao-primaria);
+        --bs-btn-border-color: var(--cor-acao-primaria);
+    }
+
+    .btn-danger {
+        --bs-btn-bg: var(--cor-perigo);
+        --bs-btn-border-color: var(--cor-perigo);
+        --bs-btn-hover-bg: var(--cor-perigo-hover);
+        --bs-btn-hover-border-color: var(--cor-perigo-hover);
+        --bs-btn-active-bg: var(--cor-perigo-hover);
+    }
+
+    .btn-success {
+        --bs-btn-bg: var(--cor-sucesso);
+        --bs-btn-border-color: var(--cor-sucesso);
+        --bs-btn-hover-bg: var(--cor-sucesso-hover);
+        --bs-btn-hover-border-color: var(--cor-sucesso-hover);
+        --bs-btn-active-bg: var(--cor-sucesso-hover);
+    }
+}
+
+/* modificações gerais */
+
 html {
   font-size: 14px;
 }
@@ -8,26 +58,48 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+section {
+    border: 1px solid #000;
+    padding: 10px
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+thead tr {
+    background-color: var(--cor-identidade);
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+}
+
+th, td {
+    padding: 12px 15px;
+}
+
+input {
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px
 }
 
 .badge {
@@ -35,10 +107,162 @@ body {
     text-align: center;
 }
 
-.btn-filtrar{
-    width: 120px;
+.navbar-cor{
+    color: var(--cor-identidade);
+}
+/* botoes */
+.botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    border: 1px transparent;
+    border-radius: var(--raio-borda);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    user-select: none;
+}
+    .btn-base:disabled,
+    .btn-base.disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+/* botoes especificos */
+.botao-primario {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria-hover);
+    color: #fff;
 }
 
-.btn-acao {
+    .botao-primario:hover {
+        background-color: var(--cor-primaria-hover);
+        border-color: var(--cor-primaria-hover);
+        color: #fff;
+    }
+
+.botao-perigo {
+    background-color: var(--cor-perigo);
+    border-color: var(--cor-perigo);
+    color: #fff;
+}
+
+    .botao-perigo:hover {
+        background-color: var(--cor-perigo-hover);
+        border-color: var(--cor-perigo-hover);
+        color: #fff;
+    }
+
+.botao-sucesso {
+    background-color: var(--cor-sucesso);
+    border-color: var(--cor-sucesso);
+    color: #fff;
+}
+
+    .botao-sucesso:hover {
+        background-color: var(--cor-sucesso-hover);
+        border-color: var(--cor-sucesso-hover);
+        color: #fff;
+    }
+
+.botao-secundario {
+    background-color: transparent;
+    border-color: var(--cor-secundaria);
+    color: var(--cor-secundaria);
+}
+
+    .botao-secundario:hover {
+        background-color: var(--cor-secundaria);
+        border-color: var(--cor-secundaria);
+        color: #fff;
+    }
+
+.botao-filtrar {
+    width: 120px;
+    height: 33px;
+    border-radius: 5px;
+    background-color: var(--cor-secundaria);
+}
+
+.botao-filtrar:hover {
+    width: 120px;
+    background-color: var(--cor-secundaria-hover);
+}
+
+.botao-acao {
     width: 100px;
 }
+
+.botao-acao-tabela {
+    width: 80px;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* containers */
+
+.form-container {
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    box-shadow: var(--sombra-card);
+    padding: 2rem;
+    max-width: 680px;       
+    margin: 1.5rem auto;
+}
+
+.table-gestao {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+    .table-gestao tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+.col-acao-tabela {
+    width: 90px;
+}
+
+/* alertas */
+.alerta {
+    padding: 0.7rem 1.0rem;
+    border-radius: var(--raio-borda);
+    border-left: 4px solid;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alerta-erro {
+    background-color: var(--cor-perigo-suave);
+    border-color: var(--cor-perigo);
+    color: var(--cor-perigo);
+}
+
+.alerta-sucesso {
+    background-color: var(--cor-sucesso-suave);
+    border-color: var(--cor-sucesso);
+    color: var(--cor-sucesso);
+}
+
+.alerta-fechar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: inherit;
+    opacity: 0.6;
+    padding: 0 0 0 1rem;
+}
+

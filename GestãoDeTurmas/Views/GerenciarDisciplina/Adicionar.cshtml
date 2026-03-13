@@ -3,34 +3,33 @@
 @{
 }
 
-<div class="card">
-    <div class="card-body">
-        <form method="post">
-            <h1>Adicionar Disciplina</h1>
 
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<form method="post" class="form-container">
+    <h1>Adicionar Disciplina</h1>
 
-            <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" asp-for="@Model.Nome" class="form-control" placeholder="Novo nome">
-                <span asp-validation-for="@Model.Nome" class="text-danger"></span>
-            </div>
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-            <div class="form-group">
-                <label for="cpf">Carga Horária</label>
-                <input type="number" asp-for="@Model.CargaHoraria" class="form-control" placeholder="Carga Horária">
-                <span asp-validation-for="@Model.CargaHoraria" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="text">Ementa</label>
-                <input type="text" asp-for="@Model.Ementa" class="form-control">
-                <span asp-validation-for="@Model.Ementa" class="text-danger"></span>
-            </div>
-
-            <br />
-            <button type="submit" class="btn btn-primary">Adicionar</button>
-            <a class="btn btn-primary" asp-controller="GerenciarDisciplina" asp-action="Index">Voltar</a>
-        </form>
+    <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" asp-for="@Model.Nome" class="form-control" placeholder="Novo nome">
+        <span asp-validation-for="@Model.Nome" class="text-danger"></span>
     </div>
-</div>
+
+    <div class="form-group">
+        <label for="cpf">Carga Horária</label>
+        <input type="number" asp-for="@Model.CargaHoraria" class="form-control" placeholder="Carga Horária">
+        <span asp-validation-for="@Model.CargaHoraria" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="text">Ementa</label>
+        <input type="text" asp-for="@Model.Ementa" class="form-control">
+        <span asp-validation-for="@Model.Ementa" class="text-danger"></span>
+    </div>
+
+    <br />
+    <div class="d-flex gap-2">
+        <button type="submit" class="botao botao-primario botao-acao">Adicionar</button>
+        <a class="btn btn-outline-secondary botao-acao" asp-controller="GerenciarDisciplina" asp-action="Index">Voltar</a>
+    </div>
+</form>
