@@ -1,4 +1,5 @@
 ﻿using API.Service;
+using Common;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Disciplina;
@@ -10,7 +11,6 @@ namespace GestãoDeTurmas.Controllers;
 public class GerenciarDisciplinaController : Controller
 {
     private readonly IDisciplinaService _disciplinaService;
-    private const int TAMANHO_PAGINA = 5;
 
     public GerenciarDisciplinaController(IDisciplinaService disciplinaService)
     {
@@ -23,7 +23,7 @@ public class GerenciarDisciplinaController : Controller
         ViewBag.PesquisaAtual = pesquisa;
         ViewBag.AtivoAtual = ativo;
 
-        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, TAMANHO_PAGINA, pesquisa, ativo);
+        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo);
 
         if (pagina > listaDisciplinas.TotalPaginas && listaDisciplinas.TotalPaginas > 0)
             return RedirectToAction(nameof(Index), new { pagina = listaDisciplinas.TotalPaginas, pesquisa, ativo });

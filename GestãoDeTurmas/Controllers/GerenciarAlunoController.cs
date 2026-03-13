@@ -1,4 +1,5 @@
 ﻿using API.Service;
+using Common;
 using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
@@ -10,7 +11,6 @@ namespace GestãoDeTurmas.Controllers
     public class GerenciarAlunoController : Controller
     {
         private readonly IAlunoService _alunoService;
-        private const int TAMANHO_PAGINA = 10;
 
         public GerenciarAlunoController(IAlunoService alunoService)
         {
@@ -24,7 +24,7 @@ namespace GestãoDeTurmas.Controllers
             ViewBag.SexoAtual = sexo;
             ViewBag.AtivoAtual = ativo;
 
-            var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, TAMANHO_PAGINA, pesquisa, sexo, ativo);
+            var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, sexo, ativo);
 
             if(pagina > alunosPaginados.TotalPaginas && alunosPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new {pagina = alunosPaginados.TotalPaginas, pesquisa, sexo, ativo});

@@ -1,4 +1,5 @@
 ﻿using API.Service;
+using Common;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Docente;
@@ -11,7 +12,6 @@ namespace GestãoDeTurmas.Controllers
     {
         private readonly IDocenteService _docenteService;
         private readonly IDisciplinaService _disciplinaService;
-        private const int TAMANHO_PAGINA = 5;
         public GerenciarDocenteController(IDocenteService docenteService, IDisciplinaService disciplinaService)
         {
             _docenteService = docenteService;
@@ -24,7 +24,7 @@ namespace GestãoDeTurmas.Controllers
             ViewBag.PesquisaAtual = pesquisa;
             ViewBag.AtivoAtual = ativo;
 
-            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, TAMANHO_PAGINA,pesquisa,ativo);
+            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa,ativo);
 
             if (pagina > docentesPaginados.TotalPaginas && docentesPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new { pagina = docentesPaginados.TotalPaginas, pesquisa, ativo });
