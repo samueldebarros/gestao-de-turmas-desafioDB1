@@ -2,7 +2,7 @@
 @model AlunoEditarViewModel
 @{
 }
-<form method="post" class="form-container">
+<form method="post" asp-action="Editar" asp-controller="GerenciarAluno">
     <h1>Editar Aluno</h1>
 
     <div asp-validation-summary="ModelOnly" class="alerta alerta-erro" role="alert"></div>
@@ -49,6 +49,5 @@
     <br />
     <div class="d-flex gap-2">
         <button type="submit" class="botao botao-primario botao-acao">Editar</button>
-        <a class="btn btn-outline-secondary botao-acao" asp-controller="GerenciarAluno" asp-action="Index">Voltar</a>
     </div>
 </form>

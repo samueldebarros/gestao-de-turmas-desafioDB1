@@ -51,28 +51,26 @@ namespace GestãoDeTurmas.Controllers
         [HttpGet]
         public IActionResult Adicionar()
         {
-            return View(new AlunoInputViewModel());
+            return PartialView("_Adicionar",new AlunoInputViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adicionar(AlunoInputViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) return PartialView("_Adicionar",model);
             
             try
             {
                 var alunoDto = model.ToDTO();
 
                 await _alunoService.AdicionarAlunoAsync(alunoDto);
-                TempData["MensagemSucesso"] = "Aluno cadastrado com sucesso!";
-
-                return RedirectToAction(nameof(Index));
+                return Json(new {sucesso = true, mensagem = "Aluno cadastrado com sucesso!"});
             }
             catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(model);
+                return PartialView("_Adicionar",model);
             }
 
         }
@@ -119,31 +117,29 @@ namespace GestãoDeTurmas.Controllers
 
             AlunoEditarViewModel alunoEditarViewModel = aluno.ToEditarViewModel();
             
-            return View(alunoEditarViewModel);
+            return PartialView("_Editar",alunoEditarViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
-            if (!ModelState.IsValid) return View(nameof(Editar), model);
+            if (!ModelState.IsValid) return View("_Editar", model);
 
             var alunoAlterado = model.ToAlterarDTO();
 
             try
             {
                 await _alunoService.AlterarAsync(alunoAlterado);
-                TempData["MensagemSucesso"] = "Aluno editado com sucesso!";
-                return RedirectToAction(nameof(Index));
+                return Json(new {sucesso = true, mensagem = "Aluno editado com sucesso!"});
             } catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(model);
+                return PartialView("_Editar",model);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                return Json(new {sucesso = false, mensagem = ex.Message});
             }
 
         }

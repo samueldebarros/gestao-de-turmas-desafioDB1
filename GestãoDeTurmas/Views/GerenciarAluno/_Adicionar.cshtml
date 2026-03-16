@@ -1,15 +1,7 @@
 ﻿@model GestãoDeTurmas.Models.Aluno.AlunoInputViewModel
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.mascara-cpf').mask('000.000.000-00');
-        });
-    </script>
-}
 
+<form method="post" asp-action="Adicionar" asp-controller="GerenciarAluno">
 
-<form method="post" class="form-container">
     <h1>Adicionar aluno</h1>
 
     <div asp-validation-summary="ModelOnly" class="alerta alerta-erro" role="alert"></div>
@@ -64,7 +56,6 @@
     <br />
     <div class="d-flex gap-2">
         <button type="submit" class="botao botao-primario botao-acao">Adicionar</button>
-        <a class="btn btn-outline-secondary botao-acao" asp-controller="GerenciarAluno" asp-action="Index">Voltar</a>
     </div>
 </form>
 
