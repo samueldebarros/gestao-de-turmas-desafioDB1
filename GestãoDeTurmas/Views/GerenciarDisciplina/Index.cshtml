@@ -1,7 +1,22 @@
-﻿@model GestãoDeTurmas.Models.Disciplina.GerenciarDisciplinaViewModel
+﻿@using GestãoDeTurmas.Views.Shared
+@model GestãoDeTurmas.Models.Disciplina.GerenciarDisciplinaViewModel
 @{
     var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
     var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
+
+    var paginacao = new PaginacaoViewModel
+    {
+        PaginaAtual = Model.PaginaAtual,
+        TotalPaginas = Model.TotalPaginas,
+        TemPaginaAnterior = Model.TemPaginaAnterior,
+        TemProximaPagina = Model.TemProximaPagina,
+        Controller = "GerenciarDisciplina",
+        Action = "Index",
+        Filtros = PaginacaoViewModel.MontarFiltros(
+            ("pesquisa", ViewBag.PesquisaAtual),
+            ("ativo", ViewBag.AtivoAtual)
+        )
+    };
 }
 
 <link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
@@ -129,6 +144,8 @@
 
             <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
 
+            <partial name="_Paginacao" model="paginacao" />
+            @*
             @if (Model.TotalPaginas > 1)
             {
                 <nav aria-label="Navegação de página">
@@ -190,6 +207,7 @@
                     </ul>
                 </nav>
             }
+            *@
         </div>
     </div>
 </div>

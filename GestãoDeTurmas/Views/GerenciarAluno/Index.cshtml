@@ -1,9 +1,25 @@
 ﻿@using Common.Enums
+@using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Aluno.GerenciarAlunoViewModel
 
 @{
     var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
     var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
+
+    var paginacao = new PaginacaoViewModel
+    {
+        PaginaAtual = Model.PaginaAtual,
+        TotalPaginas = Model.TotalPaginas,
+        TemPaginaAnterior = Model.TemPaginaAnterior,
+        TemProximaPagina = Model.TemProximaPagina,
+        Controller = "GerenciarAluno",
+        Action = "Index",
+        Filtros = PaginacaoViewModel.MontarFiltros(
+        ("pesquisa", ViewBag.PesquisaAtual),
+        ("sexo", ViewBag.SexoAtual),
+        ("ativo", ViewBag.AtivoAtual)
+    )
+    };
 }
 
 <link href="~/css/gerenciarAlunos.css" rel="stylesheet" />
@@ -143,12 +159,15 @@
         }
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex gap-2">
-                <a role="button" class="botao botao-primario botao-acao" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar</a>     
+                <a role="button" class="botao botao-primario botao-acao" asp-controller="GerenciarAluno" asp-action="Adicionar">Adicionar</a>
                 <a class="btn btn-outline-secondary botao-acao" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
             </div>
 
             <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
 
+            <partial name="_Paginacao" model="paginacao" />
+
+            @*
             @if (Model.TotalPaginas > 1)
             {
                 <nav aria-label="Navegação de página">
@@ -215,7 +234,7 @@
                     </ul>
                 </nav>
             }
-            
+            *@
         </div>
     </div>
 </div>

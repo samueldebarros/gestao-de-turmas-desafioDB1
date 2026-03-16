@@ -1,0 +1,58 @@
+﻿@model GestãoDeTurmas.Views.Shared.PaginacaoViewModel
+
+@if (Model.TotalPaginas > 1)
+{
+    <nav aria-label="Navegação de página">
+        <ul class="pagination mb-0">
+
+            <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-all-route-data="@Model.FiltrosComPagina(1)">
+                    &lt;&lt;
+                </a>
+            </li>
+
+            <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-all-route-data="@Model.FiltrosComPagina(Model.PaginaAtual - 1)">
+                    &lt;
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPaginas; i++)
+            {
+                <li class="page-item @(i == Model.PaginaAtual ? "active" : "")">
+                    <a class="page-link"
+                       asp-controller="@Model.Controller"
+                       asp-action="@Model.Action"
+                       asp-all-route-data="@Model.FiltrosComPagina(i)">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-all-route-data="@Model.FiltrosComPagina(Model.PaginaAtual + 1)">
+                    &gt;
+                </a>
+            </li>
+
+            <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                <a class="page-link"
+                   asp-controller="@Model.Controller"
+                   asp-action="@Model.Action"
+                   asp-all-route-data="@Model.FiltrosComPagina(Model.TotalPaginas)">
+                    &gt;&gt;
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+}
