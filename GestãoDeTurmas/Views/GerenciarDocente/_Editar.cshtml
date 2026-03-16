@@ -1,10 +1,6 @@
 ﻿@model GestãoDeTurmas.Models.Docente.DocenteEditarViewModel
-@{
-}
 
-<form method="post" class="form-container">
-    <h1>Editar Docente</h1>
-
+<form method="post" asp-action="Editar" asp-controller="GerenciarDocente">
     <div asp-validation-summary="ModelOnly" class="alerta alerta-erro" role="alert"></div>
 
     <input type="hidden" asp-for="Id" />
@@ -34,7 +30,6 @@
     <br />
     <div class="d-flex gap-2">
         <button type="submit" class="botao botao-primario botao-acao">Editar</button>
-        <a class="btn btn-outline-secondary botao-acao" asp-controller="GerenciarDocente" asp-action="Index">Voltar</a>
     </div>
 </form>
 

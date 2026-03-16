@@ -51,7 +51,7 @@ namespace GestãoDeTurmas.Controllers
         public async Task<IActionResult> Adicionar()
         {
             await PopularDisciplinasAsync();
-            return View(new DocenteInputViewModel());
+            return PartialView("_Adicionar",new DocenteInputViewModel());
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace GestãoDeTurmas.Controllers
             if (!ModelState.IsValid)
             {
                 await PopularDisciplinasAsync();
-                return View(model);
+                return PartialView("_Adicionar",model);
             }
             
             try
@@ -69,14 +69,13 @@ namespace GestãoDeTurmas.Controllers
                 var docenteDTO = model.ToDTO();
 
                 await _docenteService.AdicionarDocenteAsync(docenteDTO);
-                TempData["MensagemSucesso"] = "Docente cadastrado com sucesso!";
-                return RedirectToAction(nameof(Index));
+                return Json(new {sucesso = true, mensagem = "Docente adicionado com sucesso!"});
             }
             catch (RegraDeNegocioException ex)
             {
                 await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty, ex.Message);
-                return View(nameof(Adicionar), model);
+                return PartialView("_Adicionar", model);
             }
         }
 
@@ -89,7 +88,7 @@ namespace GestãoDeTurmas.Controllers
             DocenteEditarViewModel viewModel = docente.ToEditarViewModel();
 
             await PopularDisciplinasAsync();
-            return View(viewModel);
+            return PartialView("_Editar",viewModel);
         }
 
         [HttpPost]
@@ -100,26 +99,24 @@ namespace GestãoDeTurmas.Controllers
             if (!ModelState.IsValid)
             {
                 await PopularDisciplinasAsync();
-                return View(nameof(Editar), viewModel);
+                return PartialView("_Editar", viewModel);
             }
 
             var docenteAlterado = viewModel.ToEditarDTO();
             try
             {
                 await _docenteService.EditarDocenteAsync(docenteAlterado);
-                TempData["MensagemSucesso"] = "Docente editado com sucesso!";
-                return RedirectToAction(nameof(Index));
+                return Json(new {sucesso = true, mensagem = "Docente editado com sucesso!"});
             } 
             catch (RegraDeNegocioException ex)
             {
                 await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty,ex.Message);
-                return View(viewModel);
+                return PartialView("_Editar",viewModel);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                return Json(new { sucesso = false, mensagem = ex.Message });
             }
 
         }

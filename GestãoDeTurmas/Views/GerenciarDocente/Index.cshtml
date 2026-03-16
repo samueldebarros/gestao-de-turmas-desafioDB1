@@ -107,7 +107,12 @@
 
                             @if (docente.Ativo)
                             {
-                                <td><a role="button" class="botao botao-primario botao-acao-tabela" asp-route-id="@docente.Id" asp-controller="GerenciarDocente" asp-action="Editar">Editar</a></td>
+                                <td>
+                                    <button class="botao botao-primario botao-acao-tabela"
+                                            onclick="abrirModal('@Url.Action("Editar", new { id = docente.Id })', 'Editar Docente')">
+                                        Editar
+                                    </button>
+                                </td>
                                 <td>
                                     <form asp-action="Inativar" asp-route-id="@docente.Id" method="post">
                                         <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
@@ -140,7 +145,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex gap-2">
-                <a role="button" class="botao botao-primario botao-acao" asp-controller="GerenciarDocente" asp-action="Adicionar">Adicionar</a>
+                <button class="botao botao-primario botao-acao" onclick="abrirModal('@Url.Action("Adicionar")', 'Novo Docente')">Adicionar</button>
                 <a class="btn btn-outline-secondary botao-acao" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
             </div>
 
@@ -214,6 +219,17 @@
                 </nav>
             }
             *@
+        </div>
+        <div class="modal fade" id="modal-formulario" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-titulo"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body" id="modal-body"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
