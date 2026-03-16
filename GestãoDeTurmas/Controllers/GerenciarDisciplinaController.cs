@@ -49,32 +49,31 @@ public class GerenciarDisciplinaController : Controller
     [HttpGet]
     public IActionResult Adicionar()
     {
-        return View(new DisciplinaInputViewModel());
+        return PartialView("_Adicionar",new DisciplinaInputViewModel());
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(DisciplinaInputViewModel model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid) return PartialView("_Adicionar",model);
 
         var disciplina = model.ToInputDTO();
         try
         {
             await _disciplinaService.AdicionarDisciplinaAsync(disciplina);
-            TempData["MensagemSucesso"] = "Disciplina cadastrada com sucesso!";
-            return RedirectToAction(nameof(Index));
+            return Json(new {sucesso = true, mensagem = "Disciplina adicionada com sucesso!"});
         }
         catch(RegraDeNegocioException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            return View(model);
+            return PartialView("_Adicionar",model);
 
         }
         catch (DbUpdateException)
         {
             ModelState.AddModelError(string.Empty, "Já existe uma disciplina com este nome.");
-            return View(model);
+            return View("_Adicionar",model);
         }
 
     }
@@ -87,31 +86,29 @@ public class GerenciarDisciplinaController : Controller
 
         var viewModel = disciplina.ToEditarViewModel();
 
-        return View(viewModel);
+        return PartialView("_Editar",viewModel);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(DisciplinaEditarViewModel viewModel)
     {
-        if (!ModelState.IsValid) return View(nameof(Editar), viewModel);
+        if (!ModelState.IsValid) return PartialView("_Editar", viewModel);
 
         var disciplina = viewModel.ToEditarDTO();
         try
         {
             await _disciplinaService.EditarDisciplinaAsync(disciplina);
-            TempData["MensagemSucesso"] = "Disciplina editada com sucesso!";
-            return RedirectToAction(nameof(Index));
+            return Json(new { sucesso = true, mensagem = "Disciplina editada com sucesso!" });
         }
         catch (RegraDeNegocioException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
-            return View(viewModel);
+            return PartialView("_Editar",viewModel);
         }
         catch (EntidadeNaoEncontradaException ex)
         {
-            TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index));
+            return Json(new { sucesso = false, mensagem = ex.Message });
         }
 
     }
