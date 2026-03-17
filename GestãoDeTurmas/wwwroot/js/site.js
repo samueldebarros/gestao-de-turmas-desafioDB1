@@ -46,5 +46,10 @@ document.getElementById('modal-formulario').addEventListener('submit', async fun
         }
     } else {
         modalBody.innerHTML = await response.text();
+
+        const campoCpf = modalBody.querySelector('.mascara-cpf');
+        if (campoCpf) {
+            $(campoCpf).mask('000.000.000-00');
+        }
     }
 });
