@@ -38,6 +38,11 @@ public class DocenteService : IDocenteService
         var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
         if (dataNascimento < dataMinimaAceitavel)
             throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
+
+        var dataMinima18Anos = DateOnly.FromDateTime(DateTime.Today).AddYears(-18);
+        if (dataNascimento > dataMinima18Anos)
+            throw new RegraDeNegocioException("O docente deve ter pelo menos 18 anos.");
+
     }
 
     private async Task<Docente> ObterDocenteAtivoOuLancarErroAsync(int id)
