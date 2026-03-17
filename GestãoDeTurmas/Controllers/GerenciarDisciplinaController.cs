@@ -62,7 +62,8 @@ public class GerenciarDisciplinaController : Controller
         try
         {
             await _disciplinaService.AdicionarDisciplinaAsync(disciplina);
-            return Json(new {sucesso = true, mensagem = "Disciplina adicionada com sucesso!"});
+            TempData["MensagemSucesso"] = "Disciplina adicionada com sucesso!";
+            return Json(new { sucesso = true });
         }
         catch(RegraDeNegocioException ex)
         {
@@ -99,7 +100,9 @@ public class GerenciarDisciplinaController : Controller
         try
         {
             await _disciplinaService.EditarDisciplinaAsync(disciplina);
-            return Json(new { sucesso = true, mensagem = "Disciplina editada com sucesso!" });
+
+            TempData["MensagemSucesso"] = "Disciplina editada com sucesso!";
+            return Json(new { sucesso = true });
         }
         catch (RegraDeNegocioException ex)
         {

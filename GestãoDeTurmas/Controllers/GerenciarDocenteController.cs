@@ -69,7 +69,8 @@ namespace GestãoDeTurmas.Controllers
                 var docenteDTO = model.ToDTO();
 
                 await _docenteService.AdicionarDocenteAsync(docenteDTO);
-                return Json(new {sucesso = true, mensagem = "Docente adicionado com sucesso!"});
+                TempData["MensagemSucesso"] = "Docente adicionado com sucesso!";
+                return Json(new {sucesso = true  });
             }
             catch (RegraDeNegocioException ex)
             {
@@ -106,7 +107,8 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _docenteService.EditarDocenteAsync(docenteAlterado);
-                return Json(new {sucesso = true, mensagem = "Docente editado com sucesso!"});
+                TempData["MensagemSucesso"] = "Docente editado com sucesso!";
+                return Json(new {sucesso = true });
             } 
             catch (RegraDeNegocioException ex)
             {

@@ -63,9 +63,10 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 var alunoDto = model.ToDTO();
-
                 await _alunoService.AdicionarAlunoAsync(alunoDto);
-                return Json(new {sucesso = true, mensagem = "Aluno cadastrado com sucesso!"});
+
+                TempData["MensagemSucesso"] = "Aluno cadastrado com sucesso!";
+                return Json(new {sucesso = true});
             }
             catch (RegraDeNegocioException ex)
             {
@@ -131,7 +132,9 @@ namespace GestãoDeTurmas.Controllers
             try
             {
                 await _alunoService.AlterarAsync(alunoAlterado);
-                return Json(new {sucesso = true, mensagem = "Aluno editado com sucesso!"});
+
+                TempData["MensagemSucesso"] = "Aluno editado com sucesso!";
+                return Json(new {sucesso = true});
             } catch (RegraDeNegocioException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);

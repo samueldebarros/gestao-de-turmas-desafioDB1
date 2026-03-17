@@ -1,8 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-const modal = new bootstrap.Modal(document.getElementById('modal-formulario'));
+﻿const modal = new bootstrap.Modal(document.getElementById('modal-formulario'));
 const modalBody = document.getElementById('modal-body');
 const modalTitulo = document.getElementById('modal-titulo');
 
@@ -39,6 +35,14 @@ document.getElementById('modal-formulario').addEventListener('submit', async fun
         if (json.sucesso) {
             modal.hide();
             location.reload();
+        } else
+        {
+            const alertaErro = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              ${json.mensagem}
+                              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                           </div>`;
+
+            modalBody.insertAdjacentHTML('afterbegin', alertaErro);
         }
     } else {
         modalBody.innerHTML = await response.text();
