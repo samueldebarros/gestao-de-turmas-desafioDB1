@@ -6,5 +6,5 @@ namespace Common;
 
 public static class Constantes
 {
-    public const int TAMANHO_PAGINA = 5;
+    public const int TAMANHO_PAGINA = 10;
 }

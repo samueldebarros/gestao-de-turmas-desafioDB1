@@ -8,28 +8,29 @@
                 <a class="link-pagina"
                    asp-controller="@Model.Controller"
                    asp-action="@Model.Action"
-                   asp-all-route-data="@Model.FiltrosComPagina(1)">
-                    &lt;&lt;
-                </a>
-            </li>
-            <li class="item-pagina @(Model.TemPaginaAnterior ? "" : "disabled")">
-                <a class="link-pagina"
-                   asp-controller="@Model.Controller"
-                   asp-action="@Model.Action"
                    asp-all-route-data="@Model.FiltrosComPagina(Model.PaginaAtual - 1)">
                     &lt;
                 </a>
             </li>
-            @for (int i = 1; i <= Model.TotalPaginas; i++)
+            @foreach (var pagina in Model.PaginasVisiveis())
             {
-                <li class="item-pagina @(i == Model.PaginaAtual ? "active" : "")">
-                    <a class="link-pagina"
-                       asp-controller="@Model.Controller"
-                       asp-action="@Model.Action"
-                       asp-all-route-data="@Model.FiltrosComPagina(i)">
-                        @i
-                    </a>
-                </li>
+                if (pagina == null)
+                {
+                    <li class="item-pagina disabled">
+                        <span class="link-pagina">...</span>
+                    </li>
+                }
+                else
+                {
+                    <li class="item-pagina @(pagina == Model.PaginaAtual ? "active" : "")">
+                        <a class="link-pagina"
+                           asp-controller="@Model.Controller"
+                           asp-action="@Model.Action"
+                           asp-all-route-data="@Model.FiltrosComPagina(pagina.Value)">
+                            @pagina
+                        </a>
+                    </li>
+                }
             }
             <li class="item-pagina @(Model.TemProximaPagina ? "" : "disabled")">
                 <a class="link-pagina"
@@ -37,14 +38,6 @@
                    asp-action="@Model.Action"
                    asp-all-route-data="@Model.FiltrosComPagina(Model.PaginaAtual + 1)">
                     &gt;
-                </a>
-            </li>
-            <li class="item-pagina @(Model.TemProximaPagina ? "" : "disabled")">
-                <a class="link-pagina"
-                   asp-controller="@Model.Controller"
-                   asp-action="@Model.Action"
-                   asp-all-route-data="@Model.FiltrosComPagina(Model.TotalPaginas)">
-                    &gt;&gt;
                 </a>
             </li>
         </ul>
