@@ -1,38 +1,33 @@
 ﻿@{
- 
+    ViewData["Title"] = "Início";
 }
-<div class="card">
-    <h5 class="card-header">Turmas</h5>
-    <div class="card-body">
-        <h5 class="card-title">Gerenciar Turmas</h5>
-        <p class="card-text">Listar, Remover, Criar e Editar informações sobre as turmas da Instituição</p>
-        <a class="botao botao-primario botao-acao">Abrir</a>
+
+<h5>Módulos</h5>
+
+<div class="cards-modulos">
+
+    <div class="card-modulo">
+        <p class="card-modulo-titulo">Turmas</p>
+        <p class="card-modulo-descricao">Gerencie as turmas da instituição</p>
+        <a class="botao botao-primario">Abrir</a>
     </div>
-</div>
-<br />
-<div class="card">
-    <h5 class="card-header">Alunos</h5>
-    <div class="card-body">
-        <h5 class="card-title">Gerenciar Alunos</h5>
-        <p class="card-text">Listar, Remover, Criar e Editar informações sobre os alunos da Instituição</p>
-        <a class="botao botao-primario botao-acao" asp-controller="GerenciarAluno" asp-action="Index">Abrir</a>
+
+    <div class="card-modulo">
+        <p class="card-modulo-titulo">Alunos</p>
+        <p class="card-modulo-descricao">Gerencie os alunos da instituição</p>
+        <a class="botao botao-primario" asp-controller="GerenciarAluno" asp-action="Index">Abrir</a>
     </div>
-</div>
-<br />
-<div class="card">
-    <h5 class="card-header">Docentes</h5>
-    <div class="card-body">
-        <h5 class="card-title">Gerenciar Docentes</h5>
-        <p class="card-text">Listar, Remover, Criar e Editar informações sobre os docentes da Instituição</p>
-        <a class="botao botao-primario botao-acao" asp-controller="GerenciarDocente" asp-action="Index">Abrir</a>
+
+    <div class="card-modulo">
+        <p class="card-modulo-titulo">Docentes</p>
+        <p class="card-modulo-descricao">Gerencie os docentes da instituição</p>
+        <a class="botao botao-primario" asp-controller="GerenciarDocente" asp-action="Index">Abrir</a>
     </div>
-</div>
-<br />
-<div class="card">
-    <h5 class="card-header">Disciplinas</h5>
-    <div class="card-body">
-        <h5 class="card-title">Gerenciar Disciplinas</h5>
-        <p class="card-text">Listar, Remover, Criar e Editar informações sobre as disciplinas da Instituição</p>
-        <a class="botao botao-primario botao-acao" asp-controller="GerenciarDisciplina" asp-action="Index">Abrir</a>
+
+    <div class="card-modulo">
+        <p class="card-modulo-titulo">Disciplinas</p>
+        <p class="card-modulo-descricao">Gerencie as disciplinas da instituição</p>
+        <a class="botao botao-primario" asp-controller="GerenciarDisciplina" asp-action="Index">Abrir</a>
     </div>
+
 </div>
