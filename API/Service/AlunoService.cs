@@ -132,10 +132,7 @@ namespace API.Service
         public async Task AlterarAsync(AlterarAlunoDTO aluno)
         {
             var alunoExistente = await ObterAlunoAtivoOuLancarErroAsync(aluno.Id);
-
-            if (!alunoExistente.Ativo)
-                throw new RegraDeNegocioException("Não é possivel editar um aluno inativo.");
-
+            
             await ValidarDadosAlunoAsync(aluno.DataNascimento, aluno.Email, aluno.Sexo, aluno.Id);
 
             alunoExistente.Nome = aluno.Nome;
