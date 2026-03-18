@@ -10,6 +10,9 @@ public class GestaoEscolarContext : DbContext
     public DbSet<Aluno> Alunos { get; set; }
     public DbSet<Docente> Docentes { get; set; }
     public DbSet<Disciplina> Disciplinas { get; set; }
+    public DbSet<Turma> Turmas { get; set; }
+    public DbSet<Enturmamento> Enturmamentos { get; set; }
+    public DbSet<GradeCurricular> GradeCurricular { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -12,7 +12,7 @@ namespace Common.Domains
         public SexoEnum Sexo { get; set; }
         public string? Email { get; set; }
         public bool Ativo { get; set; } = true;
-        
+        public ICollection<Enturmamento> Enturmamentos { get; set; } = new List<Enturmamento>();
       
     }
 }

@@ -125,7 +125,7 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
-            if (!ModelState.IsValid) return View("_Editar", model);
+            if (!ModelState.IsValid) return PartialView("_Editar", model);
 
             var alunoAlterado = model.ToAlterarDTO();
 
