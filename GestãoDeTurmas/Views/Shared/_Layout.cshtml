@@ -10,44 +10,69 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="PaginaInicial" asp-action="Index">
-                    <img src="~/images/logo.png" alt="Gestão de Turmas" height="26" />
+
+    <div class="layout-wrapper">
+
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                <a asp-controller="PaginaInicial" asp-action="Index">
+                    <span class="sidebar-logo-texto">Gestão de Turma</span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="sidebar-secao">Principal</div>
+
+                <a asp-controller="PaginaInicial" asp-action="Index"
+                   class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "PaginaInicial" ? "ativo" : "")">
+                    Início
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbar-links" aria-expanded="false">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <div class="sidebar-secao">Cadastros</div>
 
-                <div class="collapse navbar-collapse" id="navbar-links">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="GerenciarAluno" asp-action="Index">Alunos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="GerenciarDocente" asp-action="Index">Docentes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="GerenciarDisciplina" asp-action="Index">Disciplinas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="GerenciarTurma" asp-action="Index">Turmas</a>
-                        </li>
-                    </ul>
-                </div>
+                <a asp-controller="GerenciarAluno" asp-action="Index"
+                   class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarAluno" ? "ativo" : "")">
+                    Alunos
+                </a>
+
+                <a asp-controller="GerenciarDocente" asp-action="Index"
+                   class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarDocente" ? "ativo" : "")">
+                    Docentes
+                </a>
+
+                <a asp-controller="GerenciarDisciplina" asp-action="Index"
+                   class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarDisciplina" ? "ativo" : "")">
+                    Disciplinas
+                </a>
+
+                <a asp-controller="GerenciarTurma" asp-action="Index"
+                   class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarTurma" ? "ativo" : "")">
+                    Turmas
+                </a>
+            </nav>
+
+        </aside>
+
+        <div class="conteudo-principal">
+
+            <header class="conteudo-topo">
+                <span class="conteudo-topo-titulo">@(ViewData["Title"] ?? "Gestão de Turmas")</span>
+            </header>
+
+            <div class="conteudo-corpo">
+                <partial name="_Alertas" />
+                @RenderBody()
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+        </div>
+
     </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
@@ -69,5 +94,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
