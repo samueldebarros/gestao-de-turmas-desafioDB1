@@ -17,6 +17,8 @@ public class TurmaRepository : ITurmaRepository
     {
         return await _context.Turmas
             .AsNoTracking()
+            .Include(t => t.Enturmamentos)
+            .Include(t => t.GradeCurricular)
             .ToListAsync();
     }
 

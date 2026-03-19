@@ -1,0 +1,30 @@
+﻿@model GestãoDeTurmas.Models.Turma.TurmaListaViewModel;
+@using Common.Utils;
+
+<div class="card-turma @(!Model.Ativo ? "card-turma-inativa" : "")">
+    <div>
+        <div class="card-turma-nome">@Model.NomeExibicao</div>
+        <div class="card-turma-subtitulo">@Model.Turno.ObterTurnoTranscrito() - @Model.AnoLetivo</div>
+    </div>
+    
+    <div class="card-turma-rodape">
+        <div class="card-turma-stats">
+            <span><icone nome="Usuarios" />@Model.TotalAlunos alunos</span>
+            <span><icone nome="Disciplinas" />@Model.TotalDisciplinas disciplinas</span>
+        </div>
+    </div>
+
+    <div class="card-turma-acoes">
+
+        <button class="botao-icone"
+                onclick="abrirModal('@Url.Action("Editar", new { id = Model.Id })', 'Editar Turma')"
+                title="Editar">
+            <icone nome="Editar" />
+        </button>
+
+        <a asp-action="Detalhe" asp-route-id="@Model.Id" class="botao-icone" title="Gerenciar">
+            <icone nome="SetaDireita" />
+        </a>
+
+    </div>
+</div>

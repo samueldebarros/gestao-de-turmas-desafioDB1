@@ -16,6 +16,8 @@ public static class TurmaMapperExtensions
             Ativo = turma.Ativo,
             Serie = turma.Serie,
             Turno = turma.Turno,
+            TotalAlunos = turma.Enturmamentos?.Count ?? 0,
+            TotalDisciplinas = turma.GradeCurricular?.Count ?? 0,
             Capacidade = turma.Capacidade
         };
     }

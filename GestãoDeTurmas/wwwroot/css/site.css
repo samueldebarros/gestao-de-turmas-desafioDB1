@@ -553,3 +553,105 @@ input {
     margin: 0;
     flex-grow: 1;
 }
+
+/* card das turmas */
+.cards-turmas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.card-turma {
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--sombra-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+    .card-turma:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+.card-turma-inativa {
+    opacity: 0.6;
+}
+
+.card-turma-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.card-turma-nome {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cor-texto);
+}
+
+.card-turma-subtitulo {
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+    margin-top: 2px;
+}
+
+.badge-serie {
+    background-color: #fef2f2;
+    color: var(--cor-identidade);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.card-turma-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-turma-stats {
+    display: flex;
+    gap: 14px;
+    font-size: 12.5px;
+    color: var(--cor-texto-suave);
+}
+
+    .card-turma-stats i {
+        margin-right: 4px;
+    }
+
+.card-turma-acoes {
+    display: flex;
+    gap: 4px;
+}
+
+.botao-icone {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    background: transparent;
+    color: var(--cor-texto-suave);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+    .botao-icone:hover {
+        background-color: var(--cor-fundo);
+        color: var(--cor-texto);
+        border-color: var(--cor-texto-suave);
+    }

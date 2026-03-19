@@ -20,12 +20,9 @@ public class GerenciarTurmaController : Controller
     {
         var turmas = await _turmaService.ObterTodasAsTurmasAsync();
 
-        var turmasViewModel = new GerenciarTurmaViewModel
-        {
-            TurmasCadastradas = turmas.Select(t => t.ToListaViewModel()).ToList()
-        };
+        var listaViewModel = turmas.Select(t => t.ToListaViewModel()).ToList();
 
-        return View(turmasViewModel);
+        return View(listaViewModel);
     }
 
     [HttpGet]

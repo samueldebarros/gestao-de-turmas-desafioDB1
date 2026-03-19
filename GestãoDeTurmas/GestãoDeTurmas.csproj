@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="Views\GerenciarAluno\EditarAluno.cshtml" />
+    <Content Remove="wwwroot\css\site.css~RF7d2478bb.TMP" />
     <Content Remove="wwwroot\css\StyleSheet.css" />
   </ItemGroup>
 
