@@ -1,4 +1,5 @@
-﻿const modal = new bootstrap.Modal(document.getElementById('modal-formulario'));
+﻿// Modal de Input
+const modal = new bootstrap.Modal(document.getElementById('modal-formulario'));
 const modalBody = document.getElementById('modal-body');
 const modalTitulo = document.getElementById('modal-titulo');
 
@@ -52,4 +53,27 @@ document.getElementById('modal-formulario').addEventListener('submit', async fun
             $(campoCpf).mask('000.000.000-00');
         }
     }
+});
+//--------------------------------------------------
+// Modal de confirmação
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modal-confirmacao'));
+    const modalConfirmacaoTitulo = document.getElementById('modal-confirmacao-titulo');
+    const modalConfirmacaoMensagem = document.getElementById('modal-confirmacao-mensagem');
+    const modalConfirmacaoBtn = document.getElementById('modal-confirmacao-btn');
+
+    window.confirmar = function (titulo, mensagem, onConfirmar, tipoBotao = 'botao-perigo') {
+        modalConfirmacaoTitulo.textContent = titulo;
+        modalConfirmacaoMensagem.textContent = mensagem;
+
+        modalConfirmacaoBtn.className = `botao ${tipoBotao}`;
+
+        modalConfirmacaoBtn.onclick = () => {
+            modalConfirmacao.hide();
+            onConfirmar();
+        };
+
+        modalConfirmacao.show();
+    };
 });

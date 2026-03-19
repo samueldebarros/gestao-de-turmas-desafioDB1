@@ -51,5 +51,23 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <div class="modal fade" id="modal-confirmacao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="modal-confirmacao-titulo"></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-confirmacao-mensagem"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="botao botao-secundario" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="botao botao-perigo" id="modal-confirmacao-btn">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

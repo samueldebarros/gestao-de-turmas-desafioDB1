@@ -116,7 +116,8 @@
                                         <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                         <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
                                         <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-                                        <button type="submit" class="botao botao-perigo botao-acao-tabela" onclick="return confirm('Tem certeza?')">
+                                        <button type="button" class="botao botao-perigo botao-acao-tabela"
+                                                onclick="confirmar('Inativar docente', 'Tem certeza que deseja inativar este docente?', () => this.closest('form').submit(), 'botao-perigo')">
                                             Inativar
                                         </button>
                                     </form>
@@ -129,7 +130,8 @@
                                         <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                         <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
                                         <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
-                                        <button type="submit" class="botao botao-sucesso botao-acao-tabela w-100" onclick="return confirm('Tem certeza?')">
+                                        <button type="button" class="botao botao-sucesso botao-acao-tabela w-100"
+                                                onclick="confirmar('Reativar docente', 'Tem certeza que deseja reativar este docente?', () => this.closest('form').submit(), 'botao-sucesso')">
                                             Reativar
                                         </button>
                                     </form>
