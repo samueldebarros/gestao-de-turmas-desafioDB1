@@ -16,16 +16,36 @@
                 <a class="navbar-brand" asp-controller="PaginaInicial" asp-action="Index">
                     <img src="~/images/logo.png" alt="Gestão de Turmas" height="26" />
                 </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbar-links" aria-expanded="false">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbar-links">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="GerenciarAluno" asp-action="Index">Alunos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="GerenciarDocente" asp-action="Index">Docentes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="GerenciarDisciplina" asp-action="Index">Disciplinas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link">Turmas</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
-
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

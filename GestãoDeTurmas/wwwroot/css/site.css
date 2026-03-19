@@ -326,10 +326,20 @@ input {
 }
     .navbar-brand img {
         filter: brightness(0) invert(1);
+        position: relative;
+        top: -3px;
     }
 
     .navbar-brand:hover {
         color: rgba(255,255,255,0.85);
+    }
+
+.navbar .nav-link {
+    color: rgba(255,255,255,0.85);
+}
+
+    .navbar .nav-link:hover {
+        color: #ffffff;
     }
 
 /* cards da pagina iniciail */
