@@ -1,0 +1,85 @@
+﻿@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel;
+
+<div class="card">
+    <div class="card-body">
+        <h1>Gerenciar Turmas</h1> <br />
+
+        <partial name="_Alertas" />
+
+        @if (!Model.TurmasCadastradas.Any())
+        {
+            <div class="text-center py-5">
+                <h4 class="mt-3">Nenhuma turma encontrada</h4>
+                <p class="text-muted">Tente ajustar seus filtros de pesquisa.</p>
+                <a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
+            </div>
+        }
+        else
+        {
+            <table class="table-gestao">
+                <thead>
+                    <tr>
+                        <th>Turma</th>
+                        <th class="text-center">Vagas Máximas</th>
+                        <th>Ativo</th>
+                        <th class="col-acao-tabela"></th>
+                        <th class="col-acao-tabela"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var turma in Model.TurmasCadastradas)
+                    {
+                        <tr>
+                            <td>@turma.NomeExibicao</td>
+                            <td class="text-center">@turma.VagasMaximas</td>
+                            <td class="text-center">
+                                @if (turma.Ativo)
+                                {
+                                    <span class="badge bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inativo</span>
+                                }
+                            </td>
+
+                            @if (turma.Ativo)
+                            {
+                                <td><button class="botao botao-primario botao-acao-tabela" onclick="abrirModal('@Url.Action("Editar", new { id = turma.Id })', 'Editar Disciplina')">Editar</button></td>
+                                <td>
+                                    <form asp-action="Inativar" asp-route-id="@turma.Id" method="post">
+                                        <button type="button" class="botao botao-perigo botao-acao-tabela"
+                                                onclick="confirmar('Inativar disciplina', 'Tem certeza que deseja inativar esta disciplina?', () => this.closest('form').submit(), 'botao-perigo')">
+                                            Inativar
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="2" class="text-center">
+                                    <form asp-action="Reativar" asp-route-id="@turma.Id" method="post">
+                                        <button type="button" class="botao botao-sucesso botao-acao-tabela w-100"
+                                                onclick="confirmar('Reativar disciplina', 'Tem certeza que deseja reativar esta disciplina?', () => this.closest('form').submit(), 'botao-sucesso')">
+                                            Reativar
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex gap-2">
+                <button class="botao botao-primario botao-acao" onclick="abrirModal('@Url.Action("Adicionar")', 'Nova Turma')">Adicionar</button>
+                <a class="btn btn-outline-secondary botao-acao" asp-controller="PaginaInicial" asp-action="Index">Voltar</a>
+            </div>
+        </div>
+        <partial name="_ModalGenerico" />
+    </div>
+</div>
