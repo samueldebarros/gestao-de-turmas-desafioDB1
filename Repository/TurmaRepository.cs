@@ -13,7 +13,7 @@ public class TurmaRepository : ITurmaRepository
         _context = context;
     }
 
-    public async Task<List<Turma>> ListarAsync()
+    public async Task<List<Turma>> ObterTodasAsTurmasAsync()
     {
         return await _context.Turmas
             .AsNoTracking()
@@ -27,15 +27,29 @@ public class TurmaRepository : ITurmaRepository
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task AdicionarAsync(Turma turma)
+    public async Task AdicionarTurmaAsync(Turma turma)
     {
         await _context.Turmas.AddAsync(turma);
         await _context.SaveChangesAsync();
     }
 
-    public async Task AtualizarAsync(Turma turma)
+    public async Task EditarTurmaAsync(Turma turma)
     {
         _context.Turmas.Update(turma);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task InativarTurmaAsync(int id)
+    {
+        await _context.Turmas
+            .Where(t => t.Id == id)
+            .ExecuteUpdateAsync(t => t.SetProperty(t => t.Ativo, false));
+    }
+
+    public async Task ReativarTurmaAsync(int id)
+    {
+        await _context.Turmas
+            .Where(t => t.Id == id)
+            .ExecuteUpdateAsync(t => t.SetProperty(t => t.Ativo, true));
     }
 }
