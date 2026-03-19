@@ -15,7 +15,8 @@ public static class TurmaMapperExtensions
             AnoLetivo = turma.AnoLetivo,
             Ativo = turma.Ativo,
             Serie = turma.Serie,
-            VagasMaximas = turma.VagasMaximas
+            Turno = turma.Turno,
+            Capacidade = turma.Capacidade
         };
     }
 
@@ -26,7 +27,8 @@ public static class TurmaMapperExtensions
             Identificador = model.Identificador,
             AnoLetivo = model.AnoLetivo,
             Serie = model.Serie,
-            VagasMaximas = model.VagasMaximas
+            Turno = model.Turno,
+            Capacidade = model.Capacidade
         };
     }
 

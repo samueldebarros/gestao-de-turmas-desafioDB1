@@ -8,7 +8,8 @@ public class Turma
     public string Identificador { get; set; } = string.Empty;
     public int AnoLetivo { get; set; }
     public SerieEnum Serie { get; set; }
-    public int VagasMaximas { get; set; }
+    public int Capacidade { get; set; }
+    public TurnoEnum Turno { get; set; }
     public bool Ativo { get; set; }
 
     public ICollection<Enturmamento> Enturmamentos { get; set; } = new List<Enturmamento>();

@@ -37,7 +37,8 @@ public class TurmaService : ITurmaService
             AnoLetivo = turmaDto.AnoLetivo,
             Identificador = turmaDto.Identificador.ToUpper().Trim(),
             Serie = turmaDto.Serie,
-            VagasMaximas = turmaDto.VagasMaximas,
+            Turno = turmaDto.Turno,
+            Capacidade = turmaDto.Capacidade,
             Ativo = true
         };
 
@@ -51,7 +52,8 @@ public class TurmaService : ITurmaService
         turma.AnoLetivo = turmaDto.AnoLetivo;
         turma.Identificador = turmaDto.Identificador.ToUpper().Trim();
         turma.Serie = turmaDto.Serie;
-        turma.VagasMaximas = turmaDto.VagasMaximas;
+        turma.Turno = turmaDto.Turno;
+        turma.Capacidade = turmaDto.Capacidade;
 
         await _turmaRepository.EditarTurmaAsync(turma);
     }

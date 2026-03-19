@@ -28,7 +28,11 @@ public class TurmaMapping : IEntityTypeConfiguration<Turma>
             .IsRequired()
             .HasColumnType("TINYINT");
 
-        builder.Property(t => t.VagasMaximas)
+        builder.Property(t => t.Capacidade)
+            .IsRequired()
+            .HasColumnType("TINYINT");
+
+        builder.Property(t => t.Turno)
             .IsRequired()
             .HasColumnType("TINYINT");
 

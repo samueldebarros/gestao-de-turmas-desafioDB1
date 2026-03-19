@@ -15,9 +15,11 @@ public class TurmaInputViewModel
 
     [Required(ErrorMessage = "A série é obrigatória.")]
     public SerieEnum Serie { get; set; }
+    [Required(ErrorMessage = "O turno é obrigatório.")]
+    public TurnoEnum Turno { get; set; }
 
     [Required(ErrorMessage = "O número de vagas é obrigatório.")]
     [Range(1, 255, ErrorMessage = "O número de vagas deve ser entre 1 e 255.")]
-    public int VagasMaximas { get; set; }
+    public int Capacidade { get; set; }
 }
 
