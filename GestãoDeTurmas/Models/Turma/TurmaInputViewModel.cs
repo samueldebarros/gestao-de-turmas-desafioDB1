@@ -7,6 +7,7 @@ public class TurmaInputViewModel
 {
     [Required(ErrorMessage = "O identificador é obrigatório.")]
     [MaxLength(1, ErrorMessage = "O identificador deve ter apenas 1 caractere.")]
+    [RegularExpression(@"^[a-zA-Z]$", ErrorMessage = "O identificador deve ser uma letra.")]
     public string Identificador { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O ano letivo é obrigatório.")]

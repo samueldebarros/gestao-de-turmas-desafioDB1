@@ -255,6 +255,7 @@ input {
 .alerta-erro {
     background-color: var(--cor-perigo-suave);
     border-color: var(--cor-perigo);
+    border: solid 1px;
     color: var(--cor-perigo);
 }
 

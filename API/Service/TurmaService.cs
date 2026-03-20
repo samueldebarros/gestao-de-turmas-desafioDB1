@@ -32,6 +32,9 @@ public class TurmaService : ITurmaService
 
     public async Task AdicionarTurmaAsync(TurmaInputDTO turmaDto)
     {
+        if (await _turmaRepository.ExisteTurmaAsync(turmaDto.Identificador.ToUpper().Trim(), turmaDto.AnoLetivo, turmaDto.Serie))
+            throw new RegraDeNegocioException("Já existe uma turma com esse identificador, ano letivo e série.");
+
         Turma novaTurma = new Turma
         {
             AnoLetivo = turmaDto.AnoLetivo,
@@ -48,6 +51,9 @@ public class TurmaService : ITurmaService
     public async Task EditarTurmaAsync(EditarTurmaDTO turmaDto)
     {
         var turma = await ObterTurmaOuLancarErroAsync(turmaDto.Id);
+
+        if (await _turmaRepository.ExisteTurmaAsync(turmaDto.Identificador.ToUpper().Trim(), turmaDto.AnoLetivo, turmaDto.Serie, turmaDto.Id))
+            throw new RegraDeNegocioException("Já existe uma turma com esse identificador, ano letivo e série.");
 
         turma.AnoLetivo = turmaDto.AnoLetivo;
         turma.Identificador = turmaDto.Identificador.ToUpper().Trim();

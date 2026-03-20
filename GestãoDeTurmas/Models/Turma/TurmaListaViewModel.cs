@@ -12,7 +12,6 @@ public class TurmaListaViewModel
     public TurnoEnum Turno { get; set; }
     public int Capacidade { get; set; }
     public bool Ativo { get; set; }
-
     public int TotalAlunos { get; set; }
     public int TotalDisciplinas { get; set; }
     public string NomeExibicao => $"{Serie.ObterDescricao()} {Identificador}";

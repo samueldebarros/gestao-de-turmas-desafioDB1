@@ -1,5 +1,6 @@
 ﻿using API.Service;
 using Common.Enums;
+using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Turma;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +37,22 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(TurmaInputViewModel model)
     {
         if (!ModelState.IsValid) return PartialView("_Adicionar", model);
 
-        var turmaDto = model.ToInputDTO();
-
-        await _turmaService.AdicionarTurmaAsync(turmaDto);
-        TempData["MensagemSucesso"] = "Turma adicionada com sucesso!";
-        return Json(new { sucesso = true });
-
+        try
+        {
+            await _turmaService.AdicionarTurmaAsync(model.ToInputDTO());
+            TempData["MensagemSucesso"] = "Turma cadastrada com sucesso!";
+            return Json(new { sucesso = true });
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return PartialView("_Adicionar", model);
+        }
     }
 
     [HttpGet]
@@ -60,14 +67,25 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Editar(TurmaEditarViewModel turma)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Editar(TurmaEditarViewModel model)
     {
-        if (!ModelState.IsValid) return PartialView("_Editar", turma);
+        if (!ModelState.IsValid) return PartialView("_Editar", model);
 
-        var turmaDto = turma.ToEditarDTO();
-
-        await _turmaService.EditarTurmaAsync(turmaDto);
-        TempData["MensagemSucesso"] = "Turma editada com sucesso!";
-        return Json(new { sucesso = true });
+        try
+        {
+            await _turmaService.EditarTurmaAsync(model.ToEditarDTO());
+            TempData["MensagemSucesso"] = "Turma editada com sucesso!";
+            return Json(new { sucesso = true });
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return PartialView("_Editar", model);
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            return Json(new { sucesso = false, mensagem = ex.Message });
+        }
     }
 }

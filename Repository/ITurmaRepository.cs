@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,4 +14,5 @@ public interface ITurmaRepository
     Task EditarTurmaAsync(Turma turma);
     Task InativarTurmaAsync(int id);
     Task ReativarTurmaAsync(int id);
+    Task<bool> ExisteTurmaAsync(string identificador, int anoLetivo, SerieEnum serie, int? ignorarId = null);
 }

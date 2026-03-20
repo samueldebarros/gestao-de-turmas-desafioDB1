@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 
@@ -11,6 +12,19 @@ public class TurmaRepository : ITurmaRepository
     public TurmaRepository(GestaoEscolarContext context)
     {
         _context = context;
+    }
+
+    public async Task<bool> ExisteTurmaAsync(string identificador, int anoLetivo, SerieEnum serie, int? ignorarId = null)
+    {
+        var query = _context.Turmas
+            .Where(t => t.Identificador == identificador &&
+            t.AnoLetivo == anoLetivo &&
+            t.Serie == serie);
+
+        if (ignorarId.HasValue)
+            query = query.Where(t => t.Id != ignorarId.Value);
+        
+        return await query.AnyAsync();
     }
 
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()

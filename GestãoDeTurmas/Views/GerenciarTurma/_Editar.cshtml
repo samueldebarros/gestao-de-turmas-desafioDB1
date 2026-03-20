@@ -4,6 +4,8 @@
 <form asp-action="Editar" asp-controller="GerenciarTurma" method="post">
     @Html.AntiForgeryToken()
 
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
     <input type="hidden" asp-for="Id"/>
 
     <div class="form-group">
