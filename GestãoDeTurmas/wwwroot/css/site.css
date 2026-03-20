@@ -193,9 +193,17 @@ input {
 }
 
 .botao-filtrar:hover {
-    width: 120px;
     background-color: var(--cor-secundaria-hover);
 }
+
+.botao-limpar {
+    color: var(--cor-perigo)
+}
+
+    .botao-limpar:hover {
+        background-color: var(--cor-perigo);
+        color: white;
+    }
 
 .botao-acao {
     width: 100px;

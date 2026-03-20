@@ -34,4 +34,31 @@ public static class TurmaMapperExtensions
         };
     }
 
+    public static TurmaEditarViewModel ToEditarViewModel(this Turma turma)
+    {
+        return new TurmaEditarViewModel
+        {
+            Id = turma.Id,
+            Identificador = turma.Identificador,
+            AnoLetivo = turma.AnoLetivo,
+            Serie = turma.Serie,
+            Turno = turma.Turno,
+            Capacidade = turma.Capacidade,
+        };
+    }
+
+    public static EditarTurmaDTO ToEditarDTO(this TurmaEditarViewModel turma)
+    {
+        return new EditarTurmaDTO
+        {
+            Id = turma.Id,
+            Identificador = turma.Identificador,
+            AnoLetivo = turma.AnoLetivo,
+            Serie = turma.Serie,
+            Turno = turma.Turno,
+            Capacidade = turma.Capacidade,
+        };
+    }
+
+
 }

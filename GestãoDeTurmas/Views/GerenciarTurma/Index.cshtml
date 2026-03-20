@@ -1,5 +1,5 @@
-﻿@using GestãoDeTurmas.Models.Turma
-@model IEnumerable<TurmaListaViewModel>
+﻿@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel
+
 @{
     ViewData["Title"] = "Turmas";
 }
@@ -13,17 +13,40 @@
     </button>
 </div>
 
-@if (!Model.Any())
+<div class="mb-4">
+    <form method="get" class="d-flex gap-2">
+        <input type="text" name="pesquisa" value="@Model.Pesquisa" placeholder="Pesquisar turma (Ex: 1º Ano)..." class="form-control" style="width: 300px;" />
+
+        <select name="ativo" class="form-select" style="width: 160px;">
+            <option value="">Todos os Status</option>
+            <option value="true" selected="@(Model.Ativo == true)">Ativas</option>
+            <option value="false" selected="@(Model.Ativo == false)">Inativas</option>
+        </select>
+
+        <button type="submit" class="botao botao-secundario">
+            <icone nome="Pesquisar" /> Filtrar
+        </button>
+
+        @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue)
+        {
+            <a asp-action="Index" class="botao botao-limpar">
+                Limpar
+            </a>
+        }
+    </form>
+</div>
+
+@if (!Model.TurmasCadastradas.Any())
 {
     <div class="text-center py-5" style="color: var(--cor-texto-suave);">
-        <i class="bi bi-building" style="font-size: 2.5rem;"></i>
+        <icone nome="Pesquisar" style="font-size: 2.5rem;"></icone>
         <p class="mt-2">Nenhuma turma encontrada no sistema.</p>
     </div>
 }
 else
 {
     <div class="cards-turmas">
-        @foreach (var turma in Model)
+        @foreach (var turma in Model.TurmasCadastradas)
         {
             <partial name="_CardTurma" model="turma" />
         }

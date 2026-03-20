@@ -23,6 +23,8 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Editar => "bi bi-pencil",
                 TipoIcone.SetaDireita => "bi bi-arrow-right",
                 TipoIcone.Lixeira => "bi bi-trash",
+                TipoIcone.Pesquisar => "bi bi-search",
+                TipoIcone.Adicionar => "bi bi-plus-lg",
                 _ => "bi bi-question-circle"
             };
 

@@ -1,0 +1,56 @@
+﻿@using Common.Enums
+@model GestãoDeTurmas.Models.Turma.TurmaEditarViewModel;
+
+<form asp-action="Editar" asp-controller="GerenciarTurma" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id"/>
+
+    <div class="form-group">
+        <label asp-for="Identificador">Identificador</label>
+
+        <input type="text" asp-for="Identificador" class="form-control" maxlength="1"/>
+
+        <span asp-validation-for="Identificador" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Serie">Série</label>
+
+        <select asp-for="Serie" class="form-control" asp-items="Html.GetEnumSelectList<SerieEnum>()">
+            <option value="">Selecione uma série...</option>
+        </select>
+
+        <span asp-validation-for="Serie" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Turno">Turno</label>
+
+        <select asp-for="Turno" class="form-control" asp-items="Html.GetEnumSelectList<TurnoEnum>()">
+            <option value="">Selecione um turno...</option>
+        </select>
+
+        <span asp-validation-for="Turno" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AnoLetivo">Ano Letivo</label>
+
+        <input asp-for="AnoLetivo" type="number" class="form-control" />
+
+        <span asp-validation-for="AnoLetivo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Capacidade">Capacidade</label>
+        <input asp-for="Capacidade" type="number" class="form-control" />
+        <span asp-validation-for="Capacidade" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="botao botao-primario">Editar</button>
+        <button type="button" class="botao botao-secundario" data-bs-dismiss="modal">Cancelar</button>
+    </div>
+
+</form> 

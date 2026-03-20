@@ -16,13 +16,17 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string pesquisa = null, bool? ativo = null)
     {
         var turmas = await _turmaService.ObterTodasAsTurmasAsync();
 
-        var listaViewModel = turmas.Select(t => t.ToListaViewModel()).ToList();
+        var turmasViewModel = new GerenciarTurmaViewModel {
+            TurmasCadastradas = turmas.Select(t => t.ToListaViewModel()).ToList(),
+            Pesquisa = pesquisa,
+            Ativo = ativo
+        };
 
-        return View(listaViewModel);
+        return View(turmasViewModel);
     }
 
     [HttpGet]
@@ -42,5 +46,28 @@ public class GerenciarTurmaController : Controller
         TempData["MensagemSucesso"] = "Turma adicionada com sucesso!";
         return Json(new { sucesso = true });
 
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Editar(int id)
+    {
+        var turma = await _turmaService.ObterPorIdAsync(id);
+        if (turma == null) return NotFound();
+
+        TurmaEditarViewModel turmaExistente = turma.ToEditarViewModel();
+
+        return PartialView("_Editar", turmaExistente);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Editar(TurmaEditarViewModel turma)
+    {
+        if (!ModelState.IsValid) return PartialView("_Editar", turma);
+
+        var turmaDto = turma.ToEditarDTO();
+
+        await _turmaService.EditarTurmaAsync(turmaDto);
+        TempData["MensagemSucesso"] = "Turma editada com sucesso!";
+        return Json(new { sucesso = true });
     }
 }

@@ -5,10 +5,12 @@ using System.Text;
 namespace Common.Utils;
 
 public enum TipoIcone
-{ 
+{
     Usuarios,
     Disciplinas,
     Editar,
     SetaDireita,
-    Lixeira
+    Lixeira,
+    Pesquisar,
+    Adicionar
 }
