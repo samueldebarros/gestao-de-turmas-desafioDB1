@@ -261,6 +261,7 @@ input {
 .alerta-sucesso {
     background-color: var(--cor-sucesso-suave);
     border-color: var(--cor-sucesso);
+    border: solid 1px;
     color: var(--cor-sucesso);
 }
 
