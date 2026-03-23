@@ -17,14 +17,15 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(string pesquisa = null, bool? ativo = null)
+    public async Task<IActionResult> Index(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
-        var turmas = await _turmaService.ObterTodasAsTurmasAsync();
+        var turmas = await _turmaService.ObterTodasAsTurmasAsync(pesquisa, ativo, ordenacao);
 
         var turmasViewModel = new GerenciarTurmaViewModel {
             TurmasCadastradas = turmas.Select(t => t.ToListaViewModel()).ToList(),
             Pesquisa = pesquisa,
-            Ativo = ativo
+            Ativo = ativo,
+            Ordenacao = ordenacao
         };
 
         return View(turmasViewModel);

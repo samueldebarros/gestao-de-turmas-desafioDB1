@@ -1,4 +1,5 @@
-﻿@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel
+﻿@using Common.Enums
+@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel
 
 @{
     ViewData["Title"] = "Turmas";
@@ -14,24 +15,29 @@
 </div>
 
 <div class="mb-4">
-    <form method="get" class="d-flex gap-2">
-        <input type="text" name="pesquisa" value="@Model.Pesquisa" placeholder="Pesquisar turma (Ex: 1º Ano)..." class="form-control" style="width: 300px;" />
+    <form method="get" class="d-flex gap-2 align-items-center">
+        <input type="text" name="pesquisa" value="@Model.Pesquisa"
+               placeholder="Pesquisar..." class="form-control flex-grow-1" />
 
-        <select name="ativo" class="form-select" style="width: 160px;">
+        <select name="ativo" class="form-select" style="width: 160px; flex-shrink: 0;">
             <option value="">Todos os Status</option>
             <option value="true" selected="@(Model.Ativo == true)">Ativas</option>
             <option value="false" selected="@(Model.Ativo == false)">Inativas</option>
         </select>
 
-        <button type="submit" class="botao botao-secundario">
+        <select name="ordenacao" class="form-select" asp-for="Ordenacao"
+                asp-items="Html.GetEnumSelectList<OrdenacaoTurmaEnum>()"
+                style="width: 200px; flex-shrink: 0;">
+            <option value="">Ordenar por (Padrão)</option>
+        </select>
+
+        <button type="submit" class="botao botao-secundario" style="flex-shrink: 0;">
             <icone nome="Pesquisar" /> Filtrar
         </button>
 
-        @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue)
+        @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue || Model.Ordenacao.HasValue)
         {
-            <a asp-action="Index" class="botao botao-limpar">
-                Limpar
-            </a>
+            <a asp-action="Index" class="botao botao-limpar" style="flex-shrink: 0;">Limpar</a>
         }
     </form>
 </div>

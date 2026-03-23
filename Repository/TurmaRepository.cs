@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Utils;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
@@ -23,17 +24,63 @@ public class TurmaRepository : ITurmaRepository
 
         if (ignorarId.HasValue)
             query = query.Where(t => t.Id != ignorarId.Value);
-        
+
         return await query.AnyAsync();
     }
 
-    public async Task<List<Turma>> ObterTodasAsTurmasAsync()
+    private IQueryable<Turma> AplicarFiltros(IQueryable<Turma> query, string? pesquisa, bool? ativo)
     {
-        return await _context.Turmas
+        if (!string.IsNullOrWhiteSpace(pesquisa))
+        {
+            var pesquisaLower = pesquisa.ToLower().Trim().Replace("º", "");
+
+            var seriesCompativeis = Enum.GetValues<SerieEnum>()
+                .Where(s => s.ObterDescricao().ToLower().Replace("º", "").Contains(pesquisaLower))
+                .ToList();
+
+            query = query.Where(t =>
+                t.Identificador.Contains(pesquisa) ||
+                t.AnoLetivo.ToString().Contains(pesquisa) ||
+                seriesCompativeis.Contains(t.Serie));
+        }
+
+        if (ativo.HasValue)
+            query = query.Where(t => t.Ativo == ativo.Value);
+
+        return query;
+    }
+
+    private IQueryable<Turma> AplicarOrdenacao(IQueryable<Turma> query, OrdenacaoTurmaEnum? ordenacao)
+    {
+        return ordenacao switch
+        {
+            OrdenacaoTurmaEnum.Serie => query.OrderBy(t => t.Serie)
+                                             .ThenBy(t => t.Identificador),
+
+            OrdenacaoTurmaEnum.Turno => query.OrderBy(t => t.Turno)
+                                             .ThenBy(t => t.Serie),
+
+            null => query.OrderByDescending(t => t.AnoLetivo)
+                         .ThenBy(t => t.Serie)
+                         .ThenBy(t => t.Identificador),
+
+            _ => query.OrderByDescending(t => t.Id)
+        };
+    }
+
+    public async Task<List<Turma>> ObterTodasAsTurmasAsync(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null)
+    {
+        var query = _context.Turmas
             .AsNoTracking()
             .Include(t => t.Enturmamentos)
             .Include(t => t.GradeCurricular)
-            .ToListAsync();
+            .AsQueryable();
+
+        query = AplicarFiltros(query, pesquisa, ativo);
+        query = AplicarOrdenacao(query, ordenacao);
+
+        return await query.ToListAsync();
+
     }
 
     public async Task<Turma?> ObterPorIdAsync(int id)

@@ -1,5 +1,6 @@
 ﻿using API.DTOs.TurmaDTOs;
 using Common.Domains;
+using Common.Enums;
 using Common.Exceptions;
 using Repository;
 
@@ -21,9 +22,9 @@ public class TurmaService : ITurmaService
             throw new EntidadeNaoEncontradaException("A turma não foi encontrada.");
         return turma;
     }
-    public async Task<List<Turma>> ObterTodasAsTurmasAsync()
+    public async Task<List<Turma>> ObterTodasAsTurmasAsync(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
-        return await _turmaRepository.ObterTodasAsTurmasAsync();
+        return await _turmaRepository.ObterTodasAsTurmasAsync(pesquisa,ativo,ordenacao);
     }
     public async Task<Turma> ObterPorIdAsync(int id)
     {
