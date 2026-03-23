@@ -89,4 +89,24 @@ public class GerenciarTurmaController : Controller
             return Json(new { sucesso = false, mensagem = ex.Message });
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Detalhes(int id)
+    {
+        try
+        {
+            var turma = await _turmaService.ObterTurmaComDetalhesAsync(id);
+            var alunosDisponiveis = await _turmaService.ObterAlunosDisponiveisParaTurmaAsync(id);
+            var disciplinasDisponiveis = await _turmaService.ObterDisciplinasDisponiveisParaTurmaAsync(id);
+
+            var viewModel = turma.ToDetalhesViewModel(alunosDisponiveis, disciplinasDisponiveis);
+
+            return View(viewModel);
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            TempData["MensagemErro"] = ex.Message;
+            return RedirectToAction(nameof(Index));
+        }
+    }
 }

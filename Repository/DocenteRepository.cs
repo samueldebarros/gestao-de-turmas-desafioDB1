@@ -39,6 +39,15 @@ public class DocenteRepository : IDocenteRepository
             .SetProperty(d => d.DisciplinaId, (int?)null));
     }
 
+    public async Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId)
+    {
+        return await _context.Docentes
+            .AsNoTracking()
+            .Where(d => d.DisciplinaId == disciplinaId)
+            .OrderBy(d => d.Nome)
+            .ToListAsync();
+    }
+
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
     {
         var query = _context.Docentes.Include(d => d.Disciplina).AsNoTracking().AsQueryable();

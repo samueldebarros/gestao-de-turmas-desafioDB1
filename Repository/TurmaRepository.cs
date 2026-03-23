@@ -68,6 +68,20 @@ public class TurmaRepository : ITurmaRepository
         };
     }
 
+    public async Task<Turma?> ObterTurmaComDetalhesAsync(int id)
+    {
+        return await _context.Turmas
+            .Include(t => t.Enturmamentos)
+            .ThenInclude(t => t.Aluno)
+            .Include(t => t.GradeCurricular)
+            .ThenInclude(t => t.Disciplina)
+            .Include(t => t.GradeCurricular)
+            .ThenInclude(t => t.Docente)
+            .AsSplitQuery()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == id);
+    }
+
     public async Task<List<Turma>> ObterTodasAsTurmasAsync(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
         var query = _context.Turmas

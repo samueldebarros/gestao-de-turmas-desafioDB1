@@ -4,6 +4,7 @@ namespace Repository;
 
 public interface IDisciplinaRepository
 {
+    Task<List<Disciplina>> ObterDisciplinasDisponiveisParaTurmaAsync(int turmaId);
     Task<Disciplina> ObterDisciplinaPorIdAsync(int id);
     Task<Disciplina> ObterInativoPorIdAsync(int id);
     Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null);

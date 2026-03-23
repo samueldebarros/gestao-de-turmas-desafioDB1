@@ -20,6 +20,19 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     }
 
+    public async Task<List<Disciplina>> ObterDisciplinasDisponiveisParaTurmaAsync(int turmaId)
+    {
+        var discplinasJaVinculadas = _context.GradeCurricular
+            .Where(g => g.TurmaId == turmaId)
+            .Select(g => g.DisciplinaId);
+
+        return await _context.Disciplinas
+            .AsNoTracking()
+            .Where(d => d.Ativo && !discplinasJaVinculadas.Contains(d.Id))
+            .OrderBy(d => d.Nome)
+            .ToListAsync();
+    }
+
     public async Task EditarDisciplinaAsync(Disciplina disciplina)
     {
         _context.Disciplinas.Update(disciplina);

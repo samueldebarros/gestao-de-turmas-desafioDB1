@@ -48,6 +48,19 @@ namespace Repository
             return (lista, total);
         }
 
+        public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId)
+        {
+            var alunosMatriculados = _context.Enturmamentos
+                .Where(e => e.TurmaId == turmaId)
+                .Select(e => e.AlunoId);
+
+            return await _context.Alunos
+                .AsNoTracking()
+                .Where(a => a.Ativo && !alunosMatriculados.Contains(a.Id))
+                .OrderBy(a => a.Nome)
+                .ToListAsync();
+        }
+
         public async Task InativarAsync(int id) 
         {
             await _context.Alunos

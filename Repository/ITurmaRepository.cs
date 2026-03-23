@@ -8,6 +8,7 @@ namespace Repository;
 
 public interface ITurmaRepository
 {
+    Task<Turma?> ObterTurmaComDetalhesAsync(int id);
     Task<List<Turma>> ObterTodasAsTurmasAsync(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null);
     Task<Turma?> ObterPorIdAsync(int id);
     Task AdicionarTurmaAsync(Turma turma);

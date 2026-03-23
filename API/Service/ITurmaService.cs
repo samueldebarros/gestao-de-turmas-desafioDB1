@@ -12,4 +12,8 @@ public interface ITurmaService
     Task EditarTurmaAsync(EditarTurmaDTO turmaDto);
     Task InativarTurmaAsync(int id);
     Task ReativarTurmaAsync(int id);
+    Task<Turma?> ObterTurmaComDetalhesAsync(int id);
+    Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId);
+    Task<List<Disciplina>> ObterDisciplinasDisponiveisParaTurmaAsync(int turmaId);
+    Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId);
 }

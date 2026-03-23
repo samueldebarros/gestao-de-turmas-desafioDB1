@@ -1,6 +1,8 @@
 ﻿using API.DTOs.TurmaDTOs;
 using Common.Domains;
+using Common.Utils;
 using GestãoDeTurmas.Models.Turma;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestãoDeTurmas.Mappers;
 
@@ -60,5 +62,49 @@ public static class TurmaMapperExtensions
         };
     }
 
+    public static TurmaDetalhesViewModel ToDetalhesViewModel(
+    this Turma turma,
+    List<Aluno> alunosDisponiveis,
+    List<Disciplina> disciplinasDisponiveis)
+    {
+        return new TurmaDetalhesViewModel
+        {
+            Id = turma.Id,
+            NomeExibicao = $"{turma.Serie.ObterDescricao()} {turma.Identificador}",
+            Turno = turma.Turno.ObterTurnoTranscrito(),
+            AnoLetivo = turma.AnoLetivo,
+            Capacidade = turma.Capacidade,
+            TotalMatriculados = turma.Enturmamentos?.Count ?? 0,
+            Ativo = turma.Ativo,
 
+            Alunos = turma.Enturmamentos?.Select(e => new EnturmamentoViewModel
+            {
+                AlunoId = e.AlunoId,
+                Nome = e.Aluno.Nome,
+                Matricula = e.Aluno.Matricula,
+                Cpf = e.Aluno.Cpf.FormatarCpf(),
+                Situacao = e.Situacao
+            }).ToList() ?? new(),
+
+            Grade = turma.GradeCurricular?.Select(g => new GradeCurricularViewModel
+            {
+                DisciplinaId = g.DisciplinaId,
+                DocenteId = g.DocenteId,
+                Disciplina = g.Disciplina.Nome,
+                Docente = g.Docente.Nome
+            }).ToList() ?? new(),
+
+            AlunosDisponiveis = alunosDisponiveis.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = $"{a.Nome} — {a.Matricula}"
+            }).ToList(),
+
+            DisciplinasDisponiveis = disciplinasDisponiveis.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = d.Nome
+            }).ToList()
+        };
+    }
 }

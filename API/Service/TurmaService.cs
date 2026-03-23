@@ -9,10 +9,16 @@ namespace API.Service;
 public class TurmaService : ITurmaService
 {
     private readonly ITurmaRepository _turmaRepository;
+    private readonly IAlunoRepository _alunoRepository;
+    private readonly IDocenteRepository _docenteRepository;
+    private readonly IDisciplinaRepository _disciplinaRepository;
 
-    public TurmaService(ITurmaRepository turmaRepository)
+    public TurmaService(ITurmaRepository turmaRepository, IAlunoRepository alunoRepository, IDocenteRepository docenteRepository , IDisciplinaRepository disciplinaRepository)
     {
         _turmaRepository = turmaRepository;
+        _alunoRepository = alunoRepository;
+        _docenteRepository = docenteRepository;
+        _disciplinaRepository = disciplinaRepository;
     }
 
     private async Task<Turma> ObterTurmaOuLancarErroAsync(int id)
@@ -75,5 +81,32 @@ public class TurmaService : ITurmaService
     {
         await ObterTurmaOuLancarErroAsync(id);
         await _turmaRepository.ReativarTurmaAsync(id);
+    }
+
+    public Task<Turma?> ObterTurmaComDetalhesAsync(int id)
+    {
+        var turmas = _turmaRepository.ObterTurmaComDetalhesAsync(id);
+
+        if (turmas == null)
+            throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        return turmas;
+    }
+
+    public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId)
+    {
+        await ObterTurmaOuLancarErroAsync(turmaId);
+        return await _alunoRepository.ObterAlunosDisponiveisParaTurmaAsync(turmaId);
+    }
+
+    public async Task<List<Disciplina>> ObterDisciplinasDisponiveisParaTurmaAsync(int turmaId)
+    {
+        await ObterTurmaOuLancarErroAsync(turmaId);
+        return await _disciplinaRepository.ObterDisciplinasDisponiveisParaTurmaAsync(turmaId);
+    }
+
+    public async Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId)
+    {
+        return await _docenteRepository.ObterDocentesPorDisciplinaAsync(disciplinaId);
     }
 }
