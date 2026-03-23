@@ -10,7 +10,13 @@ public enum TipoIcone
     Disciplinas,
     Editar,
     SetaDireita,
+    SetaEsquerda,
     Lixeira,
     Pesquisar,
-    Adicionar
+    Adicionar,
+    Casa,
+    Docentes,
+    Turmas,
+    Filtrar,
+    Sair
 }

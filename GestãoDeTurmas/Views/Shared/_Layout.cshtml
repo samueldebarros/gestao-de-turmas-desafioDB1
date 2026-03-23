@@ -26,6 +26,7 @@
 
                 <a asp-controller="PaginaInicial" asp-action="Index"
                    class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "PaginaInicial" ? "ativo" : "")">
+                   <icone nome="Casa" />
                     Início
                 </a>
 
@@ -33,21 +34,25 @@
 
                 <a asp-controller="GerenciarAluno" asp-action="Index"
                    class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarAluno" ? "ativo" : "")">
+                    <icone nome="Usuarios" />
                     Alunos
                 </a>
 
                 <a asp-controller="GerenciarDocente" asp-action="Index"
                    class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarDocente" ? "ativo" : "")">
+                    <icone nome="Docentes" />
                     Docentes
                 </a>
 
                 <a asp-controller="GerenciarDisciplina" asp-action="Index"
                    class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarDisciplina" ? "ativo" : "")">
+                    <icone nome="Disciplinas" />
                     Disciplinas
                 </a>
 
                 <a asp-controller="GerenciarTurma" asp-action="Index"
                    class="sidebar-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GerenciarTurma" ? "ativo" : "")">
+                    <icone nome="Turmas" />
                     Turmas
                 </a>
             </nav>

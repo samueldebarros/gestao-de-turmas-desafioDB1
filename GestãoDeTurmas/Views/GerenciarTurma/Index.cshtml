@@ -10,7 +10,7 @@
 
     <button class="botao botao-primario"
             onclick="abrirModal('@Url.Action("Adicionar")', 'Nova Turma')">
-        <i class="bi bi-plus-lg"></i> Nova Turma
+        <icone nome="Adicionar"></icone> Nova Turma
     </button>
 </div>
 
@@ -19,25 +19,25 @@
         <input type="text" name="pesquisa" value="@Model.Pesquisa"
                placeholder="Pesquisar..." class="form-control flex-grow-1" />
 
-        <select name="ativo" class="form-select" style="width: 160px; flex-shrink: 0;">
+        <select name="ativo" class="form-select flex-shrink-0" style="width: 160px;">
             <option value="">Todos os Status</option>
             <option value="true" selected="@(Model.Ativo == true)">Ativas</option>
             <option value="false" selected="@(Model.Ativo == false)">Inativas</option>
         </select>
 
-        <select name="ordenacao" class="form-select" asp-for="Ordenacao"
+        <select name="ordenacao" class="form-select flex-shrink-0" asp-for="Ordenacao"
                 asp-items="Html.GetEnumSelectList<OrdenacaoTurmaEnum>()"
-                style="width: 200px; flex-shrink: 0;">
+                style="width: 200px;">
             <option value="">Ordenar por (Padrão)</option>
         </select>
 
-        <button type="submit" class="botao botao-secundario" style="flex-shrink: 0;">
-            <icone nome="Pesquisar" /> Filtrar
+        <button type="submit" class="botao botao-secundario flex-shrink-0">
+            <icone nome="Filtrar" /> Filtrar
         </button>
 
         @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue || Model.Ordenacao.HasValue)
         {
-            <a asp-action="Index" class="botao botao-limpar" style="flex-shrink: 0;">Limpar</a>
+            <a asp-action="Index" class="botao botao-limpar flex-shrink-0">Limpar</a>
         }
     </form>
 </div>

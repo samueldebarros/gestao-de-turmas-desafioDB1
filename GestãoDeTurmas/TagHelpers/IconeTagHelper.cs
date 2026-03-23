@@ -22,9 +22,15 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Disciplinas => "bi bi-book",
                 TipoIcone.Editar => "bi bi-pencil",
                 TipoIcone.SetaDireita => "bi bi-arrow-right",
+                TipoIcone.SetaEsquerda => "bi bi-arrow-left",
                 TipoIcone.Lixeira => "bi bi-trash",
                 TipoIcone.Pesquisar => "bi bi-search",
                 TipoIcone.Adicionar => "bi bi-plus-lg",
+                TipoIcone.Casa => "bi bi-house",
+                TipoIcone.Docentes => "bi bi-person-badge",
+                TipoIcone.Turmas => "bi bi-building",
+                TipoIcone.Filtrar => "bi bi-funnel",
+                TipoIcone.Sair => "bi bi-box-arrow-right",
                 _ => "bi bi-question-circle"
             };
 
