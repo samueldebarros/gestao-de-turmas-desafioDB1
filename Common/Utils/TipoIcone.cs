@@ -18,5 +18,6 @@ public enum TipoIcone
     Docentes,
     Turmas,
     Filtrar,
+    Aviso,
     Sair
 }

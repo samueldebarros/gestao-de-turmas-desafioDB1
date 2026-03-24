@@ -129,4 +129,17 @@ public class TurmaRepository : ITurmaRepository
             .Where(t => t.Id == id)
             .ExecuteUpdateAsync(t => t.SetProperty(t => t.Ativo, true));
     }
+    public async Task AdicionarEnturmamentoAsync(Enturmamento enturmamento)
+    {
+        await _context.Enturmamentos.AddAsync(enturmamento);
+        // Nota: Se você usa UnitOfWork, não chame o SaveChanges aqui. 
+        // Se não usa, chame o SaveChanges para efetivar no banco.
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AdicionarGradeCurricularAsync(GradeCurricular gradeCurricular)
+    {
+        await _context.GradeCurricular.AddAsync(gradeCurricular);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -1,4 +1,5 @@
-﻿using API.Service;
+﻿using API.DTOs.TurmaDTOs;
+using API.Service;
 using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
@@ -107,6 +108,51 @@ public class GerenciarTurmaController : Controller
         {
             TempData["MensagemErro"] = ex.Message;
             return RedirectToAction(nameof(Index));
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ObterDocentesPorDisciplina(int disciplinaId)
+    {
+        var docentes = await _turmaService.ObterDocentesPorDisciplinaAsync(disciplinaId);
+        return Json(docentes.Select(d => new { id = d.Id, nome = d.Nome }));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> VincularDisciplina([FromForm] VincularDisciplinaDTO dto)
+    {
+        try
+        {
+            await _turmaService.VincularDisciplinaAsync(dto);
+            return Json(new { sucesso = true });
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return Json(new { sucesso = false, mensagem = ex.Message });
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            return Json(new { sucesso = false, mensagem = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MatricularAluno([FromBody] MatricularAlunoDTO dto)
+    {
+        try
+        {
+            await _turmaService.MatricularAlunoAsync(dto);
+            return Json(new { sucesso = true });
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return Json(new { sucesso = false, mensagem = ex.Message });
+        }
+        catch (EntidadeNaoEncontradaException ex)
+        {
+            return Json(new { sucesso = false, mensagem = ex.Message });
         }
     }
 }

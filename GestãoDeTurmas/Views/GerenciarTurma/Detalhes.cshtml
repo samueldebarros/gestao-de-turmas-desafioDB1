@@ -28,7 +28,7 @@
                     data-bs-target="#aba-grade"
                     type="button"
                     role="tab">
-                <icone nome="Disciplinas">Grade e Docentes</icone>
+                <icone nome="Disciplinas"> Grade e Docentes</icone>
             </button>
         </li>
 
@@ -49,9 +49,15 @@
         </div>
 
         <div class="tab-pane fade" id="aba-alunos" role="tabpanel">
-            <partial name="_AbaAlunos" model="Model" />
+            @* <partial name="_AbaAlunos" model="Model" /> *@
         </div>
     </div>
+</div>
+<div id="detalhe-config"
+     data-turma-id="@Model.Id"
+     data-url-docentes="@Url.Action("ObterDocentesPorDisciplina", "GerenciarTurma")"
+     data-url-vincular="@Url.Action("VincularDisciplina", "GerenciarTurma")"
+     data-url-matricular="@Url.Action("MatricularAluno", "GerenciarTurma")">
 </div>
 
 @section Scripts {

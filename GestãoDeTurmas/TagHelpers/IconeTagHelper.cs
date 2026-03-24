@@ -30,6 +30,7 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Docentes => "bi bi-person-badge",
                 TipoIcone.Turmas => "bi bi-building",
                 TipoIcone.Filtrar => "bi bi-funnel",
+                TipoIcone.Aviso => "bi bi-exclamation-triangle",
                 TipoIcone.Sair => "bi bi-box-arrow-right",
                 _ => "bi bi-question-circle"
             };
