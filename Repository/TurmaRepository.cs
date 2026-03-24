@@ -132,8 +132,6 @@ public class TurmaRepository : ITurmaRepository
     public async Task AdicionarEnturmamentoAsync(Enturmamento enturmamento)
     {
         await _context.Enturmamentos.AddAsync(enturmamento);
-        // Nota: Se você usa UnitOfWork, não chame o SaveChanges aqui. 
-        // Se não usa, chame o SaveChanges para efetivar no banco.
         await _context.SaveChangesAsync();
     }
 

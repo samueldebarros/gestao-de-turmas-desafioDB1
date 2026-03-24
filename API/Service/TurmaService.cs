@@ -127,7 +127,6 @@ public class TurmaService : ITurmaService
             DocenteId = dto.DocenteId
         };
 
-        // A CORREÇÃO: Usando o próprio repositório da Turma!
         await _turmaRepository.AdicionarGradeCurricularAsync(novoVinculo);
     }
 
@@ -152,7 +151,6 @@ public class TurmaService : ITurmaService
             Situacao = SituacaoEnturmamentoEnum.Ativo
         };
 
-        // A CORREÇÃO: Usando o próprio repositório da Turma!
         await _turmaRepository.AdicionarEnturmamentoAsync(novaMatricula);
     }
 }
