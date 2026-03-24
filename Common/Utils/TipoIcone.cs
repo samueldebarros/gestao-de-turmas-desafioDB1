@@ -19,5 +19,7 @@ public enum TipoIcone
     Turmas,
     Filtrar,
     Aviso,
+    Caneta,
+    Check,
     Sair
 }

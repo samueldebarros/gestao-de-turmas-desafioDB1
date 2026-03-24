@@ -32,6 +32,8 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Filtrar => "bi bi-funnel",
                 TipoIcone.Aviso => "bi bi-exclamation-triangle",
                 TipoIcone.Sair => "bi bi-box-arrow-right",
+                TipoIcone.Caneta => "bi bi-pencil",
+                TipoIcone.Check => "bi bi-check-lg",
                 _ => "bi bi-question-circle"
             };
 

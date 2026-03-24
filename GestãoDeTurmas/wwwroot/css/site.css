@@ -215,6 +215,74 @@ input {
     padding: 0.25rem 0.5rem;
 }
 
+
+/* --- BOTÕES FANTASMA (Minimalismo com Identidade) --- */
+
+/* Botão fantasma com texto (Ideal para filtros, voltar, etc) */
+.botao-fantasma {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: transparent;
+    border: 1px solid var(--cor-identidade);
+    color: var(--cor-identidade);
+    border-radius: var(--raio-borda);
+    transition: all 0.15s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .botao-fantasma:hover {
+        background-color: var(--cor-identidade);
+        color: var(--cor-superficie);
+    }
+
+/* boteos transparentes para icones */
+.botao-acao-icone {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 1px solid var(--cor-identidade);
+    color: var(--cor-identidade);
+    border-radius: var(--raio-borda);
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+    .botao-acao-icone:hover {
+        background-color: var(--cor-identidade);
+        color: var(--cor-superficie);
+    }
+
+    /* variante de sucesso do botao com icone para o reativar */
+    .botao-acao-icone.sucesso {
+        border-color: var(--cor-sucesso);
+        color: var(--cor-sucesso);
+    }
+
+        .botao-acao-icone.sucesso:hover {
+            background-color: var(--cor-sucesso);
+            color: var(--cor-superficie);
+        }
+
+    .botao-acao-icone.perigo {
+        border-color: var(--cor-perigo);
+        color: var(--cor-perigo);
+    }
+
+        .botao-acao-icone.perigo:hover {
+            background-color: var(--cor-perigo);
+            color: var(--cor-superficie);
+        }
+
 /* containers */
 
 .form-container {
@@ -574,6 +642,7 @@ input {
 .card-turma {
     background-color: var(--cor-superficie);
     border: 1px solid var(--cor-borda);
+    border-top: 4px solid var(--cor-identidade);
     border-radius: 12px;
     padding: 18px;
     display: flex;
@@ -600,9 +669,9 @@ input {
 }
 
 .card-turma-nome {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--cor-texto);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cor-identidade);
 }
 
 .card-turma-subtitulo {

@@ -14,8 +14,11 @@
     </button>
 </div>
 
+<partial name="_Alertas" />
+
 <div class="mb-4">
-    <form method="get" class="d-flex gap-2 align-items-center">
+    <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
+
         <input type="text" name="pesquisa" value="@Model.Pesquisa"
                placeholder="Pesquisar..." class="form-control flex-grow-1" />
 
@@ -31,13 +34,15 @@
             <option value="">Ordenar por (Padrão)</option>
         </select>
 
-        <button type="submit" class="botao botao-secundario flex-shrink-0">
+        <button type="submit" class="botao-fantasma flex-shrink-0">
             <icone nome="Filtrar" /> Filtrar
         </button>
 
         @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue || Model.Ordenacao.HasValue)
         {
-            <a asp-action="Index" class="botao botao-limpar flex-shrink-0">Limpar</a>
+            <a asp-action="Index" class="botao botao-limpar flex-shrink-0" title="Limpar Filtros">
+                <icone nome="Lixeira" />
+            </a>
         }
     </form>
 </div>
@@ -46,7 +51,9 @@
 {
     <div class="text-center py-5" style="color: var(--cor-texto-suave);">
         <icone nome="Pesquisar" style="font-size: 2.5rem;"></icone>
-        <p class="mt-2">Nenhuma turma encontrada no sistema.</p>
+        <h4 class="mt-3">Nenhuma turma encontrada</h4>
+        <p>Tente ajustar seus filtros de pesquisa.</p>
+        <a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
     </div>
 }
 else

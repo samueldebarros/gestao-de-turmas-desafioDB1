@@ -1,73 +1,84 @@
 ﻿@model GestãoDeTurmas.Models.Turma.TurmaDetalhesViewModel
 
 <div class="card mb-4 shadow-sm">
-    <div class="card-body align-content-center">
-        <h6 class="card-title mb-3 text-primary">
-            <icone nome="Adicionar"> Vincular Disciplina e Docente</icone>
+    <div class="card-body">
+
+        <h6 class="mb-4" style="color: var(--cor-texto); font-weight: 600;">
+            <icone nome="Adicionar"></icone> Vincular Disciplina e Docente
         </h6>
 
-        <div class="row g-2 align-items-end">
-            <div class="col-md-5">
-                <label for="select-disciplina" class="form-label mb-1 fw-bold" style="font-size: 14px;">Disciplina</label>
+        <div class="d-flex gap-3 align-items-end flex-wrap">
 
-                <select id="select-disciplina" class="form-select" asp-items="Model.DisciplinasDisponiveis">
+            <div class="flex-grow-1" style="min-width: 250px;">
+                <label for="select-disciplina" class="form-label mb-2 fw-bold" style="font-size: 0.9rem; color: var(--cor-texto-suave);">Disciplina</label>
+                <select id="select-disciplina" class="form-select form-select-minimal" asp-items="Model.DisciplinasDisponiveis">
                     <option value="">Selecione a disciplina...</option>
                 </select>
             </div>
 
-            <div class="col-md-5">
-                <label for="select-docente" class="form-label mb-1 fw-bold">Docentes</label>
-
-                <select id="select-docente" class="form-select" disabled>
+            <div class="flex-grow-1" style="min-width: 250px;">
+                <label for="select-docente" class="form-label mb-2 fw-bold" style="font-size: 0.9rem; color: var(--cor-texto-suave);">Docente</label>
+                <select id="select-docente" class="form-select form-select-minimal" disabled>
                     <option value="">Selecione a disciplina primeiro...</option>
                 </select>
             </div>
 
-            <div class="col-md-2">
-                <button type="button" class="botao botao-primario w-100" id="btn-vincular">
+            <div style="width: 140px;">
+                <button type="button" class="botao botao-primario w-100" id="btn-vincular" style="height: 38px;">
                     Vincular
                 </button>
             </div>
         </div>
+
     </div>
 </div>
 
 <div class="card shadow-sm">
     <div class="card-body">
-        <h6 class="card-title mb-3 text-secondary">Vínculos Atuais da Turma</h6>
 
-        <div class="table-responsive mt-3">
-            <table class="table-gestao w-100" id="tabela-grade">
+        <h6 class="mb-4" style="color: var(--cor-texto); font-weight: 600;">
+            <icone nome="Disciplinas"></icone> Vínculos Atuais da Turma
+        </h6>
+
+        <div class="table-responsive">
+            <table class="table-gestao" id="tabela-grade">
                 <thead>
                     <tr>
-                        <th style="width: 40%;">Disciplina</th>
+                        <th style="width: 45%;">Disciplina</th>
                         <th>Docente Responsável</th>
-                        <th class="text-end" style="width: 100px;">Ações</th>
+                        <th class="text-center" style="width: 90px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (!Model.Grade.Any())
                     {
                         <tr>
-                            <td colspan="3" class="text-center py-5 text-muted">
-                                <icone nome="Aviso" /> Nenhuma disciplina vinculada ainda.
+                            <td colspan="3" class="text-center py-5" style="color: var(--cor-texto-suave);">
+                                <icone nome="Pesquisar" style="font-size: 2rem;"></icone>
+                                <p class="mt-2 mb-0">Nenhuma disciplina vinculada a esta turma ainda.</p>
                             </td>
                         </tr>
                     }
-                    @foreach (var item in Model.Grade)
+                    else
                     {
-                        <tr>
-                            <td class="fw-bold">@item.Disciplina</td>
-                            <td>@item.Docente</td>
-                            <td class="text-end">
-                                <button type="button"
-                                        class="botao-icone text-danger btn-remover-grade"
-                                        data-disciplina-id="@item.DisciplinaId"
-                                        title="Remover Vínculo">
-                                    <icone nome="Lixeira" />
-                                </button>
-                            </td>
-                        </tr>
+                        @foreach (var item in Model.Grade)
+                        {
+                            <tr>
+                                <td class="fw-bold" style="color: var(--cor-texto);">@item.Disciplina</td>
+                                <td style="color: var(--cor-texto);">@item.Docente</td>
+
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="button"
+                                                class="botao-acao-icone perigo btn-remover-grade"
+                                                data-disciplina-id="@item.DisciplinaId"
+                                                title="Remover Vínculo">
+                                            <icone nome="Lixeira" />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

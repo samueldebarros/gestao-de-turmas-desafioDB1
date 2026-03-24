@@ -16,13 +16,13 @@
 
     <div class="card-turma-acoes">
 
-        <button class="botao-icone"
+        <button class="botao-acao-icone"
                 onclick="abrirModal('@Url.Action("Editar", new { id = Model.Id })', 'Editar Turma')"
                 title="Editar">
             <icone nome="Editar" />
         </button>
 
-        <a asp-action="Detalhes" asp-route-id="@Model.Id" class="botao-icone" title="Gerenciar">
+        <a asp-action="Detalhes" asp-route-id="@Model.Id" class="botao-acao-icone" title="Gerenciar">
             <icone nome="SetaDireita" />
         </a>
 
