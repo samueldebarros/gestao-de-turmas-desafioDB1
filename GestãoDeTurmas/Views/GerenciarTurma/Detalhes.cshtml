@@ -1,241 +1,60 @@
-﻿@model GestãoDeTurmas.Models.Turma.TurmaDetalhesViewModel
+﻿@model GestãoDeTurmas.Models.Turma.TurmaDetalhesViewModel;
 @{
     ViewData["Title"] = Model.NomeExibicao;
 }
 
-<!-- Cabeçalho -->
-<div class="d-flex align-items-center gap-3 mb-4">
-    <a asp-action="Index" class="botao-icone" title="Voltar">
-        <icone nome="SetaEsquerda" />
-    </a>
-    <div>
-        <h5 class="mb-0">@Model.NomeExibicao</h5>
-        <span style="font-size: 13px; color: var(--cor-texto-suave);">
-            @Model.Turno · @Model.AnoLetivo · @Model.TotalMatriculados/@Model.Capacidade vagas
-        </span>
-    </div>
-</div>
+@Html.AntiForgeryToken()
 
-<!-- Abas -->
-<ul class="nav nav-tabs mb-4" id="abas-detalhe">
-    <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#aba-grade">
-            Grade e Docentes
-        </button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#aba-alunos">
-            Alunos Matriculados
-        </button>
-    </li>
-</ul>
+<div class="container-detalhes-turma" data-turma-id="@Model.Id">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <a asp-action="Index" class="botao-icone" title="Voltar">
+            <icone nome="SetaEsquerda"></icone>
+        </a>
 
-<div class="tab-content">
+        <div>
+            <h5 class="mb-0">@Model.NomeExibicao</h5>
 
-    <!-- Aba Grade -->
-    <div class="tab-pane fade show active" id="aba-grade">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h6 class="mb-3">Vincular Disciplina e Docente</h6>
-                <div class="d-flex gap-2 align-items-end">
-                    <div class="flex-grow-1">
-                        <label class="form-label">Disciplina</label>
-                        <select id="select-disciplina" class="form-select">
-                            <option value="">Selecione a disciplina...</option>
-                            @foreach (var d in Model.DisciplinasDisponiveis)
-                            {
-                                <option value="@d.Value">@d.Text</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="flex-grow-1">
-                        <label class="form-label">Docente</label>
-                        <select id="select-docente" class="form-select" disabled>
-                            <option value="">Selecione a disciplina primeiro...</option>
-                        </select>
-                    </div>
-                    <button class="botao botao-primario" id="btn-vincular">
-                        <icone nome="Adicionar" /> Vincular
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h6 class="mb-3">Vínculos Atuais</h6>
-                <table class="table-gestao" id="tabela-grade">
-                    <thead>
-                        <tr>
-                            <th>Disciplina</th>
-                            <th>Docente</th>
-                            <th class="col-acao-tabela"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!Model.Grade.Any())
-                        {
-                            <tr>
-                                <td colspan="3" class="text-center py-3"
-                                    style="color: var(--cor-texto-suave);">
-                                    Nenhuma disciplina vinculada.
-                                </td>
-                            </tr>
-                        }
-                        @foreach (var g in Model.Grade)
-                        {
-                            <tr>
-                                <td>@g.Disciplina</td>
-                                <td>@g.Docente</td>
-                                <td>
-                                    <button class="botao-icone btn-remover-grade"
-                                            data-turma="@Model.Id"
-                                            data-disciplina="@g.DisciplinaId"
-                                            title="Remover">
-                                        <icone nome="Lixeira" />
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+            <span class="text-muted ">
+                @Model.Turno - @Model.AnoLetivo - @Model.TotalMatriculados/@Model.Capacidade vagas
+            </span>
         </div>
     </div>
 
-    <!-- Aba Alunos -->
-    <div class="tab-pane fade" id="aba-alunos">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h6 class="mb-3">Matricular Aluno</h6>
-                <div class="d-flex gap-2 align-items-end">
-                    <div class="flex-grow-1">
-                        <label class="form-label">Aluno</label>
-                        <select id="select-aluno" class="form-select">
-                            <option value="">Selecione o aluno...</option>
-                            @foreach (var a in Model.AlunosDisponiveis)
-                            {
-                                <option value="@a.Value">@a.Text</option>
-                            }
-                        </select>
-                    </div>
-                    <button class="botao botao-primario" id="btn-matricular">
-                        <icone nome="Adicionar" /> Matricular
-                    </button>
-                </div>
-            </div>
+    <ul class="nav nav-tabs mb-4" id="abas-detalhes" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active"
+                    id="grade-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#aba-grade"
+                    type="button"
+                    role="tab">
+                <icone nome="Disciplinas">Grade e Docentes</icone>
+            </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link"
+                    id="alunos-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#aba-alunos"
+                    type="button"
+                    role="tab">
+                <icone nome="Usuarios"> Alunos Matriculados</icone>
+            </button>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="aba-grade" role="tabpanel">
+            <partial name="_AbaGrade" model="Model" />
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <h6 class="mb-3">
-                    Alunos Matriculados (@Model.TotalMatriculados)
-                </h6>
-                <table class="table-gestao" id="tabela-alunos">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Matrícula</th>
-                            <th>CPF</th>
-                            <th class="col-acao-tabela"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!Model.Alunos.Any())
-                        {
-                            <tr>
-                                <td colspan="4" class="text-center py-3"
-                                    style="color: var(--cor-texto-suave);">
-                                    Nenhum aluno matriculado.
-                                </td>
-                            </tr>
-                        }
-                        @foreach (var a in Model.Alunos)
-                        {
-                            <tr>
-                                <td>@a.Nome</td>
-                                <td>@a.Matricula</td>
-                                <td>@a.Cpf</td>
-                                <td>
-                                    <button class="botao-icone btn-remover-aluno"
-                                            data-turma="@Model.Id"
-                                            data-aluno="@a.AlunoId"
-                                            title="Remover">
-                                        <icone nome="Lixeira" />
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+        <div class="tab-pane fade" id="aba-alunos" role="tabpanel">
+            <partial name="_AbaAlunos" model="Model" />
         </div>
     </div>
-
 </div>
 
 @section Scripts {
-<script>
-    const turmaId = @Model.Id;
-
-    // Cascata Disciplina → Docente
-    document.getElementById('select-disciplina').addEventListener('change', function () {
-        const disciplinaId = this.value;
-        const selectDocente = document.getElementById('select-docente');
-
-        selectDocente.innerHTML = '<option value="">Carregando...</option>';
-        selectDocente.disabled = true;
-
-        if (!disciplinaId) {
-            selectDocente.innerHTML = '<option value="">Selecione a disciplina primeiro...</option>';
-            return;
-        }
-
-        fetch(`/GerenciarTurma/ObterDocentesPorDisciplina?disciplinaId=${disciplinaId}`)
-            .then(r => r.json())
-            .then(docentes => {
-                selectDocente.innerHTML = '<option value="">Selecione o docente...</option>';
-                docentes.forEach(d => {
-                    selectDocente.innerHTML += `<option value="${d.id}">${d.nome}</option>`;
-                });
-                selectDocente.disabled = false;
-            });
-    });
-
-    // Vincular Disciplina
-    document.getElementById('btn-vincular').addEventListener('click', function () {
-        const disciplinaId = document.getElementById('select-disciplina').value;
-        const docenteId = document.getElementById('select-docente').value;
-
-        if (!disciplinaId || !docenteId) return;
-
-        fetch('/GerenciarTurma/VincularDisciplina', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ turmaId, disciplinaId: parseInt(disciplinaId), docenteId: parseInt(docenteId) })
-        })
-        .then(r => r.json())
-        .then(res => {
-            if (res.sucesso) location.reload();
-            else alert(res.mensagem);
-        });
-    });
-
-    // Matricular Aluno
-    document.getElementById('btn-matricular').addEventListener('click', function () {
-        const alunoId = document.getElementById('select-aluno').value;
-        if (!alunoId) return;
-
-        fetch('/GerenciarTurma/MatricularAluno', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ turmaId, alunoId: parseInt(alunoId) })
-        })
-        .then(r => r.json())
-        .then(res => {
-            if (res.sucesso) location.reload();
-            else alert(res.mensagem);
-        });
-    });
-</script>
+    <script src="~/js/turma/detalhes.js"></script>
+    @* eu poderia usar o asp-append-version="true" para não ter problemas com cache*@
 }
