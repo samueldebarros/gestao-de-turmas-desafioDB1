@@ -8,8 +8,6 @@ namespace GestaoTurmas.TagHelpers
     {
         public TipoIcone Nome { get; set; }
 
-        public string Cor { get; set; }
-
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "i";
