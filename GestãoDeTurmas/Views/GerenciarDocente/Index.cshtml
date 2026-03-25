@@ -116,7 +116,7 @@
                                             <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
                                             <button type="button" class="botao-acao-icone" title="Inativar"
                                                     onclick="confirmar('Inativar docente', 'Tem certeza que deseja inativar este docente?', () => this.closest('form').submit(), 'botao-perigo')">
-                                                <icone nome="Lixeira" />
+                                                <icone nome="Inativar" />
                                             </button>
                                         </form>
                                     }
@@ -129,7 +129,7 @@
                                             <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
                                             <button type="button" class="botao-acao-icone sucesso" title="Reativar"
                                                     onclick="confirmar('Reativar docente', 'Tem certeza que deseja reativar este docente?', () => this.closest('form').submit(), 'botao-sucesso')">
-                                                <icone nome="Check" />
+                                                <icone nome="Reativar" />
                                             </button>
                                         </form>
                                     }

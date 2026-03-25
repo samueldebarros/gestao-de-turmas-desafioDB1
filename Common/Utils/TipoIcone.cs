@@ -21,5 +21,8 @@ public enum TipoIcone
     Aviso,
     Caneta,
     Check,
+    Inativar,
+    Reativar,
     Sair
+
 }

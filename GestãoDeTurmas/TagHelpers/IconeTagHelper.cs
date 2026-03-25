@@ -33,6 +33,8 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Aviso => "bi bi-exclamation-triangle",
                 TipoIcone.Sair => "bi bi-box-arrow-right",
                 TipoIcone.Caneta => "bi bi-pencil",
+                TipoIcone.Inativar => "bi bi-slash-circle",
+                TipoIcone.Reativar => "bi bi-arrow-counterclockwise",
                 TipoIcone.Check => "bi bi-check-lg",
                 _ => "bi bi-question-circle"
             };
