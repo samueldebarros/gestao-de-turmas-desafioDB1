@@ -18,7 +18,7 @@ namespace GestaoTurmas.TagHelpers
 
             var classeIcone = Nome switch
             {
-                TipoIcone.Usuarios => "bi bi-people",
+                TipoIcone.Alunos => "bi bi-mortarboard",
                 TipoIcone.Disciplinas => "bi bi-book",
                 TipoIcone.Editar => "bi bi-pencil",
                 TipoIcone.SetaDireita => "bi bi-arrow-right",
@@ -27,8 +27,8 @@ namespace GestaoTurmas.TagHelpers
                 TipoIcone.Pesquisar => "bi bi-search",
                 TipoIcone.Adicionar => "bi bi-plus-lg",
                 TipoIcone.Casa => "bi bi-house",
-                TipoIcone.Docentes => "bi bi-person-badge",
-                TipoIcone.Turmas => "bi bi-building",
+                TipoIcone.Docentes => "bi bi-person-workspace",
+                TipoIcone.Turmas => "bi bi-people",
                 TipoIcone.Filtrar => "bi bi-funnel",
                 TipoIcone.Aviso => "bi bi-exclamation-triangle",
                 TipoIcone.Sair => "bi bi-box-arrow-right",
@@ -41,10 +41,6 @@ namespace GestaoTurmas.TagHelpers
 
             output.Attributes.Add("class", classeIcone);
 
-            if (!string.IsNullOrEmpty(Cor))
-            {
-                output.Attributes.Add("style", $"color: {Cor};");
-            }
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Common.Utils;
 
 public enum TipoIcone
 {
-    Usuarios,
+    Alunos,
     Disciplinas,
     Editar,
     SetaDireita,
