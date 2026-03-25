@@ -129,11 +129,6 @@ public class TurmaRepository : ITurmaRepository
             .Where(t => t.Id == id)
             .ExecuteUpdateAsync(t => t.SetProperty(t => t.Ativo, true));
     }
-    public async Task AdicionarEnturmamentoAsync(Enturmamento enturmamento)
-    {
-        await _context.Enturmamentos.AddAsync(enturmamento);
-        await _context.SaveChangesAsync();
-    }
 
     public async Task AdicionarGradeCurricularAsync(GradeCurricular gradeCurricular)
     {

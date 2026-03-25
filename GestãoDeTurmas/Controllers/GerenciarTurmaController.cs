@@ -137,22 +137,4 @@ public class GerenciarTurmaController : Controller
         }
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> MatricularAluno([FromBody] MatricularAlunoDTO dto)
-    {
-        try
-        {
-            await _turmaService.MatricularAlunoAsync(dto);
-            return Json(new { sucesso = true });
-        }
-        catch (RegraDeNegocioException ex)
-        {
-            return Json(new { sucesso = false, mensagem = ex.Message });
-        }
-        catch (EntidadeNaoEncontradaException ex)
-        {
-            return Json(new { sucesso = false, mensagem = ex.Message });
-        }
-    }
 }

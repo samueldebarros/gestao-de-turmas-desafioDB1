@@ -70,12 +70,11 @@
                     body: formData 
                 });
 
-                const res = await response.json();
+                const jsonResposta = await response.json();
 
-                if (res.sucesso) {
+                if (jsonResposta.sucesso) {
                     location.reload();
                 } else {
-                    alert(res.mensagem);
                     btnVincular.disabled = false;
                     btnVincular.innerHTML = textoOriginal;
                 }
@@ -87,46 +86,4 @@
         });
     }
 
-    const selectAluno = document.getElementById('select-aluno');
-    const btnMatricular = document.getElementById('btn-matricular');
-
-    if (btnMatricular && selectAluno) {
-        btnMatricular.addEventListener('click', async function () {
-            const alunoId = selectAluno.value;
-
-            if (!alunoId) {
-                alert("Por favor, selecione um aluno para matricular.");
-                return;
-            }
-            btnMatricular.disabled = true;
-            const textoOriginal = btnMatricular.innerHTML;
-            btnMatricular.innerHTML = "Matriculando...";
-
-            try {
-                const formData = new FormData();
-                formData.append("TurmaId", turmaId);
-                formData.append("AlunoId", alunoId);
-                formData.append("__RequestVerificationToken", tokenSeguranca);
-
-                const response = await fetch(config.urlMatricular, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const res = await response.json();
-
-                if (res.sucesso) {
-                    location.reload();
-                } else {
-                    alert(res.mensagem); 
-                    btnMatricular.disabled = false;
-                    btnMatricular.innerHTML = textoOriginal;
-                }
-            } catch (error) {
-                alert("Erro de comunicação com o servidor.");
-                btnMatricular.disabled = false;
-                btnMatricular.innerHTML = textoOriginal;
-            }
-        });
-    }
 });

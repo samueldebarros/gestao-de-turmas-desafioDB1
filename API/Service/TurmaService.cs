@@ -83,14 +83,14 @@ public class TurmaService : ITurmaService
         await _turmaRepository.ReativarTurmaAsync(id);
     }
 
-    public Task<Turma?> ObterTurmaComDetalhesAsync(int id)
+    public async Task<Turma> ObterTurmaComDetalhesAsync(int id)
     {
-        var turmas = _turmaRepository.ObterTurmaComDetalhesAsync(id);
+        var turma = await _turmaRepository.ObterTurmaComDetalhesAsync(id);
 
-        if (turmas == null)
+        if (turma == null)
             throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
-        return turmas;
+        return turma;
     }
 
     public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId)
@@ -130,27 +130,4 @@ public class TurmaService : ITurmaService
         await _turmaRepository.AdicionarGradeCurricularAsync(novoVinculo);
     }
 
-    public async Task MatricularAlunoAsync(MatricularAlunoDTO dto)
-    {
-        var turma = await _turmaRepository.ObterTurmaComDetalhesAsync(dto.TurmaId);
-
-        if (turma == null)
-            throw new RegraDeNegocioException("A turma informada não foi encontrada.");
-
-        if (turma.Enturmamentos.Any(e => e.AlunoId == dto.AlunoId))
-            throw new RegraDeNegocioException("Este aluno já está matriculado nesta turma.");
-
-        if (turma.Enturmamentos.Count >= turma.Capacidade)
-            throw new RegraDeNegocioException($"A matrícula não pode ser realizada. A turma já atingiu sua capacidade máxima de {turma.Capacidade} alunos.");
-
-        var novaMatricula = new Enturmamento
-        {
-            TurmaId = dto.TurmaId,
-            AlunoId = dto.AlunoId,
-            DataEnturmamento = DateTime.Now,
-            Situacao = SituacaoEnturmamentoEnum.Ativo
-        };
-
-        await _turmaRepository.AdicionarEnturmamentoAsync(novaMatricula);
-    }
 }

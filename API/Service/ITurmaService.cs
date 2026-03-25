@@ -8,7 +8,6 @@ public interface ITurmaService
 {
 
     Task VincularDisciplinaAsync(VincularDisciplinaDTO dto);
-    Task MatricularAlunoAsync(MatricularAlunoDTO dto);
     Task<List<Turma>> ObterTodasAsTurmasAsync(string? pesquisa = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null);
     Task<Turma> ObterPorIdAsync(int id);
     Task AdicionarTurmaAsync(TurmaInputDTO turmaDto);
