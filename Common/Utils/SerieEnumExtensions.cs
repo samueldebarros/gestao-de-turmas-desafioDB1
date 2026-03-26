@@ -4,14 +4,15 @@ namespace Common.Utils;
 
 public static class SerieEnumExtensions
 {
-    public static string ObterDescricao(this SerieEnum serie)
+    public static string ObterSerieFormatada(this SerieEnum serie)
     {
         return serie switch
         {
             SerieEnum.PrimeiroAno => "1º Ano",
             SerieEnum.SegundoAno => "2º Ano",
             SerieEnum.TerceiroAno => "3º Ano",
-            _ => "Série não informada"
+            _ => "Série não informada."
         };
+
     }
 }

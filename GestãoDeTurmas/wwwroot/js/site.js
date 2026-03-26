@@ -1,79 +1,54 @@
-﻿// Modal de Input
-const existeModal = document.getElementById('modal-formulario');
-const modal = new bootstrap.Modal(document.getElementById('modal-formulario'));
-const modalBody = document.getElementById('modal-body');
-const modalTitulo = document.getElementById('modal-titulo');
+﻿const modal = new bootstrap.Modal(document.getElementById("modal-formulario"));
+const modalTitulo = document.getElementById("modal-titulo");
+const modalBody = document.getElementById("modal-body");
 
 async function abrirModal(url, titulo) {
-    modalTitulo.textContent = titulo;
-    modalBody.innerHTML = '<p class="text-center">Carregando...</p>';
+    modalTitulo.innerText = titulo;
+    modalBody.innerHTML = "<span>Carregando...</span>";
     modal.show();
 
-    const response = await fetch(url);
-    modalBody.innerHTML = await response.text();
-
-    const campoCpf = modalBody.querySelector('.mascara-cpf');
-    if (campoCpf) {
-        $(campoCpf).mask('000.000.000-00');
-    }
+    const resposta = await fetch(url);
+    modalBody.innerHTML = await resposta.text();
 }
 
-document.getElementById('modal-formulario').addEventListener('submit', async function (e) {
-    e.preventDefault();
+document.getElementById('modal-formulario').addEventListener('submit', async () => {
+    event.preventDefault();
 
-    const form = e.target.closest('form');
-    const url = form.action;
+    const form = event.target;
+    const urlForm = form.action;
     const formData = new FormData(form);
 
-    const response = await fetch(url, {
+    const respostaForm = await fetch(urlForm, {
         method: 'POST',
         body: formData
     });
 
-    const contentType = response.headers.get('content-type');
+    const contentType = respostaForm.headers.get("Content-Type");
 
-    if (contentType && contentType.includes('application/json')) {
-        const json = await response.json();
+    if (contentType.includes("application/json")) {
+        const json = await respostaForm.json();
         if (json.sucesso) {
             modal.hide();
             location.reload();
-        } else {
-            const alertaErro = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                              ${json.mensagem}
-                              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                           </div>`;
-
-            modalBody.insertAdjacentHTML('afterbegin', alertaErro);
         }
     } else {
-        modalBody.innerHTML = await response.text();
-
-        const campoCpf = modalBody.querySelector('.mascara-cpf');
-        if (campoCpf) {
-            $(campoCpf).mask('000.000.000-00');
-        }
+        modalBody.innerHTML = await respostaForm.text();
     }
-});
-//--------------------------------------------------
-// Modal de confirmação
+})
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modal-confirmacao'));
-    const modalConfirmacaoTitulo = document.getElementById('modal-confirmacao-titulo');
-    const modalConfirmacaoMensagem = document.getElementById('modal-confirmacao-mensagem');
-    const modalConfirmacaoBtn = document.getElementById('modal-confirmacao-btn');
+// Modal de confirmação - a fazer
 
-    window.confirmar = function (titulo, mensagem, onConfirmar, tipoBotao = 'botao-perigo') {
-        modalConfirmacaoTitulo.textContent = titulo;
-        modalConfirmacaoMensagem.textContent = mensagem;
-
-        modalConfirmacaoBtn.className = `botao ${tipoBotao}`;
-
-        modalConfirmacaoBtn.onclick = () => {
-            modalConfirmacao.hide();
-            onConfirmar();
-        };
-
-        modalConfirmacao.show();
-    };
-});
+/* 
+<div class="modal fade" id="modal-formulario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-titulo"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+*/

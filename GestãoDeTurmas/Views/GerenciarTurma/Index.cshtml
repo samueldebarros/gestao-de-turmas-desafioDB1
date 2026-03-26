@@ -1,69 +1,14 @@
-﻿@using Common.Enums
-@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel
-
-@{
-    ViewData["Title"] = "Turmas";
-}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Gestão de Turmas</h2>
-
-    <button class="botao botao-primario"
-            onclick="abrirModal('@Url.Action("Adicionar")', 'Nova Turma')">
-        <icone nome="Adicionar"></icone> Nova Turma
-    </button>
-</div>
-
-<partial name="_Alertas" />
-
-<div class="mb-4">
-    <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
-
-        <input type="text" name="pesquisa" value="@Model.Pesquisa"
-               placeholder="Pesquisar..." class="form-control flex-grow-1" />
-
-        <select name="ativo" class="form-select flex-shrink-0" style="width: 160px;">
-            <option value="">Todos os Status</option>
-            <option value="true" selected="@(Model.Ativo == true)">Ativas</option>
-            <option value="false" selected="@(Model.Ativo == false)">Inativas</option>
-        </select>
-
-        <select name="ordenacao" class="form-select flex-shrink-0" asp-for="Ordenacao"
-                asp-items="Html.GetEnumSelectList<OrdenacaoTurmaEnum>()"
-                style="width: 200px;">
-            <option value="">Ordenar por (Padrão)</option>
-        </select>
-
-        <button type="submit" class="botao-fantasma flex-shrink-0">
-            <icone nome="Filtrar" /> Filtrar
-        </button>
-
-        @if (!string.IsNullOrEmpty(Model.Pesquisa) || Model.Ativo.HasValue || Model.Ordenacao.HasValue)
-        {
-            <a asp-action="Index" class="botao botao-limpar flex-shrink-0" title="Limpar Filtros">
-                <icone nome="Lixeira" />
-            </a>
-        }
-    </form>
-</div>
-
-@if (!Model.TurmasCadastradas.Any())
-{
-    <div class="text-center py-5" style="color: var(--cor-texto-suave);">
-        <icone nome="Pesquisar" style="font-size: 2.5rem;"></icone>
-        <h4 class="mt-3">Nenhuma turma encontrada</h4>
-        <p>Tente ajustar seus filtros de pesquisa.</p>
-        <a asp-action="Index" class="btn btn-outline-primary mt-2">Limpar Busca</a>
+﻿@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel;
+<div class="card">
+    <div class="d-flex justify-content-between card-header">
+        <h4>Gerenciar Turmas</h4>
+        <button type="button" class="botao botao-primario">Adicionar</button>
     </div>
-}
-else
-{
-    <div class="cards-turmas">
-        @foreach (var turma in Model.TurmasCadastradas)
+    <div class="card-body d-flex gap-3">
+        @foreach(var turma in Model.Turmas)
         {
             <partial name="_CardTurma" model="turma" />
         }
-    </div>
-}
 
-<partial name="_ModalGenerico" />
+    </div>
+</div>
