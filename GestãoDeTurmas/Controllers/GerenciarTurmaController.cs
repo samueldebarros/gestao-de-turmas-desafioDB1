@@ -1,4 +1,6 @@
 ﻿using API.Service;
+using GestãoDeTurmas.Mappers;
+using GestãoDeTurmas.Models.Turma;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestãoDeTurmas.Controllers;
@@ -12,8 +14,16 @@ public class GerenciarTurmaController : Controller
         _turmaService = turmaService;
     }
 
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var turmasExistentes = await _turmaService.ObterTodasAsTurmasAsync();
+
+        GerenciarTurmaViewModel turmaModel = new GerenciarTurmaViewModel
+        {
+            Turmas = turmasExistentes.Select(t => t.ToListaViewModel()).ToList()
+        };
+
+        return View(turmaModel);
     }
 }

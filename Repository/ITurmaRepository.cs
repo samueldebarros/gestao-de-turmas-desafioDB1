@@ -8,5 +8,5 @@ namespace Repository;
 
 public interface ITurmaRepository
 {
-
+    public Task<List<Turma>> ObterTodasAsTurmasAsync();
 }

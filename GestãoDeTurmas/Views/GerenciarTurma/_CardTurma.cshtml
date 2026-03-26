@@ -1,19 +1,21 @@
 ﻿@model GestãoDeTurmas.Models.Turma.ListaTurmaViewModel;
 
 <div class="card-turma">
-    <div class="card-header">
-        <h5>@Model.NomeExibicao</h5>
-        <h6>@Model.Turno - @Model.AnoLetivo</h6>
+    <div class="card-turma-topo">
+        <h5 class="card-turma-nome">@Model.NomeExibicao</h5>
     </div>
-    <div class="card-body d-flex gap-1">
+    <h6 class="card-turma-subtitulo">@Model.Turno - @Model.AnoLetivo</h6>
+    <div class="card-body d-flex gap-2">
         <small>
-            <icone nome="Alunos" /> @Model.QuantidadeAlunos
+            <icone nome="Alunos" /> 
+            @Model.QuantidadeAlunos Alunos
         </small>
         <small>
-            <icone nome="Disciplinas" /> @Model.QuantidadeDisciplinas
+            <icone nome="Disciplinas" /> 
+            @Model.QuantidadeDisciplinas Disciplinas
         </small>
     </div>
-    <div class="card-footer">
+    <div class="card-turma-acoes">
         <button class="botao-acao-icone" title="Editar">
             <icone nome="Editar"></icone>
         </button>

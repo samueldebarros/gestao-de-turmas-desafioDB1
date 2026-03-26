@@ -6,6 +6,6 @@ namespace API.Service;
 
 public interface ITurmaService
 {
-
+    Task<List<Turma>> ObterTodasAsTurmasAsync();
 
 }
