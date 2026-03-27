@@ -8,4 +8,6 @@ public interface ITurmaService
 {
     Task<List<Turma>> ObterTodasAsTurmasAsync();
     Task AdicionarTurmaAsync(TurmaInputDTO turma);
+    Task<Turma> ObterTurmaPeloIdAsync(int id);
+    Task EditarTurmaAsync(TurmaEditarDTO turmaDTO);
 }

@@ -30,10 +30,29 @@ public class TurmaService : ITurmaService
         await _turmaRepository.AdicionarTurmaAsync(turma);
     }
 
+    public async Task EditarTurmaAsync(TurmaEditarDTO turmaDTO)
+    {
+        var turma = await _turmaRepository.ObterTurmaPeloIdAsync(turmaDTO.Id);
+
+        if (turma == null)
+            throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        turma.Turno = turmaDTO.Turno;
+        turma.Capacidade = turmaDTO.Capacidade;
+        turma.Serie = turmaDTO.Serie;
+        turma.AnoLetivo = turmaDTO.AnoLetivo;
+        turma.Identificador = turmaDTO.Identificador;
+
+        await _turmaRepository.EditarTurmaAsync(turma);
+    }
+
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
     { 
         return await _turmaRepository.ObterTodasAsTurmasAsync();
     }
 
-   
+    public async Task<Turma> ObterTurmaPeloIdAsync(int id)
+    {
+        return await _turmaRepository.ObterTurmaPeloIdAsync(id);
+    }
 }

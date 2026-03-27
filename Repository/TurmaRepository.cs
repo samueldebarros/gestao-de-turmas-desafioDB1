@@ -21,6 +21,12 @@ public class TurmaRepository : ITurmaRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task EditarTurmaAsync(Turma turma)
+    {
+        _context.Turmas.Update(turma);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
     {
         return await _context.Turmas
@@ -29,5 +35,10 @@ public class TurmaRepository : ITurmaRepository
             .AsNoTracking()
             .AsSplitQuery()
             .ToListAsync();
+    }
+
+    public async Task<Turma> ObterTurmaPeloIdAsync(int id)
+    {
+        return await _context.Turmas.FirstOrDefaultAsync(t => t.Id == id);
     }
 }

@@ -10,4 +10,6 @@ public interface ITurmaRepository
 {
     public Task<List<Turma>> ObterTodasAsTurmasAsync();
     Task AdicionarTurmaAsync(Turma turma);
+    Task<Turma> ObterTurmaPeloIdAsync(int id);
+    Task EditarTurmaAsync(Turma turma);
 }

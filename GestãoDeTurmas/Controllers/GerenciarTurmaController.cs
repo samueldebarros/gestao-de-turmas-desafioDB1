@@ -2,6 +2,7 @@
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Turma;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestãoDeTurmas.Controllers;
@@ -51,8 +52,30 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpGet]
-    public IActionResult Editar()
+    public async Task<IActionResult> Editar(int id)
     {
-        return PartialView("_Editar");
+        var turma = await _turmaService.ObterTurmaPeloIdAsync(id);
+
+        var turmaModel = turma.ToEditarViewModel();
+
+        return PartialView("_Editar", turmaModel);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Editar(TurmaEditarViewModel turmaModel)
+    {
+        if (!ModelState.IsValid) return PartialView("_Editar", turmaModel);
+
+        try
+        {
+            await _turmaService.EditarTurmaAsync(turmaModel.ToEditarDTO());
+            TempData["MensagemSucesso"] = "Turma editada com sucesso!";
+            return Json(new { sucesso = true });
+        } catch(EntidadeNaoEncontradaException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return PartialView("_Editar", turmaModel);
+        }
+    }
+
 }
