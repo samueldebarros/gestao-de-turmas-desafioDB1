@@ -15,6 +15,12 @@ public class TurmaRepository : ITurmaRepository
         _context = context;
     }
 
+    public async Task AdicionarTurmaAsync(Turma turma)
+    {
+        await _context.Turmas.AddAsync(turma);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
     {
         return await _context.Turmas

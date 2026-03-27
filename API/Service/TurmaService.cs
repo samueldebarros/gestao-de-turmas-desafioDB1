@@ -15,10 +15,25 @@ public class TurmaService : ITurmaService
         _turmaRepository = turmaRepository;
     }
 
-    public async Task<List<Turma>> ObterTodasAsTurmasAsync()
+    public async Task AdicionarTurmaAsync(TurmaInputDTO turmaDTO)
     {
-        var turmas = await _turmaRepository.ObterTodasAsTurmasAsync();
-        return turmas;
+        var turma = new Turma()
+        {
+            Identificador = turmaDTO.Identificador,
+            Serie = turmaDTO.Serie,
+            Turno = turmaDTO.Turno,
+            AnoLetivo = turmaDTO.AnoLetivo,
+            Capacidade = turmaDTO.Capacidade,
+            Ativo = true,
+        };
 
+        await _turmaRepository.AdicionarTurmaAsync(turma);
     }
+
+    public async Task<List<Turma>> ObterTodasAsTurmasAsync()
+    { 
+        return await _turmaRepository.ObterTodasAsTurmasAsync();
+    }
+
+   
 }

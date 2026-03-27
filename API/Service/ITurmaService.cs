@@ -7,5 +7,5 @@ namespace API.Service;
 public interface ITurmaService
 {
     Task<List<Turma>> ObterTodasAsTurmasAsync();
-
+    Task AdicionarTurmaAsync(TurmaInputDTO turma);
 }

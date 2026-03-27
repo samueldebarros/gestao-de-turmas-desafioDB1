@@ -1,0 +1,43 @@
+﻿@using Common.Enums
+@model GestãoDeTurmas.Models.Turma.TurmaInputViewModel;
+
+<form method="post" asp-controller="GerenciarTurma" asp-action="Adicionar">
+    <div asp-validation-summary="ModelOnly" class="alerta alerta-erro" role="alert"></div>
+
+    <div class="form-group">
+        <label for="identificador">Identificador</label>
+        <input type="text" class="form-control" asp-for="@Model.Identificador" />
+        <span asp-validation-for="@Model.Identificador" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="serie">Serie</label>
+        <select class="form-select" asp-for="@Model.Serie" asp-items="@Html.GetEnumSelectList<SerieEnum>()">
+            <option value="">Selecione uma série...</option>
+        </select>
+        <span asp-validation-for="@Model.Serie" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="turno">Turno</label>
+        <select class="form-select" asp-for="@Model.Turno" asp-items="@Html.GetEnumSelectList<TurnoEnum>()">
+            <option value="">Selecione um turno...</option>
+        </select>
+        <span asp-validation-for="@Model.Turno" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="anoLetivo">Ano Letivo</label>
+        <input type="number" class="form-control" asp-for="@Model.AnoLetivo" />
+        <span asp-validation-for="@Model.AnoLetivo" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="capacidade">Capacidade</label>
+        <input type="number" class="form-control" asp-for="@Model.Capacidade" />
+        <span asp-validation-for="@Model.Capacidade" class="text-danger"></span>
+    </div>
+
+    <br />
+    <button class="botao botao-primario">Adicionar</button>
+</form>
