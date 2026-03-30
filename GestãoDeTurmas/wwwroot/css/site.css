@@ -216,9 +216,7 @@ input {
 }
 
 
-/* --- BOTÕES FANTASMA (Minimalismo com Identidade) --- */
-
-/* Botão fantasma com texto (Ideal para filtros, voltar, etc) */
+/* Botão fantasma com texto (filtros, voltar, etc) */
 .botao-fantasma {
     display: inline-flex;
     align-items: center;

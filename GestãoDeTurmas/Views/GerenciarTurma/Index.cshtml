@@ -1,4 +1,5 @@
-﻿@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel;
+﻿@using Common.Enums
+@model GestãoDeTurmas.Models.Turma.GerenciarTurmaViewModel;
 <div>
     <div class="d-flex justify-content-between pb-4">
         <h4>Gerenciar Turmas</h4>
@@ -7,8 +8,27 @@
 
     <partial name="_Alertas"></partial>
 
+    <form method="get" asp-action="Index" asp-controller="GerenciarTurma" class="d-flex flex-row pb-2 gap-2 align-items-end">
+        <div class="form-group col">
+            <label></label>
+            <input class="form-control" type="text" asp-for="@Model.Pesquisa" placeholder="Pesquisar..." />
+        </div>
+        <div class="form-group col-3">
+            <label></label>
+            <select class="form-select" asp-for="@Model.Ordenacao" asp-items="Html.GetEnumSelectList<OrdenacaoTurmaEnum>()">
+                <option value="">Ordenar por (Padrão)</option>
+            </select>
+        </div>
+        <div>
+            <label></label>
+            <button type="submit" class="botao-fantasma">
+                <icone nome="Filtrar"></icone> Filtrar
+            </button>
+        </div>
+    </form>
+
     <div class="cards-turmas flex-md-column">
-        @foreach(var turma in Model.Turmas)
+        @foreach (var turma in Model.Turmas)
         {
             <partial name="_CardTurma" model="turma" />
         }

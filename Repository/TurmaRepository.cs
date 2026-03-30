@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Utils;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
@@ -13,7 +14,38 @@ public class TurmaRepository : ITurmaRepository
     {
         _context = context;
     }
-    
+
+    private IQueryable<Turma> AplicarFiltros(IQueryable<Turma> query, string? pesquisa)
+    {
+        if (!string.IsNullOrEmpty(pesquisa))
+        {
+            var pesquisaTratada = pesquisa.ToLower().Trim().Replace("º", "");
+
+            //----
+            var seriesCompativeis = Enum.GetValues<SerieEnum>()
+            .Where(s => s.ObterSerieFormatada().ToLower().Trim().Replace("º", "").Contains(pesquisaTratada))
+            .ToList();
+            //----
+            query = query.Where(t =>
+                t.Identificador.Contains(pesquisa) ||
+                t.AnoLetivo.ToString().Contains(pesquisa) ||
+                seriesCompativeis.Contains(t.Serie));
+           
+        }
+
+        return query;
+    }
+
+    private IQueryable<Turma> AplicarOrdenacao(IQueryable<Turma> query, OrdenacaoTurmaEnum? ordenacao)
+    {
+        return ordenacao switch
+        {
+            OrdenacaoTurmaEnum.Serie => query.OrderBy(t => t.Serie).ThenBy(t => t.Identificador),
+            OrdenacaoTurmaEnum.Turno => query.OrderBy(t => t.Turno).ThenBy(t => t.Serie),
+            _ => query.OrderByDescending(t => t.AnoLetivo).ThenBy(t => t.Serie).ThenBy(t => t.Identificador)
+        };
+    }
+
     public async Task<bool> ValidarPelosIdentificadores(string identificador, SerieEnum serie, int anoLetivo, int? ignorarId = null)
     {
         var query = _context.Turmas.AsNoTracking().AsQueryable();
@@ -48,9 +80,17 @@ public class TurmaRepository : ITurmaRepository
             .ToListAsync();
     }
 
-    public async Task<List<TurmaResumo>> ObterTurmasSimplificadasAsync()
+    public async Task<List<TurmaResumo>> ObterTurmasSimplificadasAsync(string? pesquisa = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
-        return await _context.Turmas
+        var query = _context.Turmas.AsNoTracking().AsQueryable();
+
+        if(pesquisa != null)
+            query = AplicarFiltros(query, pesquisa);
+
+        if(ordenacao != null)
+            query = AplicarOrdenacao(query, ordenacao);
+
+        return await query
             .Select(t => new TurmaResumo()
             {
                 Id = t.Id,
@@ -62,7 +102,6 @@ public class TurmaRepository : ITurmaRepository
                 QuantidadeAlunos = t.Enturmamentos.Count,
                 QuantidadeDisciplinas = t.GradeCurricular.Count
             })
-            .AsNoTracking()
             .ToListAsync();
     }
 

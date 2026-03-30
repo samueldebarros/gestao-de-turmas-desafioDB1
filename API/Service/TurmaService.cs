@@ -61,9 +61,9 @@ public class TurmaService : ITurmaService
         return await _turmaRepository.ObterTodasAsTurmasAsync();
     }
 
-    public async Task<List<ListaTurmasDTO>> ObterTurmasSimplificadasAsync()
+    public async Task<List<ListaTurmasDTO>> ObterTurmasSimplificadasAsync(string? pesquisa = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
-        var turmas = await _turmaRepository.ObterTurmasSimplificadasAsync();
+        var turmas = await _turmaRepository.ObterTurmasSimplificadasAsync(pesquisa, ordenacao);
 
         var turmasDTO = turmas.Select(t => new ListaTurmasDTO
         {

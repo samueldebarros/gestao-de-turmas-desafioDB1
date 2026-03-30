@@ -1,4 +1,5 @@
 ﻿using API.Service;
+using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Turma;
@@ -17,13 +18,15 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? pesquisa = null, OrdenacaoTurmaEnum? ordenacao = null)
     {
-        var turmasExistentes = await _turmaService.ObterTurmasSimplificadasAsync();
+        var turmasExistentes = await _turmaService.ObterTurmasSimplificadasAsync(pesquisa, ordenacao);
 
         GerenciarTurmaViewModel turmaModel = new GerenciarTurmaViewModel
         {
-            Turmas = turmasExistentes.Select(t => t.ToListaViewModel()).ToList()
+            Turmas = turmasExistentes.Select(t => t.ToListaViewModel()).ToList(),
+            Pesquisa = pesquisa,
+            Ordenacao = ordenacao
         };
 
         return View(turmaModel);
