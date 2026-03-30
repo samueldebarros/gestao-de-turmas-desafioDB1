@@ -6,18 +6,18 @@ namespace GestãoDeTurmas.Mappers;
 
 public static class TurmaMapperExtensions
 {
-    public static ListaTurmaViewModel ToListaViewModel(this Turma turma)
+    public static ListaTurmaViewModel ToListaViewModel(this ListaTurmasDTO turma)
     {
         return new ListaTurmaViewModel()
         {
-            TurmaId = turma.Id,
+            TurmaId = turma.TurmaId,
             Identificador = turma.Identificador,
             AnoLetivo = turma.AnoLetivo,
             Turno = turma.Turno,
             Capacidade = turma.Capacidade,
             Serie = turma.Serie,
-            QuantidadeAlunos = turma.Enturmamentos.Count(),
-            QuantidadeDisciplinas = turma.GradeCurricular.Count()
+            QuantidadeAlunos = turma.QuantidadeAlunos,
+            QuantidadeDisciplinas = turma.QuantidadeDisciplinas
         };
     }
 

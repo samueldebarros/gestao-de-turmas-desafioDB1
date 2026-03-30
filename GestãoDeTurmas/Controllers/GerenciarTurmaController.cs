@@ -19,7 +19,7 @@ public class GerenciarTurmaController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var turmasExistentes = await _turmaService.ObterTodasAsTurmasAsync();
+        var turmasExistentes = await _turmaService.ObterTurmasSimplificadasAsync();
 
         GerenciarTurmaViewModel turmaModel = new GerenciarTurmaViewModel
         {

@@ -1,6 +1,4 @@
 ﻿using Common.Domains;
-using Common.Utils;
-using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 
@@ -34,6 +32,24 @@ public class TurmaRepository : ITurmaRepository
             .Include(t => t.GradeCurricular).ThenInclude(g => g.Disciplina)
             .AsNoTracking()
             .AsSplitQuery()
+            .ToListAsync();
+    }
+
+    public async Task<List<TurmaResumo>> ObterTurmasSimplificadasAsync()
+    {
+        return await _context.Turmas
+            .Select(t => new TurmaResumo()
+            {
+                Id = t.Id,
+                Identificador = t.Identificador,
+                Turno = t.Turno,
+                Serie = t.Serie,
+                Capacidade = t.Capacidade,
+                AnoLetivo = t.AnoLetivo,
+                QuantidadeAlunos = t.Enturmamentos.Count,
+                QuantidadeDisciplinas = t.GradeCurricular.Count
+            })
+            .AsNoTracking()
             .ToListAsync();
     }
 
