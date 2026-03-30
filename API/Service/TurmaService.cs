@@ -15,8 +15,16 @@ public class TurmaService : ITurmaService
         _turmaRepository = turmaRepository;
     }
 
+    private async Task ValidarTurma(string identificador, SerieEnum serie, int anoLetivo, int? ignorarId = null)
+    {
+        if (await _turmaRepository.ValidarPelosIdentificadores(identificador, serie, anoLetivo, ignorarId))
+            throw new RegraDeNegocioException("Já existe uma turma com essa combinação de Identificador, Série e Ano letivo");
+    }
+
     public async Task AdicionarTurmaAsync(TurmaInputDTO turmaDTO)
     {
+        await ValidarTurma(turmaDTO.Identificador, turmaDTO.Serie, turmaDTO.AnoLetivo);
+
         var turma = new Turma()
         {
             Identificador = turmaDTO.Identificador,
@@ -37,6 +45,8 @@ public class TurmaService : ITurmaService
         if (turma == null)
             throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
+        await ValidarTurma(turmaDTO.Identificador, turmaDTO.Serie, turmaDTO.AnoLetivo, turmaDTO.Id);
+
         turma.Turno = turmaDTO.Turno;
         turma.Capacidade = turmaDTO.Capacidade;
         turma.Serie = turmaDTO.Serie;
@@ -47,13 +57,13 @@ public class TurmaService : ITurmaService
     }
 
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
-    { 
+    {
         return await _turmaRepository.ObterTodasAsTurmasAsync();
     }
 
     public async Task<List<ListaTurmasDTO>> ObterTurmasSimplificadasAsync()
     {
-        var turmas =  await _turmaRepository.ObterTurmasSimplificadasAsync();
+        var turmas = await _turmaRepository.ObterTurmasSimplificadasAsync();
 
         var turmasDTO = turmas.Select(t => new ListaTurmasDTO
         {

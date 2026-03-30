@@ -4,6 +4,9 @@
         <h4>Gerenciar Turmas</h4>
         <button type="button" class="botao botao-primario" onclick="abrirModal('@Url.Action("Adicionar")', 'Adicionar Turma')">Adicionar</button>
     </div>
+
+    <partial name="_Alertas"></partial>
+
     <div class="cards-turmas flex-md-column">
         @foreach(var turma in Model.Turmas)
         {

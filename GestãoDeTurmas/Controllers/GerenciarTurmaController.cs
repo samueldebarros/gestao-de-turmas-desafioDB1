@@ -36,6 +36,7 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(TurmaInputViewModel turmaModel)
     {
         if (!ModelState.IsValid) return PartialView("_Adicionar", turmaModel);
@@ -62,6 +63,7 @@ public class GerenciarTurmaController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(TurmaEditarViewModel turmaModel)
     {
         if (!ModelState.IsValid) return PartialView("_Editar", turmaModel);
@@ -72,6 +74,11 @@ public class GerenciarTurmaController : Controller
             TempData["MensagemSucesso"] = "Turma editada com sucesso!";
             return Json(new { sucesso = true });
         } catch(EntidadeNaoEncontradaException ex)
+        {
+            ModelState.AddModelError(string.Empty, ex.Message);
+            return PartialView("_Editar", turmaModel);
+        }
+        catch (RegraDeNegocioException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Editar", turmaModel);
