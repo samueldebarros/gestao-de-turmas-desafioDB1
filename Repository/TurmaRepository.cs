@@ -21,16 +21,13 @@ public class TurmaRepository : ITurmaRepository
         {
             var pesquisaTratada = pesquisa.ToLower().Trim().Replace("º", "");
 
-            //----
-            var seriesCompativeis = Enum.GetValues<SerieEnum>()
+            var series = Enum.GetValues<SerieEnum>()
             .Where(s => s.ObterSerieFormatada().ToLower().Trim().Replace("º", "").Contains(pesquisaTratada))
             .ToList();
-            //----
-            query = query.Where(t =>
-                t.Identificador.Contains(pesquisa) ||
+
+            query = query.Where(t => t.Identificador.Contains(pesquisa) ||
                 t.AnoLetivo.ToString().Contains(pesquisa) ||
-                seriesCompativeis.Contains(t.Serie));
-           
+                series.Contains(t.Serie));
         }
 
         return query;
