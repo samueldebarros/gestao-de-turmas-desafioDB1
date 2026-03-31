@@ -40,9 +40,14 @@ namespace GestãoDeTurmas.Controllers
                 PesquisaAtual = pesquisa,
                 SexoAtual = sexo,
                 AtivoAtual = ativo,
+                FiltrosAtivos = new Dictionary<string, string>(),
 
                 NovoAluno = new AlunoInputViewModel()
             };
+
+            if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
+            if (sexo != null) viewModel.FiltrosAtivos.Add("sexo", sexo.Value.ToString());
+            if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
 
             return View(viewModel);
         }

@@ -14,11 +14,7 @@
         TemProximaPagina = Model.TemProximaPagina,
         Controller = "GerenciarAluno",
         Action = "Index",
-        Filtros = PaginacaoViewModel.MontarFiltros(
-        ("pesquisa", Model.PesquisaAtual),
-        ("sexo", Model.SexoAtual),
-        ("ativo", Model.AtivoAtual)
-    )
+        Filtros = Model.FiltrosAtivos
     };
 }
 
@@ -82,9 +78,12 @@
                     <tr>
                         <th>Matricula</th>
                         <th>
-                            <a asp-action="Index" asp->
-                                Nome
-                            </a>
+                            @{
+                                var rotaMatricula = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaMatricula["ordenacao"] = "Matricula";
+                                rotaMatricula["direcao"] = (Model.Ordenacao == "Matricula" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaMatricula">Nome</a>
                         </th>
                         <th>CPF</th>
                         <th>Email</th>
@@ -125,6 +124,10 @@
                                         </button>
 
                                         <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post" class="m-0">
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="submit" class="botao-acao-icone" title="Inativar">
                                                 <icone nome="Inativar" />
@@ -134,6 +137,10 @@
                                     else
                                     {
                                         <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
                                                 <icone nome="Reativar" />

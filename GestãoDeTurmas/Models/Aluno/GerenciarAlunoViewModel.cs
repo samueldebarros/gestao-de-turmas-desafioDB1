@@ -17,5 +17,6 @@ namespace GestãoDeTurmas.Models.Aluno
         public string? PesquisaAtual { get; set; }
         public SexoEnum? SexoAtual { get; set; }
         public bool? AtivoAtual { get; set; }
+        public Dictionary<string, string> FiltrosAtivos { get; set; } = new();
     }
 }
