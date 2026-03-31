@@ -126,8 +126,7 @@
 
                                         <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post" class="m-0">
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="button" class="botao-acao-icone" title="Inativar"
-                                                    onclick="confirmar('Inativar aluno', 'Tem certeza?', () => this.closest('form').submit(), 'botao-perigo')">
+                                            <button type="submit" class="botao-acao-icone" title="Inativar">
                                                 <icone nome="Inativar" />
                                             </button>
                                         </form>
@@ -136,8 +135,7 @@
                                     {
                                         <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="button" class="botao-acao-icone sucesso" title="Reativar"
-                                                    onclick="confirmar('Reativar aluno', 'Tem certeza?', () => this.closest('form').submit(), 'botao-sucesso')">
+                                            <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
                                                 <icone nome="Reativar" />
                                             </button>
                                         </form>
