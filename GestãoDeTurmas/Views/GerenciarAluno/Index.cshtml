@@ -79,11 +79,11 @@
                         <th>Matricula</th>
                         <th>
                             @{
-                                var rotaMatricula = new Dictionary<string, string>(Model.FiltrosAtivos);
-                                rotaMatricula["ordenacao"] = "Matricula";
-                                rotaMatricula["direcao"] = (Model.Ordenacao == "Matricula" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                                var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaNome["ordenacao"] = "Nome";
+                                rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
-                            <a asp-action="Index" asp-all-route-data="rotaMatricula">Nome</a>
+                            <a asp-action="Index" asp-all-route-data="rotaNome">Nome</a>
                         </th>
                         <th>CPF</th>
                         <th>Email</th>
