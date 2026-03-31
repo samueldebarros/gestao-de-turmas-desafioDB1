@@ -13,8 +13,8 @@
         Controller = "GerenciarDisciplina",
         Action = "Index",
         Filtros = PaginacaoViewModel.MontarFiltros(
-            ("pesquisa", ViewBag.PesquisaAtual),
-            ("ativo", ViewBag.AtivoAtual)
+            ("pesquisa", Model.PesquisaAtual),
+            ("ativo", Model.AtivoAtual)
         )
     };
 }
@@ -36,19 +36,19 @@
             <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
 
                 <input type="text" name="pesquisa" class="form-control flex-grow-1"
-                       placeholder="Nome ou Ementa" value="@ViewBag.PesquisaAtual" />
+                       placeholder="Nome ou Ementa" value="@Model.PesquisaAtual" />
 
                 <select name="ativo" class="form-select flex-shrink-0" style="width: 140px;">
                     <option value="">Status</option>
-                    <!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
-                    <!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
+                    <!option value="true" @(Model.AtivoAtual == true ? "selected" : "")>Ativos</!option>
+                    <!option value="false" @(Model.AtivoAtual == false ? "selected" : "")>Inativos</!option>
                 </select>
 
                 <button type="submit" class="botao-fantasma flex-shrink-0">
                     <icone nome="Filtrar" /> Filtrar
                 </button>
 
-                @if (ViewBag.PesquisaAtual != null || ViewBag.AtivoAtual != null)
+                @if (Model.PesquisaAtual != null || Model.AtivoAtual != null)
                 {
                     <a asp-action="Index" class="botao botao-limpar flex-shrink-0" title="Limpar Filtros">
                         <icone nome="Lixeira" />
@@ -108,8 +108,8 @@
 
                                         <form asp-action="Inativar" asp-route-id="@disciplina.Id" method="post" class="m-0">
                                             @Html.AntiForgeryToken()
-                                            <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
+                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="button" class="botao-acao-icone" title="Inativar"
                                                     onclick="confirmar('Inativar disciplina', 'Tem certeza que deseja inativar esta disciplina?', () => this.closest('form').submit(), 'botao-perigo')">
@@ -121,8 +121,8 @@
                                     {
                                         <form asp-action="Reativar" asp-route-id="@disciplina.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
                                             @Html.AntiForgeryToken()
-                                            <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
+                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="button" class="botao-acao-icone sucesso" title="Reativar"
                                                     onclick="confirmar('Reativar disciplina', 'Tem certeza que deseja reativar esta disciplina?', () => this.closest('form').submit(), 'botao-sucesso')">

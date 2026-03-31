@@ -20,9 +20,6 @@ public class GerenciarDisciplinaController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null)
     {
-        ViewBag.PesquisaAtual = pesquisa;
-        ViewBag.AtivoAtual = ativo;
-
         var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo);
 
         if (pagina > listaDisciplinas.TotalPaginas && listaDisciplinas.TotalPaginas > 0)
@@ -41,6 +38,8 @@ public class GerenciarDisciplinaController : Controller
             TotalResultados = listaDisciplinas.TotalResultados,
             PaginaAtual = pagina,
             TotalPaginas = listaDisciplinas.TotalPaginas,
+            PesquisaAtual = pesquisa,
+            AtivoAtual = ativo,
         };
 
         return View(viewModel);

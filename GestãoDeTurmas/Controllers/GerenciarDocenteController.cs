@@ -19,12 +19,9 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pagina = 1,string? pesquisa = null, bool? ativo = null)
+        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null)
         {
-            ViewBag.PesquisaAtual = pesquisa;
-            ViewBag.AtivoAtual = ativo;
-
-            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa,ativo);
+            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo);
 
             if (pagina > docentesPaginados.TotalPaginas && docentesPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new { pagina = docentesPaginados.TotalPaginas, pesquisa, ativo });
@@ -41,7 +38,9 @@ namespace GestãoDeTurmas.Controllers
                 TotalResultados = docentesPaginados.TotalResultados,
                 TemProximaPagina = docentesPaginados.TemProximaPagina,
                 TamanhoPagina = docentesPaginados.TamanhoPagina,
-                TemPaginaAnterior = docentesPaginados.TemPaginaAnterior
+                TemPaginaAnterior = docentesPaginados.TemPaginaAnterior,
+                PesquisaAtual = pesquisa,
+                AtivoAtual = ativo,
             };
 
             return View(viewModel);
@@ -51,7 +50,7 @@ namespace GestãoDeTurmas.Controllers
         public async Task<IActionResult> Adicionar()
         {
             await PopularDisciplinasAsync();
-            return PartialView("_Adicionar",new DocenteInputViewModel());
+            return PartialView("_Adicionar", new DocenteInputViewModel());
         }
 
         [HttpPost]
@@ -61,16 +60,16 @@ namespace GestãoDeTurmas.Controllers
             if (!ModelState.IsValid)
             {
                 await PopularDisciplinasAsync();
-                return PartialView("_Adicionar",model);
+                return PartialView("_Adicionar", model);
             }
-            
+
             try
             {
                 var docenteDTO = model.ToDTO();
 
                 await _docenteService.AdicionarDocenteAsync(docenteDTO);
                 TempData["MensagemSucesso"] = "Docente adicionado com sucesso!";
-                return Json(new {sucesso = true  });
+                return Json(new { sucesso = true });
             }
             catch (RegraDeNegocioException ex)
             {
@@ -89,7 +88,7 @@ namespace GestãoDeTurmas.Controllers
             DocenteEditarViewModel viewModel = docente.ToEditarViewModel();
 
             await PopularDisciplinasAsync();
-            return PartialView("_Editar",viewModel);
+            return PartialView("_Editar", viewModel);
         }
 
         [HttpPost]
@@ -108,13 +107,13 @@ namespace GestãoDeTurmas.Controllers
             {
                 await _docenteService.EditarDocenteAsync(docenteAlterado);
                 TempData["MensagemSucesso"] = "Docente editado com sucesso!";
-                return Json(new {sucesso = true });
-            } 
+                return Json(new { sucesso = true });
+            }
             catch (RegraDeNegocioException ex)
             {
                 await PopularDisciplinasAsync();
-                ModelState.AddModelError(string.Empty,ex.Message);
-                return PartialView("_Editar",viewModel);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return PartialView("_Editar", viewModel);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
@@ -131,12 +130,12 @@ namespace GestãoDeTurmas.Controllers
             {
                 await _docenteService.InativarDocenteAsync(id);
                 TempData["MensagemSucesso"] = "Docente inativado com sucesso!";
-                return RedirectToAction(nameof(Index), new {pagina, pesquisa, ativo});
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
             catch (EntidadeNaoEncontradaException ex)
             {
                 TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index), new {pagina, pesquisa, ativo });
+                return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
 
         }
@@ -157,7 +156,7 @@ namespace GestãoDeTurmas.Controllers
                 return RedirectToAction(nameof(Index), new { pagina, pesquisa, ativo });
             }
         }
-        
+
         private async Task PopularDisciplinasAsync()
         {
             var disciplinas = await _disciplinaService.ObterDisciplinasAtivasAsync();

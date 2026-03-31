@@ -11,5 +11,7 @@ public class GerenciarDisciplinaViewModel
     public bool TemProximaPagina { get; set; }
     public bool TemPaginaAnterior { get; set; }
     public int TotalResultados { get; set; }
+    public string? PesquisaAtual { get; set; }
+    public bool? AtivoAtual { get; set; }
 
 }

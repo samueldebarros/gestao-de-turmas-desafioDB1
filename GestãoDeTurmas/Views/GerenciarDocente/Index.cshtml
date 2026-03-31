@@ -13,8 +13,8 @@
         Controller = "GerenciarDocente",
         Action = "Index",
         Filtros = PaginacaoViewModel.MontarFiltros(
-        ("pesquisa", ViewBag.PesquisaAtual),
-        ("ativo", ViewBag.AtivoAtual)
+        ("pesquisa", Model.PesquisaAtual),
+        ("ativo", Model.AtivoAtual)
     )
     };
 }
@@ -36,19 +36,19 @@
             <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
 
                 <input type="text" name="pesquisa" class="form-control flex-grow-1"
-                       placeholder="Nome, CPF ou Disciplina" value="@ViewBag.PesquisaAtual" />
+                       placeholder="Nome, CPF ou Disciplina" value="@Model.PesquisaAtual" />
 
                 <select name="ativo" class="form-select flex-shrink-0" style="width: 140px;">
                     <option value="">Status</option>
-                    <!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
-                    <!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
+                    <!option value="true" @(Model.AtivoAtual == true ? "selected" : "")>Ativos</!option>
+                    <!option value="false" @(Model.AtivoAtual == false ? "selected" : "")>Inativos</!option>
                 </select>
 
                 <button type="submit" class="botao-fantasma flex-shrink-0">
                     <icone nome="Filtrar" /> Filtrar
                 </button>
 
-                @if (ViewBag.PesquisaAtual != null || ViewBag.AtivoAtual != null)
+                @if (Model.PesquisaAtual != null || Model.AtivoAtual != null)
                 {
                     <a asp-action="Index" class="botao botao-limpar flex-shrink-0" title="Limpar Filtros">
                         <icone nome="Lixeira" />
@@ -112,8 +112,8 @@
                                         <form asp-action="Inativar" asp-route-id="@docente.Id" method="post" class="m-0">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
+                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <button type="button" class="botao-acao-icone" title="Inativar"
                                                     onclick="confirmar('Inativar docente', 'Tem certeza que deseja inativar este docente?', () => this.closest('form').submit(), 'botao-perigo')">
                                                 <icone nome="Inativar" />
@@ -125,8 +125,8 @@
                                         <form asp-action="Reativar" asp-route-id="@docente.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <input type="hidden" name="pesquisa" value="@ViewBag.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@ViewBag.AtivoAtual?.ToString().ToLower()" />
+                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
+                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <button type="button" class="botao-acao-icone sucesso" title="Reativar"
                                                     onclick="confirmar('Reativar docente', 'Tem certeza que deseja reativar este docente?', () => this.closest('form').submit(), 'botao-sucesso')">
                                                 <icone nome="Reativar" />

@@ -11,4 +11,6 @@ public class GerenciarDocenteViewModel
     public int TotalResultados { get; set; }
     public bool TemProximaPagina { get; set; }
     public bool TemPaginaAnterior { get; set; }
+    public string? PesquisaAtual { get; set; }
+    public bool? AtivoAtual { get; set; }
 }
