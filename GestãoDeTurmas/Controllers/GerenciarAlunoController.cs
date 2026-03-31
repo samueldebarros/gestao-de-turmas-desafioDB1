@@ -20,10 +20,6 @@ namespace GestãoDeTurmas.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
         {
-            ViewBag.PesquisaAtual = pesquisa;
-            ViewBag.SexoAtual = sexo;
-            ViewBag.AtivoAtual = ativo;
-
             var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, sexo, ativo);
 
             if(pagina > alunosPaginados.TotalPaginas && alunosPaginados.TotalPaginas > 0)
@@ -41,6 +37,9 @@ namespace GestãoDeTurmas.Controllers
                 TemPaginaAnterior = alunosPaginados.TemPaginaAnterior,
                 TotalResultados = alunosPaginados.TotalResultados,
                 TemProximaPagina = alunosPaginados.TemProximaPagina,
+                PesquisaAtual = pesquisa,
+                SexoAtual = sexo,
+                AtivoAtual = ativo,
 
                 NovoAluno = new AlunoInputViewModel()
             };

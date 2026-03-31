@@ -1,4 +1,6 @@
-﻿namespace GestãoDeTurmas.Models.Aluno
+﻿using Common.Enums;
+
+namespace GestãoDeTurmas.Models.Aluno
 {
     public class GerenciarAlunoViewModel
     {
@@ -10,5 +12,10 @@
         public int TamanhoPagina { get; set; }
         public bool TemPaginaAnterior { get; set; }
         public bool TemProximaPagina { get; set; }
+        public DirecaoOrdenacaoEnum? Direcao { get; set; }
+        public string? Ordenacao { get; set; }
+        public string? PesquisaAtual { get; set; }
+        public SexoEnum? SexoAtual { get; set; }
+        public bool? AtivoAtual { get; set; }
     }
 }

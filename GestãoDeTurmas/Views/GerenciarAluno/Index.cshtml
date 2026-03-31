@@ -15,9 +15,9 @@
         Controller = "GerenciarAluno",
         Action = "Index",
         Filtros = PaginacaoViewModel.MontarFiltros(
-        ("pesquisa", ViewBag.PesquisaAtual),
-        ("sexo", ViewBag.SexoAtual),
-        ("ativo", ViewBag.AtivoAtual)
+        ("pesquisa", Model.PesquisaAtual),
+        ("sexo", Model.SexoAtual),
+        ("ativo", Model.AtivoAtual)
     )
     };
 }
@@ -39,26 +39,26 @@
             <form asp-action="Index" method="get" class="d-flex gap-2 align-items-center">
 
                 <input type="text" name="pesquisa" class="form-control flex-grow-1"
-                       placeholder="Nome, CPF ou Matricula" value="@ViewBag.PesquisaAtual" />
+                       placeholder="Nome, CPF ou Matricula" value="@Model.PesquisaAtual" />
 
                 <select name="sexo" class="form-select flex-shrink-0" style="width: 140px;">
                     <option value="">Sexo</option>
-                    <!option value="1" @(ViewBag.SexoAtual == SexoEnum.Masculino ? "selected" : "")>Masculino</!option>
-                    <!option value="2" @(ViewBag.SexoAtual == SexoEnum.Feminino ? "selected" : "")>Feminino</!option>
-                    <!option value="3" @(ViewBag.SexoAtual == SexoEnum.Outro ? "selected" : "")>Outro</!option>
+                    <!option value="1" @(Model.SexoAtual == SexoEnum.Masculino ? "selected" : "")>Masculino</!option>
+                    <!option value="2" @(Model.SexoAtual == SexoEnum.Feminino ? "selected" : "")>Feminino</!option>
+                    <!option value="3" @(Model.SexoAtual == SexoEnum.Outro ? "selected" : "")>Outro</!option>
                 </select>
 
                 <select name="ativo" class="form-select flex-shrink-0" style="width: 140px;">
                     <option value="">Status</option>
-                    <!option value="true" @(ViewBag.AtivoAtual == true ? "selected" : "")>Ativos</!option>
-                    <!option value="false" @(ViewBag.AtivoAtual == false ? "selected" : "")>Inativos</!option>
+                    <!option value="true" @(Model.AtivoAtual == true ? "selected" : "")>Ativos</!option>
+                    <!option value="false" @(Model.AtivoAtual == false ? "selected" : "")>Inativos</!option>
                 </select>
 
                 <button type="submit" class="botao-fantasma flex-shrink-0">
                     <icone nome="Filtrar" /> Filtrar
                 </button>
 
-                @if (ViewBag.PesquisaAtual != null || ViewBag.SexoAtual != null || ViewBag.AtivoAtual != null)
+                @if (Model.PesquisaAtual != null || Model.SexoAtual != null || Model.AtivoAtual != null)
                 {
                     <a asp-action="Index" class="botao botao-limpar flex-shrink-0" title="Limpar Filtros">
                         <icone nome="Lixeira" />
@@ -81,7 +81,11 @@
                 <thead>
                     <tr>
                         <th>Matricula</th>
-                        <th>Nome</th>
+                        <th>
+                            <a asp-action="Index" asp->
+                                Nome
+                            </a>
+                        </th>
                         <th>CPF</th>
                         <th>Email</th>
                         <th>Nascimento</th>
@@ -121,7 +125,6 @@
                                         </button>
 
                                         <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post" class="m-0">
-                                            @Html.AntiForgeryToken()
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="button" class="botao-acao-icone" title="Inativar"
                                                     onclick="confirmar('Inativar aluno', 'Tem certeza?', () => this.closest('form').submit(), 'botao-perigo')">
@@ -132,7 +135,6 @@
                                     else
                                     {
                                         <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
-                                            @Html.AntiForgeryToken()
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="button" class="botao-acao-icone sucesso" title="Reativar"
                                                     onclick="confirmar('Reativar aluno', 'Tem certeza?', () => this.closest('form').submit(), 'botao-sucesso')">
