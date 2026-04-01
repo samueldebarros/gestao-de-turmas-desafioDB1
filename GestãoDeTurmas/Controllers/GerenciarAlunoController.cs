@@ -18,9 +18,10 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
         {
-            var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, sexo, ativo);
+            var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, sexo, ativo, ordenacao, direcao);
 
             if(pagina > alunosPaginados.TotalPaginas && alunosPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new {pagina = alunosPaginados.TotalPaginas, pesquisa, sexo, ativo});
@@ -41,6 +42,8 @@ namespace GestãoDeTurmas.Controllers
                 SexoAtual = sexo,
                 AtivoAtual = ativo,
                 FiltrosAtivos = new Dictionary<string, string>(),
+                Ordenacao = ordenacao,
+                Direcao = direcao,
 
                 NovoAluno = new AlunoInputViewModel()
             };

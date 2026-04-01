@@ -1,22 +1,7 @@
 ﻿@using Common.Enums
+@using Common.Utils
 @using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Aluno.GerenciarAlunoViewModel
-
-@{
-    var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
-    var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
-
-    var paginacao = new PaginacaoViewModel
-    {
-        PaginaAtual = Model.PaginaAtual,
-        TotalPaginas = Model.TotalPaginas,
-        TemPaginaAnterior = Model.TemPaginaAnterior,
-        TemProximaPagina = Model.TemProximaPagina,
-        Controller = "GerenciarAluno",
-        Action = "Index",
-        Filtros = Model.FiltrosAtivos
-    };
-}
 
 <div class="card">
     <div class="card-body">
@@ -76,18 +61,44 @@
             <table class="table-gestao">
                 <thead>
                     <tr>
-                        <th>Matricula</th>
+                        <th>
+                            @{
+                                var rotaMatricula = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaMatricula["ordenacao"] = "Matricula";
+                                rotaMatricula["direcao"] = (Model.Ordenacao == "Matricula" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaMatricula" style="color: #ffffff;" >Matricula</a>
+                            @if (Model.Ordenacao == "Matricula")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
+                            }
+                        </th>
                         <th>
                             @{
                                 var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaNome["ordenacao"] = "Nome";
                                 rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
-                            <a asp-action="Index" asp-all-route-data="rotaNome">Nome</a>
+                            <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;" >Nome</a>
+                            @if (Model.Ordenacao == "Nome")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
+                            }
                         </th>
                         <th>CPF</th>
                         <th>Email</th>
-                        <th>Nascimento</th>
+                        <th>
+                            @{
+                                var rotaDataNascimento = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaDataNascimento["ordenacao"] = "DataNascimento";
+                                rotaDataNascimento["direcao"] = (Model.Ordenacao == "DataNascimento" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaDataNascimento" style="color: #ffffff;">Data de Nascimento</a>
+                            @if (Model.Ordenacao == "DataNascimento")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
+                            }
+                        </th>
                         <th>Sexo</th>
                         <th class="text-center">Status</th>
                         <th class="text-center" style="width: 90px;">Ações</th>
@@ -159,8 +170,8 @@
             <a class="botao-fantasma" asp-controller="PaginaInicial" asp-action="Index">
                 <icone nome="SetaEsquerda" /> Voltar
             </a>
-            <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
-            <partial name="_Paginacao" model="paginacao" />
+            <small class="text-muted">@Model.InicioPagina-@Model.FimPagina de @Model.TotalResultados</small>
+            <partial name="_Paginacao" model="@Model.MontarPaginacao("GerenciarAluno","Index")" />
         </div>
     </div>
 </div>

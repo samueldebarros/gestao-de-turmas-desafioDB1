@@ -102,9 +102,11 @@ namespace API.Service
             await _alunoRepository.AdicionarAsync(novoAluno);
         }
 
-        public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
+            string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
         {
-            var (alunos, total) = await _alunoRepository.ObterTodosOsAlunoAsync(pagina, tamanho, pesquisa, sexo, ativo);
+            var (alunos, total) = await _alunoRepository.ObterTodosOsAlunoAsync(pagina, tamanho, pesquisa, sexo, ativo, ordenacao, direcao);
 
             var resultadoPaginado = new ListaPaginada<Aluno>(alunos, total, pagina, tamanho);
 

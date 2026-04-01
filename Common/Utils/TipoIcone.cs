@@ -11,6 +11,8 @@ public enum TipoIcone
     Editar,
     SetaDireita,
     SetaEsquerda,
+    SetaCima,
+    SetaBaixo,
     Lixeira,
     Pesquisar,
     Adicionar,

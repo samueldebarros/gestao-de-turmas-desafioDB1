@@ -21,7 +21,21 @@ namespace Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null)
+        private IQueryable<Aluno> OrdenarLista(IQueryable<Aluno> query,string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
+        {
+            bool isDesc = direcao == DirecaoOrdenacaoEnum.Desc;
+
+            return ordenacao switch
+            { 
+                "Matricula" => isDesc ? query.OrderByDescending(a => a.Matricula) : query.OrderBy(a => a.Matricula),
+                "Nome" => isDesc ? query.OrderByDescending(a => a.Nome) : query.OrderBy(a => a.Nome),
+                "DataNascimento" => isDesc ? query.OrderByDescending(a => a.DataNascimento) : query.OrderBy(a => a.DataNascimento),
+                _ => query.OrderBy(a => a.Nome)
+            };
+        }
+
+        public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
+            string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
         {
             var query = _context.Alunos.AsNoTracking().AsQueryable();
 
@@ -38,10 +52,12 @@ namespace Repository
 
             if (ativo.HasValue) query = query.Where(a => a.Ativo == ativo.Value);        
 
+
             int total = await query.CountAsync();
 
-            var lista = await query.OrderBy(a => a.Nome)
-                .Skip((pagina - 1) * tamanho)
+            query = OrdenarLista(query, ordenacao, direcao);
+
+            var lista = await query.Skip((pagina - 1) * tamanho)
                 .Take(tamanho)
                 .ToListAsync();
 
