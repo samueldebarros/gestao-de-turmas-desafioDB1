@@ -1,16 +1,12 @@
-﻿namespace GestãoDeTurmas.Models.Disciplina;
+﻿using Common.Enums;
+using GestãoDeTurmas.Views.Shared;
 
-public class GerenciarDisciplinaViewModel
+namespace GestãoDeTurmas.Models.Disciplina;
+
+public class GerenciarDisciplinaViewModel : ListagemBaseViewModel
 {
     public List<DisciplinaListaViewModel> DisciplinasCadastradas { get; set; }
     public DisciplinaInputViewModel NovaDisciplina { get; set; }
-
-    public int TotalPaginas { get; set; }
-    public int PaginaAtual { get; set; }
-    public int TamanhoPagina { get; set; }
-    public bool TemProximaPagina { get; set; }
-    public bool TemPaginaAnterior { get; set; }
-    public int TotalResultados { get; set; }
     public string? PesquisaAtual { get; set; }
     public bool? AtivoAtual { get; set; }
 

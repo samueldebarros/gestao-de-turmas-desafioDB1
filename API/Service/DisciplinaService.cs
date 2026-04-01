@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.DTOs.DisciplinaDTOs;
 using Common.Domains;
+using Common.Enums;
 using Common.Exceptions;
 using Repository;
 
@@ -75,9 +76,10 @@ public class DisciplinaService : IDisciplinaService
         return await _disciplinaRepository.ObterInativoPorIdAsync(id);
     }
 
-    public async Task<ListaPaginada<Disciplina>> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
+    public async Task<ListaPaginada<Disciplina>> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
     {
-        var (disciplinas, total) = await _disciplinaRepository.ObterTodasAsDisciplinasAsync(pagina, tamanho, pesquisa,ativo);
+        var (disciplinas, total) = await _disciplinaRepository.ObterTodasAsDisciplinasAsync(pagina, tamanho, pesquisa,ativo, ordenacao, direcao);
 
         var disciplinasPaginadas = new ListaPaginada<Disciplina>(disciplinas, total, pagina, tamanho);
 

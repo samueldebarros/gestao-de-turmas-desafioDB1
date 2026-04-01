@@ -1,16 +1,12 @@
-﻿namespace GestãoDeTurmas.Models.Docente;
+﻿using Common.Enums;
+using GestãoDeTurmas.Views.Shared;
 
-public class GerenciarDocenteViewModel
+namespace GestãoDeTurmas.Models.Docente;
+
+public class GerenciarDocenteViewModel : ListagemBaseViewModel
 {
     public List<DocenteListaViewModel> DocentesCadastrados { get; set; } = new List<DocenteListaViewModel>();
     public DocenteInputViewModel NovoDocente { get; set; } = new DocenteInputViewModel();
-
-    public int PaginaAtual { get; set; }
-    public int TotalPaginas { get; set; }
-    public int TamanhoPagina { get; set; }
-    public int TotalResultados { get; set; }
-    public bool TemProximaPagina { get; set; }
-    public bool TemPaginaAnterior { get; set; }
     public string? PesquisaAtual { get; set; }
     public bool? AtivoAtual { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using API.Service;
 using Common;
+using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Disciplina;
@@ -18,9 +19,10 @@ public class GerenciarDisciplinaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null)
+    public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
     {
-        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo);
+        var listaDisciplinas = await _disciplinaService.ObterTodasAsDisciplinasAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo, ordenacao, direcao);
 
         if (pagina > listaDisciplinas.TotalPaginas && listaDisciplinas.TotalPaginas > 0)
             return RedirectToAction(nameof(Index), new { pagina = listaDisciplinas.TotalPaginas, pesquisa, ativo });
@@ -39,8 +41,14 @@ public class GerenciarDisciplinaController : Controller
             PaginaAtual = pagina,
             TotalPaginas = listaDisciplinas.TotalPaginas,
             PesquisaAtual = pesquisa,
+            Ordenacao = ordenacao,
+            Direcao = direcao,
+            FiltrosAtivos = new Dictionary<string, string>(),
             AtivoAtual = ativo,
         };
+
+        if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
+        if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
 
         return View(viewModel);
     }

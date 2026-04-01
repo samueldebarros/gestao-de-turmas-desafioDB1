@@ -22,11 +22,8 @@
                 <input type="text" name="pesquisa" class="form-control flex-grow-1"
                        placeholder="Nome, CPF ou Matricula" value="@Model.PesquisaAtual" />
 
-                <select name="sexo" class="form-select flex-shrink-0" style="width: 140px;">
+                <select name="sexo" class="form-select flex-shrink-0" asp-for="@Model.SexoAtual" asp-items="@Html.GetEnumSelectList<SexoEnum>()" style="width: 140px;">
                     <option value="">Sexo</option>
-                    <!option value="1" @(Model.SexoAtual == SexoEnum.Masculino ? "selected" : "")>Masculino</!option>
-                    <!option value="2" @(Model.SexoAtual == SexoEnum.Feminino ? "selected" : "")>Feminino</!option>
-                    <!option value="3" @(Model.SexoAtual == SexoEnum.Outro ? "selected" : "")>Outro</!option>
                 </select>
 
                 <select name="ativo" class="form-select flex-shrink-0" style="width: 140px;">

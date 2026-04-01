@@ -1,23 +1,7 @@
-﻿@using GestãoDeTurmas.Views.Shared
+﻿@using Common.Enums
+@using Common.Utils
+@using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Disciplina.GerenciarDisciplinaViewModel
-@{
-    var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
-    var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
-
-    var paginacao = new PaginacaoViewModel
-    {
-        PaginaAtual = Model.PaginaAtual,
-        TotalPaginas = Model.TotalPaginas,
-        TemPaginaAnterior = Model.TemPaginaAnterior,
-        TemProximaPagina = Model.TemProximaPagina,
-        Controller = "GerenciarDisciplina",
-        Action = "Index",
-        Filtros = PaginacaoViewModel.MontarFiltros(
-            ("pesquisa", Model.PesquisaAtual),
-            ("ativo", Model.AtivoAtual)
-        )
-    };
-}
 
 <div class="card">
     <div class="card-body">
@@ -71,8 +55,30 @@
             <table class="table-gestao">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th class="text-center">Carga Horária</th>
+                        <th>
+                            @{
+                                var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaNome["ordenacao"] = "Nome";
+                                rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
+                            @if (Model.Ordenacao == "Nome")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)"></icone>
+                            }
+                        </th>
+                        <th class="text-center">
+                            @{
+                                var rotaCargaHoraria = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaCargaHoraria["ordenacao"] = "CargaHoraria";
+                                rotaCargaHoraria["direcao"] = (Model.Ordenacao == "CargaHoraria" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaCargaHoraria" style="color: #ffffff;">Carga Horária</a>
+                            @if(Model.Ordenacao == "CargaHoraria")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)"></icone>
+                            }
+                        </th>
                         <th>Ementa</th>
                         <th class="text-center">Status</th>
                         <th class="text-center" style="width: 90px;">Ações</th>
@@ -107,9 +113,10 @@
                                         </button>
 
                                         <form asp-action="Inativar" asp-route-id="@disciplina.Id" method="post" class="m-0">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="submit" class="botao-acao-icone" title="Inativar">
                                                 <icone nome="Inativar" />
@@ -119,9 +126,10 @@
                                     else
                                     {
                                         <form asp-action="Reativar" asp-route-id="@disciplina.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
                                             <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
                                                 <icone nome="Reativar" />
@@ -141,9 +149,9 @@
                 <icone nome="SetaEsquerda" /> Voltar
             </a>
 
-            <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
+            <small class="text-muted">@Model.InicioPagina-@Model.FimPagina de @Model.TotalResultados</small>
 
-            <partial name="_Paginacao" model="paginacao" />
+            <partial name="_Paginacao" model="@Model.MontarPaginacao("GerenciarDisciplina", "Index")" />
         </div>
 
         <partial name="_ModalGenerico" />

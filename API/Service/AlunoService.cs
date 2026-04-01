@@ -76,7 +76,7 @@ namespace API.Service
                 if (await _alunoRepository.ExistePeloEmailAsync(email, ignorarId))
                     throw new RegraDeNegocioException("Este e-mail já esta em uso.");
 
-            if (!sexo.HasValue || sexo == SexoEnum.NaoInformado)
+            if (!sexo.HasValue)
                 throw new RegraDeNegocioException("Selecione um sexo.");
 
         }

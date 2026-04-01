@@ -1,6 +1,7 @@
 ﻿using API.DTOs;
 using API.DTOs.DocenteDTOs;
 using Common.Domains;
+using Common.Enums;
 using Common.Exceptions;
 using Common.Utils;
 using Repository;
@@ -108,9 +109,10 @@ public class DocenteService : IDocenteService
         await _docenteRepository.ReativarDocenteAsync(id);
     }
 
-    public async Task<ListaPaginada<Docente>> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
+    public async Task<ListaPaginada<Docente>> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
     {
-        var (docentes, total) = await _docenteRepository.ObterTodosOsDocentesAsync(pagina, tamanho, pesquisa,ativo);
+        var (docentes, total) = await _docenteRepository.ObterTodosOsDocentesAsync(pagina, tamanho, pesquisa,ativo, ordenacao, direcao);
 
         var docentesPaginados = new ListaPaginada<Docente>(docentes, total, pagina, tamanho);
 

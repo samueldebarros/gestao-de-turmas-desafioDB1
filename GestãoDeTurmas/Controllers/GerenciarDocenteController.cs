@@ -1,5 +1,6 @@
 ﻿using API.Service;
 using Common;
+using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Docente;
@@ -19,9 +20,10 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null)
+        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
         {
-            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo);
+            var docentesPaginados = await _docenteService.ObterTodosOsDocentesAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, ativo, ordenacao, direcao);
 
             if (pagina > docentesPaginados.TotalPaginas && docentesPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new { pagina = docentesPaginados.TotalPaginas, pesquisa, ativo });
@@ -40,8 +42,14 @@ namespace GestãoDeTurmas.Controllers
                 TamanhoPagina = docentesPaginados.TamanhoPagina,
                 TemPaginaAnterior = docentesPaginados.TemPaginaAnterior,
                 PesquisaAtual = pesquisa,
+                FiltrosAtivos = new Dictionary<string, string>(),
+                Ordenacao = ordenacao,
+                Direcao = direcao,
                 AtivoAtual = ativo,
             };
+
+            if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
+            if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
 
             return View(viewModel);
         }

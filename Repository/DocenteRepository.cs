@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 
@@ -12,6 +13,21 @@ public class DocenteRepository : IDocenteRepository
     {
         _context = context;
     }
+
+    private IQueryable<Docente> OrdenarPor(IQueryable<Docente> query, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
+    {
+        bool IsDesc = direcao == DirecaoOrdenacaoEnum.Desc;
+
+        return ordenacao switch
+        {
+            "Nome" => IsDesc ? query.OrderByDescending(d => d.Nome) : query.OrderBy(d => d.Nome),
+            "Disciplina" => IsDesc ? query.OrderByDescending(d => d.Disciplina.Nome) : query.OrderBy(d => d.Disciplina.Nome),
+            "DataNascimento" => IsDesc ? query.OrderByDescending(d => d.DataNascimento) : query.OrderBy(d => d.DataNascimento),
+            _ => query.OrderBy(d => d.Nome)
+        };
+    }
+
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
         return await _context.Docentes
@@ -48,7 +64,8 @@ public class DocenteRepository : IDocenteRepository
             .ToListAsync();
     }
 
-    public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
+    public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
     {
         var query = _context.Docentes.Include(d => d.Disciplina).AsNoTracking().AsQueryable();
 
@@ -64,8 +81,9 @@ public class DocenteRepository : IDocenteRepository
 
         int total = await query.CountAsync();
 
-        var docentesPaginados = await query.OrderBy(d => d.Nome)
-            .Skip((pagina - 1) * tamanho)
+        query = OrdenarPor(query, ordenacao, direcao);
+
+        var docentesPaginados = await query.Skip((pagina - 1) * tamanho)
             .Take(tamanho)
             .ToListAsync();
 

@@ -1,23 +1,7 @@
-﻿@using GestãoDeTurmas.Views.Shared
+﻿@using Common.Enums
+@using Common.Utils
+@using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Docente.GerenciarDocenteViewModel
-@{
-    var inicioPagina = (Model.PaginaAtual - 1) * Model.TamanhoPagina + 1;
-    var fimPagina = Math.Min(Model.PaginaAtual * Model.TamanhoPagina, Model.TotalResultados);
-
-    var paginacao = new PaginacaoViewModel
-    {
-        PaginaAtual = Model.PaginaAtual,
-        TotalPaginas = Model.TotalPaginas,
-        TemPaginaAnterior = Model.TemPaginaAnterior,
-        TemProximaPagina = Model.TemProximaPagina,
-        Controller = "GerenciarDocente",
-        Action = "Index",
-        Filtros = PaginacaoViewModel.MontarFiltros(
-        ("pesquisa", Model.PesquisaAtual),
-        ("ativo", Model.AtivoAtual)
-    )
-    };
-}
 
 <div class="card">
     <div class="card-body">
@@ -71,11 +55,44 @@
             <table class="table-gestao">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Disciplina</th>
+                        <th>
+                            @{
+                                var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaNome["ordenacao"] = "Nome";
+                                rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
+                            @if(Model.Ordenacao == "Nome")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)"></icone>
+                            }
+                        </th>
+                        <th>
+                            @{
+                                var rotaDisciplina = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaDisciplina["ordenacao"] = "Disciplina";
+                                rotaDisciplina["direcao"] = (Model.Ordenacao == "Disciplina" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaDisciplina" style="color: #ffffff;">Disciplina</a>
+                            @if (Model.Ordenacao == "Disciplina")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)"></icone>
+                            }
+                        </th>
                         <th>CPF</th>
                         <th>Email</th>
-                        <th>Data de Nascimento</th>
+                        <th>
+                            @{
+                                var rotaDataNascimento = new Dictionary<string, string>(Model.FiltrosAtivos);
+                                rotaDataNascimento["ordenacao"] = "DataNascimento";
+                                rotaDataNascimento["direcao"] = (Model.Ordenacao == "DataNascimento" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
+                            }
+                            <a asp-action="Index" asp-all-route-data="rotaDataNascimento" style="color: #ffffff;">Data de Nascimento</a>
+                            @if (Model.Ordenacao == "DataNascimento")
+                            {
+                                <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
+                            }
+                        </th>
                         <th class="text-center">Status</th>
                         <th class="text-center" style="width: 90px;">Ações</th>
                     </tr>
@@ -110,10 +127,11 @@
                                         </button>
 
                                         <form asp-action="Inativar" asp-route-id="@docente.Id" method="post" class="m-0">
-                                            @Html.AntiForgeryToken()
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <button type="submit" class="botao-acao-icone" title="Inativar">
                                                 <icone nome="Inativar" />
                                             </button>
@@ -122,10 +140,11 @@
                                     else
                                     {
                                         <form asp-action="Reativar" asp-route-id="@docente.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
-                                            @Html.AntiForgeryToken()
+                                            @foreach (var filtro in Model.FiltrosAtivos)
+                                            {
+                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
+                                            }
                                             <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <input type="hidden" name="pesquisa" value="@Model.PesquisaAtual" />
-                                            <input type="hidden" name="ativo" value="@Model.AtivoAtual?.ToString().ToLower()" />
                                             <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
                                                 <icone nome="Reativar" />
                                             </button>
@@ -144,9 +163,9 @@
                 <icone nome="SetaEsquerda" /> Voltar
             </a>
 
-            <small class="text-muted">@inicioPagina-@fimPagina de @Model.TotalResultados</small>
+            <small class="text-muted">@Model.InicioPagina-@Model.FimPagina de @Model.TotalResultados</small>
 
-            <partial name="_Paginacao" model="paginacao" />
+            <partial name="_Paginacao" model="@Model.MontarPaginacao("GerenciarDocente", "Index")" />
         </div>
 
         <partial name="_ModalGenerico" />

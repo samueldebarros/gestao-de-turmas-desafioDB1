@@ -1,4 +1,5 @@
 ﻿using Common.Domains;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 
@@ -11,6 +12,18 @@ public class DisciplinaRepository : IDisciplinaRepository
     public DisciplinaRepository(GestaoEscolarContext context)
     {
         _context = context;
+    }
+
+    private IQueryable<Disciplina> OrdenarPor(IQueryable<Disciplina> query, string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
+    {
+        bool isDesc = direcao == DirecaoOrdenacaoEnum.Desc;
+
+        return ordenacao switch
+        {
+            "Nome" => isDesc ? query.OrderByDescending(d => d.Nome) : query.OrderBy(d => d.Nome),
+            "CargaHoraria" => isDesc ? query.OrderByDescending(d => d.CargaHoraria) : query.OrderBy(d => d.CargaHoraria),
+            _ => query.OrderBy(d => d.Nome)
+        };
     }
 
     public async Task AdicionarDisciplinaAsync(Disciplina disciplina)
@@ -56,20 +69,22 @@ public class DisciplinaRepository : IDisciplinaRepository
         return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
     }
 
-    public async Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null)
+    public async Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
+            DirecaoOrdenacaoEnum? direcao = null)
     {
         var query = _context.Disciplinas.AsNoTracking().AsQueryable();
 
-        if (!string.IsNullOrEmpty(pesquisa)) 
+        if (!string.IsNullOrEmpty(pesquisa))
             query = query.Where(d => d.Nome.Contains(pesquisa)
             || d.Ementa.Contains(pesquisa));
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
 
         int total = await query.CountAsync();
-        
-        var disciplinas = await query.OrderBy(d => d.Nome)
-            .Skip((pagina - 1) * tamanho)
+
+        query = OrdenarPor(query, ordenacao, direcao);
+
+        var disciplinas = await query.Skip((pagina - 1) * tamanho)
             .Take(tamanho)
             .ToListAsync();
 
@@ -96,7 +111,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task<bool> ExisteAtivaAsync(int id)
     {
-        return await _context.Disciplinas.AnyAsync(d=> d.Id == id && d.Ativo);
+        return await _context.Disciplinas.AnyAsync(d => d.Id == id && d.Ativo);
     }
 
     public async Task<bool> PossuiDocentesAtivosAsync(int disciplinaId)
