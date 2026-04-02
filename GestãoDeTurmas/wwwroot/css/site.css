@@ -21,6 +21,7 @@
     /*texto*/
     --cor-texto: #1a1a1a;
     --cor-texto-suave: #6b7280;
+    --cor-texto-discreto: rgba(255, 255, 255, 0.3);
     /*espaçamento*/
     --raio-borda: 6px;
     --sombra-card: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
@@ -50,18 +51,18 @@
 /* modificações gerais */
 
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -70,6 +71,7 @@ body {
     color: var(--cor-texto);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
+
 section {
     border: 1px solid #000;
     padding: 10px;
@@ -112,7 +114,7 @@ input {
     text-align: center;
 }
 
-.navbar-cor{
+.navbar-cor {
     color: var(--cor-identidade);
 }
 /* botoes */
@@ -133,12 +135,13 @@ input {
     transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
     user-select: none;
 }
-    .btn-base:disabled,
-    .btn-base.disabled {
-        opacity: 0.55;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
+
+.btn-base:disabled,
+.btn-base.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 
 /* botoes especificos */
 .botao-primario {
@@ -196,9 +199,9 @@ input {
     background-color: var(--cor-secundaria);
 }
 
-.botao-filtrar:hover {
-    background-color: var(--cor-secundaria-hover);
-}
+    .botao-filtrar:hover {
+        background-color: var(--cor-secundaria-hover);
+    }
 
 .botao-limpar {
     color: var(--cor-perigo)
@@ -293,7 +296,7 @@ input {
     border-radius: var(--raio-borda);
     box-shadow: var(--sombra-card);
     padding: 2rem;
-    max-width: 680px;       
+    max-width: 680px;
     margin: 1.5rem auto;
 }
 
@@ -402,70 +405,44 @@ input {
     width: 220px;
     min-height: 100vh;
     background-color: var(--cor-identidade);
-    display: flex;
-    flex-direction: column;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
 }
 
 .sidebar-logo {
     padding: 20px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-    .sidebar-logo a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-    }
-
-.sidebar-logo-icone {
-    width: 32px;
-    height: 32px;
-    background-color: var(--cor-identidade);
-    border-radius: var(--raio-borda);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
+    border-bottom: 1px solid var(--cor-texto-discreto);
 }
 
 .sidebar-logo-texto {
-    font-size: 15px;
-    font-weight: 600;
     color: #fff;
-    letter-spacing: 0.01em;
+    font-weight: 600;
 }
 
 .sidebar-nav {
-    flex: 1;
     padding: 12px 0;
 }
 
 .sidebar-secao {
-    padding: 16px 16px 6px;
-    font-size: 10px;
+    padding: 16px;
     font-weight: 600;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.3);
+    color: var(--cor-texto-discreto);
 }
 
 .sidebar-item {
     display: flex;
-    align-items: center;
     gap: 10px;
     padding: 9px 16px;
-    font-size: 13.5px;
-    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    color: var(--cor-texto-discreto);
     text-decoration: none;
-    border-radius: 0;
     transition: all 0.15s ease;
     margin: 1px 8px;
     border-radius: var(--raio-borda);
@@ -473,8 +450,6 @@ input {
 
     .sidebar-item:hover {
         background-color: var(--cor-identidade-hover);
-        color: rgba(255,255,255,0.9);
-        text-decoration: none;
     }
 
     .sidebar-item.ativo {
@@ -487,108 +462,29 @@ input {
             font-weight: 500;
         }
 
-    .sidebar-item svg {
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
-        opacity: 0.8;
-    }
-
-    .sidebar-item.ativo svg {
-        opacity: 1;
-    }
-
-.sidebar-rodape {
-    padding: 12px 16px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.sidebar-avatar {
-    width: 32px;
-    height: 32px;
-    background-color: var(--cor-identidade);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: #fff;
-    flex-shrink: 0;
-}
-
-.sidebar-usuario-nome {
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.2;
-}
-
-.sidebar-usuario-email {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-}
-
 /* Conteúdo principal deslocado pelo sidebar */
 .conteudo-principal {
     margin-left: 220px;
     flex: 1;
     min-height: 100vh;
-    background-color: var(--cor-fundo);
 }
 
 .conteudo-topo {
     background-color: var(--cor-superficie);
     border-bottom: 1px solid var(--cor-borda);
-    padding: 0 28px;
-    height: 56px;
+    padding: 28px;
+    height: 50px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 50;
 }
 
 .conteudo-topo-titulo {
-    font-size: 15px;
     font-weight: 600;
     color: var(--cor-texto);
 }
-
-.topbar-busca {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: var(--cor-fundo);
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio-borda);
-    padding: 6px 12px;
-    width: 240px;
-}
-
-    .topbar-busca input {
-        border: none;
-        background: transparent;
-        font-size: 13px;
-        color: var(--cor-texto);
-        outline: none;
-        width: 100%;
-    }
-
-        .topbar-busca input::placeholder {
-            color: var(--cor-texto-suave);
-        }
-
-    .topbar-busca svg {
-        width: 14px;
-        height: 14px;
-        color: var(--cor-texto-suave);
-        flex-shrink: 0;
-    }
 
 .conteudo-corpo {
     padding: 28px;
@@ -644,95 +540,35 @@ input {
 .card-turma {
     background-color: var(--cor-superficie);
     border: 1px solid var(--cor-borda);
-    border-top: 4px solid var(--cor-identidade);
     border-radius: 12px;
+    border-top: 3px solid var(--cor-identidade);
     padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     box-shadow: var(--sombra-card);
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
     .card-turma:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-.card-turma-inativa {
-    opacity: 0.6;
-}
-
-.card-turma-topo {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-}
-
 .card-turma-nome {
-    font-size: 16px;
     font-weight: 700;
+    font-size: 16px;
     color: var(--cor-identidade);
 }
 
 .card-turma-subtitulo {
     font-size: 13px;
     color: var(--cor-texto-suave);
-    margin-top: 2px;
-}
-
-.badge-serie {
-    background-color: #fef2f2;
-    color: var(--cor-identidade);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.card-turma-rodape {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-turma-stats {
-    display: flex;
-    gap: 14px;
-    font-size: 12.5px;
-    color: var(--cor-texto-suave);
-}
-
-    .card-turma-stats i {
-        margin-right: 4px;
-    }
-
-.card-turma-acoes {
-    display: flex;
-    gap: 4px;
+    margin-top: -5px;
 }
 
 .botao-icone {
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--cor-borda);
-    border-radius: var(--raio-borda);
-    background: transparent;
-    color: var(--cor-texto-suave);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    text-decoration: none;
 }
 
     .botao-icone:hover {
-        background-color: var(--cor-fundo);
-        color: var(--cor-texto);
-        border-color: var(--cor-texto-suave);
     }
