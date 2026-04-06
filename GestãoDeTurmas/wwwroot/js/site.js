@@ -11,28 +11,40 @@ async function abrirModal(url, titulo) {
     modalBody.innerHTML = await resposta.text();
 }
 
-document.getElementById('modal-formulario').addEventListener('submit', async () => {
+document.getElementById('modal-formulario').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const form = event.target;
     const urlForm = form.action;
-    const formData = new FormData(form);
+    const payload = new URLSearchParams(new FormData(form));
 
-    const respostaForm = await fetch(urlForm, {
-        method: 'POST',
-        body: formData
-    });
+    try {
+        const respostaForm = await fetch(urlForm, {
+            method: 'POST',
+            body: payload
+        });
 
-    const contentType = respostaForm.headers.get("Content-Type");
-
-    if (contentType.includes("application/json")) {
-        const json = await respostaForm.json();
-        if (json.sucesso) {
+        if (respostaForm.ok) {
             modal.hide();
             location.reload();
+            return;
         }
-    } else {
-        modalBody.innerHTML = await respostaForm.text();
+
+        if (respostaForm.status === 400) {
+            modalBody.innerHTML = await respostaForm.text();
+            return;
+        }
+
+        if (respostaForm.status === 404) {
+            const json = await respostaForm.json();
+            modalBody.innerHTML = `<div class="alerta alerta-erro">${json.mensagem}</div>`;
+            return;
+        }
+
+        throw new Error("Erro de processamento no servidor");
+
+    } catch (erro) {
+        modalBody.innerHTML = `<div class="alerta alerta-erro">Falha ao comunicar com o servidor: ${erro.message}</div>`;
     }
 })
 

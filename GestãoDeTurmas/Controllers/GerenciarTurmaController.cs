@@ -42,7 +42,10 @@ public class GerenciarTurmaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(TurmaInputViewModel turmaModel)
     {
-        if (!ModelState.IsValid) return PartialView("_Adicionar", turmaModel);
+        if (!ModelState.IsValid) {
+            Response.StatusCode = 400;
+            return PartialView("_Adicionar", turmaModel);
+        }
 
         try
         {
@@ -50,6 +53,7 @@ public class GerenciarTurmaController : Controller
             return Json(new { sucesso = true });
         } catch(RegraDeNegocioException ex)
         {
+            Response.StatusCode = 400;
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Adicionar", turmaModel);
         }
@@ -69,7 +73,10 @@ public class GerenciarTurmaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(TurmaEditarViewModel turmaModel)
     {
-        if (!ModelState.IsValid) return PartialView("_Editar", turmaModel);
+        if (!ModelState.IsValid) {
+            Response.StatusCode = 400;
+            return PartialView("_Editar", turmaModel); 
+        }
 
         try
         {
@@ -78,11 +85,13 @@ public class GerenciarTurmaController : Controller
             return Json(new { sucesso = true });
         } catch(EntidadeNaoEncontradaException ex)
         {
+            Response.StatusCode = 404;
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Editar", turmaModel);
         }
         catch (RegraDeNegocioException ex)
         {
+            Response.StatusCode = 400;
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Editar", turmaModel);
         }

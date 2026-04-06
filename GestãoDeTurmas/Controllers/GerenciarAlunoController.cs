@@ -65,7 +65,11 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Adicionar(AlunoInputViewModel model)
         {
-            if (!ModelState.IsValid) return PartialView("_Adicionar",model);
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                return PartialView("_Adicionar", model);
+            }
             
             try
             {
@@ -77,6 +81,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
+                Response.StatusCode = 400;
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return PartialView("_Adicionar",model);
             }
@@ -132,7 +137,11 @@ namespace GestãoDeTurmas.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(AlunoEditarViewModel model)
         {
-            if (!ModelState.IsValid) return PartialView("_Editar", model);
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                return PartialView("_Editar", model); 
+            }
 
             var alunoAlterado = model.ToAlterarDTO();
 
@@ -144,11 +153,13 @@ namespace GestãoDeTurmas.Controllers
                 return Json(new {sucesso = true});
             } catch (RegraDeNegocioException ex)
             {
+                Response.StatusCode = 400;
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return PartialView("_Editar",model);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
+                Response.StatusCode = 404;
                 return Json(new {sucesso = false, mensagem = ex.Message});
             }
 

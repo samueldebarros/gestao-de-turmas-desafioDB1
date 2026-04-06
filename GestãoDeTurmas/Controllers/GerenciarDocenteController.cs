@@ -67,6 +67,7 @@ namespace GestãoDeTurmas.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
                 return PartialView("_Adicionar", model);
             }
@@ -81,6 +82,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
+                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return PartialView("_Adicionar", model);
@@ -106,6 +108,7 @@ namespace GestãoDeTurmas.Controllers
 
             if (!ModelState.IsValid)
             {
+                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
                 return PartialView("_Editar", viewModel);
             }
@@ -119,12 +122,14 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
+                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return PartialView("_Editar", viewModel);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
+                Response.StatusCode = 404;
                 return Json(new { sucesso = false, mensagem = ex.Message });
             }
 

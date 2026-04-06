@@ -63,7 +63,10 @@ public class GerenciarDisciplinaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Adicionar(DisciplinaInputViewModel model)
     {
-        if (!ModelState.IsValid) return PartialView("_Adicionar",model);
+        if (!ModelState.IsValid) {
+            Response.StatusCode = 400;
+            return PartialView("_Adicionar", model); 
+        }
 
         var disciplina = model.ToInputDTO();
         try
@@ -74,14 +77,10 @@ public class GerenciarDisciplinaController : Controller
         }
         catch(RegraDeNegocioException ex)
         {
+            Response.StatusCode = 400;
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Adicionar",model);
 
-        }
-        catch (DbUpdateException)
-        {
-            ModelState.AddModelError(string.Empty, "Já existe uma disciplina com este nome.");
-            return View("_Adicionar",model);
         }
 
     }
@@ -101,7 +100,9 @@ public class GerenciarDisciplinaController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Editar(DisciplinaEditarViewModel viewModel)
     {
-        if (!ModelState.IsValid) return PartialView("_Editar", viewModel);
+        if (!ModelState.IsValid) {
+            Response.StatusCode = 400;
+            return PartialView("_Editar", viewModel); }
 
         var disciplina = viewModel.ToEditarDTO();
         try
@@ -113,11 +114,13 @@ public class GerenciarDisciplinaController : Controller
         }
         catch (RegraDeNegocioException ex)
         {
+            Response.StatusCode = 400;
             ModelState.AddModelError(string.Empty, ex.Message);
             return PartialView("_Editar",viewModel);
         }
         catch (EntidadeNaoEncontradaException ex)
         {
+            Response.StatusCode = 404;
             return Json(new { sucesso = false, mensagem = ex.Message });
         }
 
