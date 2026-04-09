@@ -34,7 +34,8 @@ async function onConfirmar(url) {
     const resposta = await fetch(url, {
         method: "POST",
         headers: {
-            "RequestVerificationToken" : token
+            "RequestVerificationToken": token,
+            "Content-Type": "application/x-www-form-urlencoded"
         }
     });
     if (resposta.ok) {
