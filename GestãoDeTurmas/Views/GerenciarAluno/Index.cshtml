@@ -3,6 +3,10 @@
 @using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Aluno.GerenciarAlunoViewModel
 
+@{
+    @Html.AntiForgeryToken()
+}
+
 <div class="card">
     <div class="card-body">
 
@@ -64,7 +68,7 @@
                                 rotaMatricula["ordenacao"] = "Matricula";
                                 rotaMatricula["direcao"] = (Model.Ordenacao == "Matricula" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
-                            <a asp-action="Index" asp-all-route-data="rotaMatricula" style="color: #ffffff;" >Matricula</a>
+                            <a asp-action="Index" asp-all-route-data="rotaMatricula" style="color: #ffffff;">Matricula</a>
                             @if (Model.Ordenacao == "Matricula")
                             {
                                 <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
@@ -76,7 +80,7 @@
                                 rotaNome["ordenacao"] = "Nome";
                                 rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
-                            <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;" >Nome</a>
+                            <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
                             @if (Model.Ordenacao == "Nome")
                             {
                                 <icone nome="@(Model.Direcao == DirecaoOrdenacaoEnum.Asc ? TipoIcone.SetaCima : TipoIcone.SetaBaixo)" />
@@ -130,30 +134,23 @@
                                                 onclick="abrirModal('@Url.Action("Editar", new { id = aluno.Id })', 'Editar Aluno')">
                                             <icone nome="Caneta" />
                                         </button>
-
-                                        <form asp-action="Inativar" asp-route-id="@aluno.Id" method="post" class="m-0">
-                                            @foreach (var filtro in Model.FiltrosAtivos)
-                                            {
-                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
-                                            }
-                                            <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="submit" class="botao-acao-icone" title="Inativar">
-                                                <icone nome="Inativar" />
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                class="botao-acao-icone"
+                                                title="Inativar"
+                                                onclick="abrirModalConfirmacao('@Url.Action("Inativar", new { id = aluno.Id })', 'Inativar Aluno')">
+                                            <icone nome="Inativar" />
+                                        </button>
                                     }
                                     else
                                     {
-                                        <form asp-action="Reativar" asp-route-id="@aluno.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
-                                            @foreach (var filtro in Model.FiltrosAtivos)
-                                            {
-                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
-                                            }
-                                            <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
-                                                <icone nome="Reativar" />
+                                        <div class="m-0 w-100 d-flex justify-content-center">
+                                            <button type="button"
+                                                    class="botao-acao-icone sucesso"
+                                                    title="Inativar"
+                                                    onclick="abrirModalConfirmacao('@Url.Action("Reativar", new { id = aluno.Id })', 'Reativar Aluno')">
+                                                <icone nome="Inativar" />
                                             </button>
-                                        </form>
+                                        </div>
                                     }
                                 </div>
                             </td>
@@ -168,7 +165,7 @@
                 <icone nome="SetaEsquerda" /> Voltar
             </a>
             <small class="text-muted">@Model.InicioPagina-@Model.FimPagina de @Model.TotalResultados</small>
-            <partial name="_Paginacao" model="@Model.MontarPaginacao("GerenciarAluno","Index")" />
+            <partial name="_Paginacao" model="@Model.MontarPaginacao("GerenciarAluno", "Index")" />
         </div>
     </div>
 </div>

@@ -96,11 +96,10 @@ namespace GestãoDeTurmas.Controllers
             {
                 await _alunoService.InativarAlunoAsync(id);
                 TempData["MensagemSucesso"] = "Aluno inativado com sucesso!";
-                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+                return Ok();
             } catch (EntidadeNaoEncontradaException ex)
             {
-                TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+                return NotFound(new { mensagem = ex.Message });
             }
 
         }
@@ -113,12 +112,11 @@ namespace GestãoDeTurmas.Controllers
             {
                 await _alunoService.ReativarAlunoAsync(id);
                 TempData["MensagemSucesso"] = "Aluno reativado com sucesso!";
-                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+                return Ok();
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                TempData["MensagemErro"] = ex.Message;
-                return RedirectToAction(nameof(Index), new { pagina, pesquisa, sexo, ativo });
+                return NotFound(new { mensagem = ex.Message });
             }
         }
 
