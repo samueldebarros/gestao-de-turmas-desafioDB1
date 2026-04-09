@@ -134,17 +134,15 @@ public class GerenciarDisciplinaController : Controller
         {
             await _disciplinaService.InativarDisciplinaAsync(id);
             TempData["MensagemSucesso"] = "Disciplina inativada com sucesso!";
-            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina});
+            return Ok();
         }
         catch (EntidadeNaoEncontradaException ex)
         {
-            TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
+            return NotFound(new { mensagem = ex.Message });
         }
         catch (RegraDeNegocioException ex)
         {
-            TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index), new {pesquisa, ativo, pagina});
+            return UnprocessableEntity(new { mensagem = ex.Message });
         }
 
     }
@@ -157,12 +155,11 @@ public class GerenciarDisciplinaController : Controller
         {
             await _disciplinaService.ReativarDisciplinaAsync(id);
             TempData["MensagemSucesso"] = "Disciplina reativada com sucesso!";
-            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
+            return Ok();
         }
         catch (EntidadeNaoEncontradaException ex)
         {
-            TempData["MensagemErro"] = ex.Message;
-            return RedirectToAction(nameof(Index), new { pesquisa, ativo, pagina });
+            return NotFound(new { mensagem = ex.Message });
         }
 
     }

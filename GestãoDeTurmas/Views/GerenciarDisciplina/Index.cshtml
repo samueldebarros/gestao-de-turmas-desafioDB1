@@ -3,6 +3,10 @@
 @using GestãoDeTurmas.Views.Shared
 @model GestãoDeTurmas.Models.Disciplina.GerenciarDisciplinaViewModel
 
+@{
+    @Html.AntiForgeryToken()
+}
+
 <div class="card">
     <div class="card-body">
 
@@ -112,29 +116,21 @@
                                             <icone nome="Caneta" />
                                         </button>
 
-                                        <form asp-action="Inativar" asp-route-id="@disciplina.Id" method="post" class="m-0">
-                                            @foreach (var filtro in Model.FiltrosAtivos)
-                                            {
-                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
-                                            }
-                                            <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="submit" class="botao-acao-icone" title="Inativar">
-                                                <icone nome="Inativar" />
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                class="botao-acao-icone sucesso"
+                                                title="Inativar"
+                                                onclick="abrirModalConfirmacao('@Url.Action("Inativar", new { id = disciplina.Id })', 'Inativar Disciplina')">
+                                            <icone nome="Inativar" />
+                                        </button>
                                     }
                                     else
                                     {
-                                        <form asp-action="Reativar" asp-route-id="@disciplina.Id" method="post" class="m-0 w-100 d-flex justify-content-center">
-                                            @foreach (var filtro in Model.FiltrosAtivos)
-                                            {
-                                                <input type="hidden" name="@filtro.Key" value="@filtro.Value" />
-                                            }
-                                            <input type="hidden" name="pagina" value="@Model.PaginaAtual" />
-                                            <button type="submit" class="botao-acao-icone sucesso" title="Reativar">
-                                                <icone nome="Reativar" />
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                                class="botao-acao-icone sucesso"
+                                                title="Reativar"
+                                                onclick="abrirModalConfirmacao('@Url.Action("Reativar", new { id = disciplina.Id })', 'Reativar Disciplina')">
+                                            <icone nome="Reativar" />
+                                        </button>
                                     }
                                 </div>
                             </td>
