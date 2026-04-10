@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestãoDeTurmas.Controllers;
 
-public class GerenciarDisciplinaController : Controller
+public class GerenciarDisciplinaController : BaseController
 {
     private readonly IDisciplinaService _disciplinaService;
 
@@ -77,10 +77,7 @@ public class GerenciarDisciplinaController : Controller
         }
         catch(RegraDeNegocioException ex)
         {
-            Response.StatusCode = 400;
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return PartialView("_Adicionar",model);
-
+            return TratarErroRegraDeNegocio(ex, "_Adicionar", model);
         }
 
     }
@@ -114,14 +111,11 @@ public class GerenciarDisciplinaController : Controller
         }
         catch (RegraDeNegocioException ex)
         {
-            Response.StatusCode = 400;
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return PartialView("_Editar",viewModel);
+            return TratarErroRegraDeNegocio(ex, "_Editar", viewModel);
         }
         catch (EntidadeNaoEncontradaException ex)
         {
-            Response.StatusCode = 404;
-            return Json(new { sucesso = false, mensagem = ex.Message });
+            return TratarErroEntidadeNaoEncontrada(ex);
         }
 
     }

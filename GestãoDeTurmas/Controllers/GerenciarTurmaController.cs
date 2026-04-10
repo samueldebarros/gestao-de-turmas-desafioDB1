@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestãoDeTurmas.Controllers;
 
-public class GerenciarTurmaController : Controller
+public class GerenciarTurmaController : BaseController
 {
     private readonly ITurmaService _turmaService;
 
@@ -53,9 +53,7 @@ public class GerenciarTurmaController : Controller
             return Json(new { sucesso = true });
         } catch(RegraDeNegocioException ex)
         {
-            Response.StatusCode = 400;
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return PartialView("_Adicionar", turmaModel);
+            return TratarErroRegraDeNegocio(ex, "_Adicionar", turmaModel);
         }
     }
 
@@ -85,15 +83,11 @@ public class GerenciarTurmaController : Controller
             return Json(new { sucesso = true });
         } catch(EntidadeNaoEncontradaException ex)
         {
-            Response.StatusCode = 404;
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return PartialView("_Editar", turmaModel);
+            return TratarErroEntidadeNaoEncontrada(ex, "_Editar", turmaModel);
         }
         catch (RegraDeNegocioException ex)
         {
-            Response.StatusCode = 400;
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return PartialView("_Editar", turmaModel);
+            return TratarErroRegraDeNegocio(ex, "_Editar", turmaModel);
         }
     }
 

@@ -153,7 +153,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                return TratarErroEntidadeNaoEncontrado(ex, "_Editar", model);
+                return TratarErroEntidadeNaoEncontrada(ex, "_Editar", model);
             }
 
         }

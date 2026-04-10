@@ -12,7 +12,7 @@ public abstract class BaseController : Controller
         return PartialView(partialView, model);
     }
 
-    protected IActionResult TratarErroEntidadeNaoEncontrado(EntidadeNaoEncontradaException ex, string? partialView = null, object? model = null)
+    protected IActionResult TratarErroEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex, string? partialView = null, object? model = null)
     {
         Response.StatusCode = 404;
 

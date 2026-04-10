@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestãoDeTurmas.Controllers
 {
-    public class GerenciarDocenteController : Controller
+    public class GerenciarDocenteController : BaseController
     {
         private readonly IDocenteService _docenteService;
         private readonly IDisciplinaService _disciplinaService;
@@ -82,10 +82,8 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
-                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return PartialView("_Adicionar", model);
+                return TratarErroRegraDeNegocio(ex, "_Adicionar", model);
             }
         }
 
@@ -122,15 +120,12 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
-                Response.StatusCode = 400;
                 await PopularDisciplinasAsync();
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return PartialView("_Editar", viewModel);
+                return TratarErroRegraDeNegocio(ex, "_Editar", viewModel);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                Response.StatusCode = 404;
-                return Json(new { sucesso = false, mensagem = ex.Message });
+                return TratarErroEntidadeNaoEncontrada(ex);
             }
 
         }
@@ -172,7 +167,6 @@ namespace GestãoDeTurmas.Controllers
         {
             var disciplinas = await _disciplinaService.ObterDisciplinasAtivasAsync();
             ViewBag.Disciplinas = new SelectList(disciplinas, "Id", "Nome");
-
         }
     }
 }
