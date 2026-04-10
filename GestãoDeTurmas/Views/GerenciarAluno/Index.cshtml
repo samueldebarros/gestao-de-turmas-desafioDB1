@@ -66,6 +66,7 @@
                             @{
                                 var rotaMatricula = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaMatricula["ordenacao"] = "Matricula";
+                                rotaMatricula["pagina"] = Model.PaginaAtual.ToString();
                                 rotaMatricula["direcao"] = (Model.Ordenacao == "Matricula" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
                             <a asp-action="Index" asp-all-route-data="rotaMatricula" style="color: #ffffff;">Matricula</a>
@@ -78,6 +79,7 @@
                             @{
                                 var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaNome["ordenacao"] = "Nome";
+                                rotaNome["pagina"] = Model.PaginaAtual.ToString();
                                 rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
                             <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
@@ -92,6 +94,7 @@
                             @{
                                 var rotaDataNascimento = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaDataNascimento["ordenacao"] = "DataNascimento";
+                                rotaDataNascimento["pagina"] = Model.PaginaAtual.ToString();
                                 rotaDataNascimento["direcao"] = (Model.Ordenacao == "DataNascimento" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
                             <a asp-action="Index" asp-all-route-data="rotaDataNascimento" style="color: #ffffff;">Data de Nascimento</a>

@@ -63,6 +63,7 @@
                             @{
                                 var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaNome["ordenacao"] = "Nome";
+                                rotaNome["pagina"] = Model.PaginaAtual.ToString();
                                 rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
                             }
                             <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
@@ -75,6 +76,7 @@
                             @{
                                 var rotaDisciplina = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaDisciplina["ordenacao"] = "Disciplina";
+                                rotaDisciplina["pagina"] = Model.PaginaAtual.ToString();
                                 rotaDisciplina["direcao"] = (Model.Ordenacao == "Disciplina" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
                             }
                             <a asp-action="Index" asp-all-route-data="rotaDisciplina" style="color: #ffffff;">Disciplina</a>
@@ -89,6 +91,7 @@
                             @{
                                 var rotaDataNascimento = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaDataNascimento["ordenacao"] = "DataNascimento";
+                                rotaDataNascimento["pagina"] = Model.PaginaAtual.ToString();
                                 rotaDataNascimento["direcao"] = (Model.Ordenacao == "DataNascimento" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
                             <a asp-action="Index" asp-all-route-data="rotaDataNascimento" style="color: #ffffff;">Data de Nascimento</a>
@@ -130,7 +133,7 @@
                                             <icone nome="Caneta" />
                                         </button>
                                         <button type="button"
-                                                class="botao-acao-icone sucesso"
+                                                class="botao-acao-icone"
                                                 title="Inativar"
                                                 onclick="abrirModalConfirmacao('@Url.Action("Inativar", new { id = docente.Id })', 'Inativar Docente')">
                                             <icone nome="Inativar" />

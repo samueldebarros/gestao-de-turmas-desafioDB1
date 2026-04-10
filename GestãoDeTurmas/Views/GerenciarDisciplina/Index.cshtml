@@ -63,6 +63,7 @@
                             @{
                                 var rotaNome = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaNome["ordenacao"] = "Nome";
+                                rotaNome["pagina"] = Model.PaginaAtual.ToString();
                                 rotaNome["direcao"] = (Model.Ordenacao == "Nome" && Model.Direcao == DirecaoOrdenacaoEnum.Asc) ? "desc" : "asc";
                             }
                             <a asp-action="Index" asp-all-route-data="rotaNome" style="color: #ffffff;">Nome</a>
@@ -75,6 +76,7 @@
                             @{
                                 var rotaCargaHoraria = new Dictionary<string, string>(Model.FiltrosAtivos);
                                 rotaCargaHoraria["ordenacao"] = "CargaHoraria";
+                                rotaCargaHoraria["pagina"] = Model.PaginaAtual.ToString();
                                 rotaCargaHoraria["direcao"] = (Model.Ordenacao == "CargaHoraria" && Model.Direcao == DirecaoOrdenacaoEnum.Asc ? "desc" : "asc");
                             }
                             <a asp-action="Index" asp-all-route-data="rotaCargaHoraria" style="color: #ffffff;">Carga Horária</a>
@@ -117,7 +119,7 @@
                                         </button>
 
                                         <button type="button"
-                                                class="botao-acao-icone sucesso"
+                                                class="botao-acao-icone"
                                                 title="Inativar"
                                                 onclick="abrirModalConfirmacao('@Url.Action("Inativar", new { id = disciplina.Id })', 'Inativar Disciplina')">
                                             <icone nome="Inativar" />
