@@ -17,14 +17,14 @@ async function abrirModalConfirmacao(url, titulo) {
     modal.show();
 
     modalBody.innerHTML =
-        `
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-            <p>Tem certeza?</p>
-            <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                <button class="botao botao-secundario" data-bs-dismiss="modal">Cancelar</button>
-                <button class="botao botao-perigo" onclick="onConfirmar('${url}')">Confirmar</button>
-            </div>
-        </div>
+    `
+       <div style="display: flex; flex-direction: column; gap: 16px;">
+           <p>Tem certeza?</p>
+           <div style="display: flex; justify-content: flex-end; gap: 8px;">
+               <button class="botao botao-secundario" data-bs-dismiss="modal">Cancelar</button>
+               <button class="botao botao-perigo" onclick="onConfirmar('${url}')">Confirmar</button>
+           </div>
+       </div>
     `;
 }
 
@@ -88,19 +88,6 @@ document.getElementById('modal-formulario').addEventListener('submit', async (ev
 
 // Modal de confirmação - a fazer
 /* 
-<div class="modal fade" id="modal-confirmacao" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal-confirmacao-titulo"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body" id="modal-confirmacao-body">
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="modal-formulario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

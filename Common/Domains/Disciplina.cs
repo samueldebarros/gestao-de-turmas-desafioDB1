@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Domains;
 
-public class Disciplina
+public class Disciplina : IEntidadeInativavel
 {
     public int Id { get; set; }
     public string Nome { get; set; }

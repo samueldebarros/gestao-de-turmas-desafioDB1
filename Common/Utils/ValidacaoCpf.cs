@@ -53,7 +53,5 @@ public static class ValidacaoCpf
 
         return cpfLimpo;
     }
-
-
 }
 

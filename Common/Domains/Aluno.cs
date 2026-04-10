@@ -2,7 +2,7 @@
 
 namespace Common.Domains
 {
-    public class Aluno
+    public class Aluno : IEntidadeInativavel
     {
         public int Id { get; set; }
         public string Matricula { get; set; }

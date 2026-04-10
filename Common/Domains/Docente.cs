@@ -1,6 +1,6 @@
 ﻿namespace Common.Domains;
 
-public class Docente
+public class Docente : IEntidadeInativavel
 {
     public int Id { get; set; }
     public string Nome { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Common.Domains;
 
-public class Turma
+public class Turma : IEntidadeInativavel
 {
     public int Id { get; set; }
     public string Identificador { get; set; } = string.Empty;
