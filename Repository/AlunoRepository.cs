@@ -100,7 +100,7 @@ namespace Repository
             return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id && !a.Ativo);
         }
 
-        public async Task AlterarAsync(Aluno aluno)
+        public async Task EditarAlunoAsync(Aluno aluno)
         {
             _context.Alunos.Update(aluno);
             await _context.SaveChangesAsync();

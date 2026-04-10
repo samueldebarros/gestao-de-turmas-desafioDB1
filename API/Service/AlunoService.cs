@@ -17,17 +17,6 @@ namespace API.Service
             _alunoRepository = alunoRepository;
         }
 
-        private async Task<string> ValidarEProcessarCpfAsync(string cpfSujo)
-        {
-            var cpfLimpo = ValidacaoCpf.Limpar(cpfSujo);
-
-            if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
-
-            if (await _alunoRepository.ExistePeloCpfAsync(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
-
-            return cpfLimpo;
-        }
-
         private void ValidarDataNascimento(DateOnly? dataNascimento)
         {
             if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))
@@ -85,7 +74,7 @@ namespace API.Service
         {
             await ValidarDadosAlunoAsync(aluno.DataNascimento, aluno.Email, aluno.Sexo);
 
-            var cpfLimpo = await ValidarEProcessarCpfAsync(aluno.Cpf);
+            var cpfLimpo = await ValidacaoCpf.ValidarEProcessarCpfAsync(aluno.Cpf, _alunoRepository.ExistePeloCpfAsync);
 
             Aluno novoAluno = new Aluno
             {
@@ -131,7 +120,7 @@ namespace API.Service
             return await _alunoRepository.ObterPorIdAsync(id);
         }
 
-        public async Task AlterarAsync(AlterarAlunoDTO aluno)
+        public async Task EditarAlunoAsync(EditarAlunoDTO aluno)
         {
             var alunoExistente = await ObterAlunoAtivoOuLancarErroAsync(aluno.Id);
             
@@ -146,7 +135,7 @@ namespace API.Service
                 alunoExistente.DataNascimento = aluno.DataNascimento.Value;
             }
             
-            await _alunoRepository.AlterarAsync(alunoExistente);
+            await _alunoRepository.EditarAlunoAsync(alunoExistente);
         }
     }
 }

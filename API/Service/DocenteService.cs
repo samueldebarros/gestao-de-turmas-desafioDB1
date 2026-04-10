@@ -83,7 +83,7 @@ public class DocenteService : IDocenteService
     {
         await ValidarDadosDocenteAsync(docente.DataNascimento, docente.Email, docente.DisciplinaId);
 
-        var cpfLimpo = await ValidarEProcessarCpfAsync(docente.Cpf);
+        var cpfLimpo = await ValidacaoCpf.ValidarEProcessarCpfAsync(docente.Cpf, _docenteRepository.ExistePeloCpfAsync);
 
         Docente novoDocente = new Docente()
         {

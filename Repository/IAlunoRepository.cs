@@ -13,7 +13,7 @@ namespace Repository
             string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null);
         Task InativarAsync(int id);
         Task ReativarAsync(int id);
-        Task AlterarAsync(Aluno aluno);
+        Task EditarAlunoAsync(Aluno aluno);
         Task<bool> ExistePeloCpfAsync(string cpf);
         Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
         Task<bool> ExisteMatriculaAsync(string matricula);

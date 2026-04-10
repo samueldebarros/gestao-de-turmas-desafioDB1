@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,6 +43,17 @@ public static class ValidacaoCpf
     }
 
     public static string Limpar(string cpf) => cpf.Replace(".", "").Replace("-", "").Trim();
+    public static async Task<string> ValidarEProcessarCpfAsync(string cpfSujo, Func<string,Task<bool>> verificarExistencia)
+    {
+        var cpfLimpo = Limpar(cpfSujo);
+
+        if (!IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+
+        if (await verificarExistencia(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+
+        return cpfLimpo;
+    }
+
 
 }
 

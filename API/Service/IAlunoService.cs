@@ -13,6 +13,6 @@ namespace API.Service
         Task<Aluno> ObterPeloIdAsync(int id);
         Task InativarAlunoAsync(int id);
         Task ReativarAlunoAsync(int id);
-        Task AlterarAsync(AlterarAlunoDTO aluno);
+        Task EditarAlunoAsync(EditarAlunoDTO aluno);
     }
 }

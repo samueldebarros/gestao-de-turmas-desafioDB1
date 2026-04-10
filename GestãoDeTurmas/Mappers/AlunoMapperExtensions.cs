@@ -45,9 +45,9 @@ namespace GestãoDeTurmas.Mappers
             };
         }
 
-        public static AlterarAlunoDTO ToAlterarDTO(this AlunoEditarViewModel model)
+        public static EditarAlunoDTO ToEditarDTO(this AlunoEditarViewModel model)
         {
-            return new AlterarAlunoDTO
+            return new EditarAlunoDTO
             {
                 Id = model.Id,
                 Nome = model.Nome,

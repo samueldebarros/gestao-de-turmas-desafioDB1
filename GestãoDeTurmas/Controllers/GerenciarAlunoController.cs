@@ -141,11 +141,11 @@ namespace GestãoDeTurmas.Controllers
                 return PartialView("_Editar", model); 
             }
 
-            var alunoAlterado = model.ToAlterarDTO();
+            var alunoAlterado = model.ToEditarDTO();
 
             try
             {
-                await _alunoService.AlterarAsync(alunoAlterado);
+                await _alunoService.EditarAlunoAsync(alunoAlterado);
 
                 TempData["MensagemSucesso"] = "Aluno editado com sucesso!";
                 return Json(new {sucesso = true});

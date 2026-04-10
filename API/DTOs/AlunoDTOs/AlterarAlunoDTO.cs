@@ -2,7 +2,7 @@
 
 namespace API.DTOs.AlunoDTOs
 {
-    public class AlterarAlunoDTO
+    public class EditarAlunoDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }
