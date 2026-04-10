@@ -37,9 +37,6 @@ public class DisciplinaService : IDisciplinaService
     {
         var disciplinaExistente = await ObterDisciplinaAtivaOuLancarErroAsync(disciplinaDTO.Id);
 
-        if (!disciplinaExistente.Ativo)
-            throw new RegraDeNegocioException("Não é possivel editar uma disciplina inativada.");
-
         var nomeTratado = disciplinaDTO.Nome.Trim();
 
         await ValidarDadosDisciplinaAsync(nomeTratado, disciplinaDTO.CargaHoraria, disciplinaDTO.Id);
