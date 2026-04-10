@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestãoDeTurmas.Controllers
 {
-    public class GerenciarAlunoController : Controller
+    public class GerenciarAlunoController : BaseController
     {
         private readonly IAlunoService _alunoService;
 
@@ -81,9 +81,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
-                Response.StatusCode = 400;
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return PartialView("_Adicionar",model);
+                return TratarErroRegraDeNegocio(ex, "_Adicionar", model);
             }
 
         }
@@ -151,14 +149,11 @@ namespace GestãoDeTurmas.Controllers
                 return Json(new {sucesso = true});
             } catch (RegraDeNegocioException ex)
             {
-                Response.StatusCode = 400;
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return PartialView("_Editar",model);
+                return TratarErroRegraDeNegocio(ex, "_Editar", model);
             }
             catch (EntidadeNaoEncontradaException ex)
             {
-                Response.StatusCode = 404;
-                return Json(new {sucesso = false, mensagem = ex.Message});
+                return TratarErroEntidadeNaoEncontrado(ex, "_Editar", model);
             }
 
         }
