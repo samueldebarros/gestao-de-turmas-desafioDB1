@@ -36,7 +36,7 @@ public class DocenteService : IDocenteService
 
     private async Task<Docente> ObterDocenteAtivoOuLancarErroAsync(int id)
     {
-        var docente = await _docenteRepository.ObterPeloIdAsync(id);
+        var docente = await _docenteRepository.ObterPorIdAsync(id);
         if (docente == null)
             throw new EntidadeNaoEncontradaException("O docente não foi encontrado.");
         return docente;
@@ -44,7 +44,7 @@ public class DocenteService : IDocenteService
 
     private async Task<Docente> ObterDocenteInativoOuLancarErroAsync(int id)
     {
-        var docente = await _docenteRepository.ObterInativoPeloIdAsync(id);
+        var docente = await _docenteRepository.ObterInativoPorIdAsync(id);
         if (docente == null)
             throw new EntidadeNaoEncontradaException("O docente não foi encontrado.");
         return docente;
@@ -83,18 +83,18 @@ public class DocenteService : IDocenteService
             Ativo = true
         };
 
-        await _docenteRepository.AdicionarDocenteAsync(novoDocente);
+        await _docenteRepository.AdicionarAsync(novoDocente);
     }
 
     public async Task InativarDocenteAsync(int id)
     {
         await ObterDocenteAtivoOuLancarErroAsync(id);
-        await _docenteRepository.InativarDocenteAsync(id);
+        await _docenteRepository.InativarAsync(id);
     }
     public async Task ReativarDocenteAsync(int id)
     {
         await ObterDocenteInativoOuLancarErroAsync(id);
-        await _docenteRepository.ReativarDocenteAsync(id);
+        await _docenteRepository.ReativarAsync(id);
     }
 
     public async Task<ListaPaginada<Docente>> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
@@ -118,10 +118,10 @@ public class DocenteService : IDocenteService
         docenteExistente.DisciplinaId = docente.DisciplinaId;
         docenteExistente.Email = docente.Email;
 
-        await _docenteRepository.EditarDocenteAsync(docenteExistente);
+        await _docenteRepository.EditarAsync(docenteExistente);
     }
     public async Task<Docente> ObterPeloIdAsync(int id)
     {
-        return await _docenteRepository.ObterPeloIdAsync(id);
+        return await _docenteRepository.ObterPorIdAsync(id);
     }
 }

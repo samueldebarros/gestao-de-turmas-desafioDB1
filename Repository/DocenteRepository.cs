@@ -5,13 +5,10 @@ using Repository.Context;
 
 namespace Repository;
 
-public class DocenteRepository : IDocenteRepository
+public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepository
 {
-    private readonly GestaoEscolarContext _context;
-
-    public DocenteRepository(GestaoEscolarContext context)
+    public DocenteRepository(GestaoEscolarContext context) : base(context)
     {
-        _context = context;
     }
 
     private IQueryable<Docente> OrdenarPor(IQueryable<Docente> query, string? ordenacao = null,
@@ -28,27 +25,16 @@ public class DocenteRepository : IDocenteRepository
         };
     }
 
-    public async Task<Docente> ObterPeloIdAsync(int id)
+    public override async Task<Docente> ObterPorIdAsync(int id)
     {
-        return await _context.Docentes
+        return await _dbSet
             .Include(d => d.Disciplina)
             .FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
     }
-    public async Task<Docente> ObterInativoPeloIdAsync(int id)
-    {
-        return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
-    }
 
-    public async Task AdicionarDocenteAsync(Docente docente)
+    public override async Task InativarAsync(int id)
     {
-        _context.Add(docente);
-
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task InativarDocenteAsync(int id)
-    {
-        await _context.Docentes
+        await _dbSet
             .Where(d => d.Id == id)
             .ExecuteUpdateAsync(d => d
             .SetProperty(d => d.Ativo, false)
@@ -57,7 +43,7 @@ public class DocenteRepository : IDocenteRepository
 
     public async Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId)
     {
-        return await _context.Docentes
+        return await _dbSet
             .AsNoTracking()
             .Where(d => d.DisciplinaId == disciplinaId)
             .OrderBy(d => d.Nome)
@@ -67,7 +53,7 @@ public class DocenteRepository : IDocenteRepository
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
             DirecaoOrdenacaoEnum? direcao = null)
     {
-        var query = _context.Docentes.Include(d => d.Disciplina).AsNoTracking().AsQueryable();
+        var query = _dbSet.Include(d => d.Disciplina).AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(pesquisa))
         {
@@ -90,26 +76,13 @@ public class DocenteRepository : IDocenteRepository
         return (docentesPaginados, total);
     }
 
-    public async Task ReativarDocenteAsync(int id)
-    {
-        await _context.Docentes
-            .Where(d => d.Id == id)
-            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
-    }
-
-    public async Task EditarDocenteAsync(Docente docente)
-    {
-        _context.Docentes.Update(docente);
-        await _context.SaveChangesAsync();
-    }
-
     public async Task<bool> ExistePeloCpfAsync(string cpf)
     {
-        return await _context.Docentes.AnyAsync(d => d.Cpf == cpf);
+        return await _dbSet.AnyAsync(d => d.Cpf == cpf);
     }
     public async Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null)
     {
-        var query = _context.Docentes.Where(d => d.Email == email);
+        var query = _dbSet.Where(d => d.Email == email);
 
         if (ignorarId.HasValue)
             query = query.Where(d => d.Id != ignorarId.Value);
