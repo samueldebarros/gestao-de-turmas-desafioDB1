@@ -61,6 +61,7 @@ public class GerenciarTurmaController : BaseController
     public async Task<IActionResult> Editar(int id)
     {
         var turma = await _turmaService.ObterTurmaPeloIdAsync(id);
+        if (turma == null) return NotFound();
 
         var turmaModel = turma.ToEditarViewModel();
 

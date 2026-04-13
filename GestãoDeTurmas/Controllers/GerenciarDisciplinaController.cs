@@ -27,28 +27,13 @@ public class GerenciarDisciplinaController : BaseController
         if (pagina > listaDisciplinas.TotalPaginas && listaDisciplinas.TotalPaginas > 0)
             return RedirectToAction(nameof(Index), new { pagina = listaDisciplinas.TotalPaginas, pesquisa, ativo });
 
-        var disciplinasDomain = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList();
-
         var viewModel = new GerenciarDisciplinaViewModel()
         {
-            DisciplinasCadastradas = disciplinasDomain,
-            NovaDisciplina = new DisciplinaInputViewModel(),
-
-            TemProximaPagina = listaDisciplinas.TemProximaPagina,
-            TemPaginaAnterior = listaDisciplinas.TemPaginaAnterior,
-            TamanhoPagina = listaDisciplinas.TamanhoPagina,
-            TotalResultados = listaDisciplinas.TotalResultados,
-            PaginaAtual = pagina,
-            TotalPaginas = listaDisciplinas.TotalPaginas,
-            PesquisaAtual = pesquisa,
-            Ordenacao = ordenacao,
-            Direcao = direcao,
-            FiltrosAtivos = new Dictionary<string, string>(),
-            AtivoAtual = ativo,
+            DisciplinasCadastradas = listaDisciplinas.Select(d => d.ToListaViewModel()).ToList()
         };
 
-        if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
-        if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
+        viewModel.MapearPaginacao(listaDisciplinas, ordenacao, direcao);
+        viewModel.RegistrarFiltros(pesquisa, ativo);
 
         return View(viewModel);
     }

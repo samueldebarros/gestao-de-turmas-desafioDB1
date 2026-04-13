@@ -26,31 +26,13 @@ namespace GestãoDeTurmas.Controllers
             if(pagina > alunosPaginados.TotalPaginas && alunosPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new {pagina = alunosPaginados.TotalPaginas, pesquisa, sexo, ativo});
 
-            var alunosDomain = alunosPaginados.Select(a => a.ToListaViewModel()).ToList();
-
             var viewModel = new GerenciarAlunoViewModel
             {
-                AlunosCadastrados = alunosDomain,
-
-                PaginaAtual = alunosPaginados.PaginaAtual,
-                TotalPaginas = alunosPaginados.TotalPaginas,
-                TamanhoPagina = alunosPaginados.TamanhoPagina,
-                TemPaginaAnterior = alunosPaginados.TemPaginaAnterior,
-                TotalResultados = alunosPaginados.TotalResultados,
-                TemProximaPagina = alunosPaginados.TemProximaPagina,
-                PesquisaAtual = pesquisa,
-                SexoAtual = sexo,
-                AtivoAtual = ativo,
-                FiltrosAtivos = new Dictionary<string, string>(),
-                Ordenacao = ordenacao,
-                Direcao = direcao,
-
-                NovoAluno = new AlunoInputViewModel()
+                AlunosCadastrados = alunosPaginados.Select(a => a.ToListaViewModel()).ToList()
             };
 
-            if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
-            if (sexo != null) viewModel.FiltrosAtivos.Add("sexo", sexo.Value.ToString());
-            if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
+            viewModel.MapearPaginacao(alunosPaginados, ordenacao, direcao);
+            viewModel.RegistrarFiltros(pesquisa,sexo, ativo);
 
             return View(viewModel);
         }

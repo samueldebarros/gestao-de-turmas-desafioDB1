@@ -9,5 +9,12 @@ public class GerenciarDisciplinaViewModel : ListagemBaseViewModel
     public DisciplinaInputViewModel NovaDisciplina { get; set; }
     public string? PesquisaAtual { get; set; }
     public bool? AtivoAtual { get; set; }
+    public void RegistrarFiltros(string? pesquisa, bool? ativo)
+    {
+        PesquisaAtual = pesquisa;
+        AtivoAtual = ativo;
 
+        if (!string.IsNullOrEmpty(pesquisa)) FiltrosAtivos["pesquisa"] = pesquisa;
+        if (ativo.HasValue) FiltrosAtivos["ativo"] = ativo.Value.ToString();
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Common.Enums;
+﻿using API.DTOs;
+using Common.Enums;
 using GestãoDeTurmas.Views.Shared;
 
 namespace GestãoDeTurmas.Models;

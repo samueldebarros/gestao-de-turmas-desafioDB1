@@ -28,28 +28,13 @@ namespace GestãoDeTurmas.Controllers
             if (pagina > docentesPaginados.TotalPaginas && docentesPaginados.TotalPaginas > 0)
                 return RedirectToAction(nameof(Index), new { pagina = docentesPaginados.TotalPaginas, pesquisa, ativo });
 
-            var docenteDomain = docentesPaginados.Select(a => a.ToListaViewModel()).ToList();
-
             var viewModel = new GerenciarDocenteViewModel()
             {
-                DocentesCadastrados = docenteDomain,
-                NovoDocente = new DocenteInputViewModel(),
-
-                PaginaAtual = pagina,
-                TotalPaginas = docentesPaginados.TotalPaginas,
-                TotalResultados = docentesPaginados.TotalResultados,
-                TemProximaPagina = docentesPaginados.TemProximaPagina,
-                TamanhoPagina = docentesPaginados.TamanhoPagina,
-                TemPaginaAnterior = docentesPaginados.TemPaginaAnterior,
-                PesquisaAtual = pesquisa,
-                FiltrosAtivos = new Dictionary<string, string>(),
-                Ordenacao = ordenacao,
-                Direcao = direcao,
-                AtivoAtual = ativo,
+                DocentesCadastrados = docentesPaginados.Select(a => a.ToListaViewModel()).ToList()
             };
 
-            if (!string.IsNullOrEmpty(pesquisa)) viewModel.FiltrosAtivos.Add("pesquisa", pesquisa);
-            if (ativo != null) viewModel.FiltrosAtivos.Add("ativo", ativo.Value.ToString().ToLower());
+            viewModel.MapearPaginacao(docentesPaginados, ordenacao, direcao);
+            viewModel.RegistrarFiltros(pesquisa, ativo);
 
             return View(viewModel);
         }
