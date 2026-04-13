@@ -5,21 +5,9 @@ using Repository.Context;
 
 namespace Repository
 {
-    public class AlunoRepository : IAlunoRepository
+    public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
     {
-        private readonly GestaoEscolarContext _context;
-
-        public AlunoRepository(GestaoEscolarContext context)
-        {
-            _context = context;
-        }
-
-        public async Task AdicionarAsync(Aluno aluno)
-        {
-            _context.Add(aluno);
-
-            await _context.SaveChangesAsync();
-        }
+        public AlunoRepository(GestaoEscolarContext context) : base(context) { }
 
         private IQueryable<Aluno> OrdenarLista(IQueryable<Aluno> query,string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
         {
@@ -37,7 +25,7 @@ namespace Repository
         public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
             string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
         {
-            var query = _context.Alunos.AsNoTracking().AsQueryable();
+            var query = _dbSet.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrEmpty(pesquisa)) 
             {
@@ -70,50 +58,21 @@ namespace Repository
                 .Where(e => e.TurmaId == turmaId)
                 .Select(e => e.AlunoId);
 
-            return await _context.Alunos
+            return await _dbSet
                 .AsNoTracking()
                 .Where(a => a.Ativo && !alunosMatriculados.Contains(a.Id))
                 .OrderBy(a => a.Nome)
                 .ToListAsync();
         }
 
-        public async Task InativarAsync(int id) 
-        {
-            await _context.Alunos
-                .Where(a => a.Id == id)
-                .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, false));
-        }
-
-        public async Task ReativarAsync(int id)
-        {
-            await _context.Alunos
-                .Where(a => a.Id == id)
-                .ExecuteUpdateAsync(a => a.SetProperty(a => a.Ativo, true));
-        }
-
-        public async Task<Aluno> ObterPorIdAsync(int id)
-        {
-            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id && a.Ativo);
-        }
-        public async Task<Aluno> ObterInativoPorIdAsync(int id)
-        {
-            return await _context.Alunos.FirstOrDefaultAsync(a => a.Id == id && !a.Ativo);
-        }
-
-        public async Task EditarAlunoAsync(Aluno aluno)
-        {
-            _context.Alunos.Update(aluno);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<bool> ExistePeloCpfAsync(string cpf)
         {
-            return await _context.Alunos.AnyAsync(a => a.Cpf == cpf);
+            return await _dbSet.AnyAsync(a => a.Cpf == cpf);
         }
 
         public async Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null)
         {
-            var query = _context.Alunos.Where(a => a.Email == email);
+            var query = _dbSet.Where(a => a.Email == email);
 
             if(ignorarId.HasValue) 
                 query = query.Where(a => a.Id != ignorarId.Value);
@@ -123,7 +82,7 @@ namespace Repository
 
         public async Task<bool> ExisteMatriculaAsync(string matricula)
         {
-            return await _context.Alunos.AnyAsync(d => d.Matricula == matricula);
+            return await _dbSet.AnyAsync(d => d.Matricula == matricula);
         }
     }
 }

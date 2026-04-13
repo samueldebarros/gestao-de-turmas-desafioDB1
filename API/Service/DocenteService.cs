@@ -19,18 +19,6 @@ public class DocenteService : IDocenteService
         _disciplinaRepository = disciplinaRepository;
     }
 
-    private async Task<string> ValidarEProcessarCpfAsync(string cpfSujo)
-    {
-        var cpfLimpo = ValidacaoCpf.Limpar(cpfSujo);
-
-        if (!ValidacaoCpf.IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
-
-        if (await _docenteRepository.ExistePeloCpfAsync(cpfLimpo)) 
-            throw new RegraDeNegocioException("Esse CPF já esta em uso.");
-
-        return cpfLimpo;
-    }
-
     private void ValidarDataNascimento(DateOnly? dataNascimento)
     {
         if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))

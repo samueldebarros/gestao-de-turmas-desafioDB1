@@ -135,7 +135,7 @@ namespace API.Service
                 alunoExistente.DataNascimento = aluno.DataNascimento.Value;
             }
             
-            await _alunoRepository.EditarAlunoAsync(alunoExistente);
+            await _alunoRepository.EditarAsync(alunoExistente);
         }
     }
 }
