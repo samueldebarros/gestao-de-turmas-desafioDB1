@@ -5,13 +5,10 @@ using Repository.Context;
 
 namespace Repository;
 
-public class DisciplinaRepository : IDisciplinaRepository
+public class DisciplinaRepository : BaseInativavelRepository<Disciplina>, IDisciplinaRepository
 {
-    private readonly GestaoEscolarContext _context;
-
-    public DisciplinaRepository(GestaoEscolarContext context)
+    public DisciplinaRepository(GestaoEscolarContext context) : base(context)
     {
-        _context = context;
     }
 
     private IQueryable<Disciplina> OrdenarPor(IQueryable<Disciplina> query, string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
@@ -26,53 +23,23 @@ public class DisciplinaRepository : IDisciplinaRepository
         };
     }
 
-    public async Task AdicionarDisciplinaAsync(Disciplina disciplina)
-    {
-        _context.Add(disciplina);
-        await _context.SaveChangesAsync();
-
-    }
-
     public async Task<List<Disciplina>> ObterDisciplinasDisponiveisParaTurmaAsync(int turmaId)
     {
         var discplinasJaVinculadas = _context.GradeCurricular
             .Where(g => g.TurmaId == turmaId)
             .Select(g => g.DisciplinaId);
 
-        return await _context.Disciplinas
+        return await _dbSet
             .AsNoTracking()
             .Where(d => d.Ativo && !discplinasJaVinculadas.Contains(d.Id))
             .OrderBy(d => d.Nome)
             .ToListAsync();
     }
 
-    public async Task EditarDisciplinaAsync(Disciplina disciplina)
-    {
-        _context.Disciplinas.Update(disciplina);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task InativarDisciplinaAsync(int id)
-    {
-        await _context.Disciplinas
-            .Where(d => d.Id == id)
-            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, false));
-    }
-
-    public async Task<Disciplina> ObterDisciplinaPorIdAsync(int id)
-    {
-        return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
-    }
-
-    public async Task<Disciplina> ObterInativoPorIdAsync(int id)
-    {
-        return await _context.Disciplinas.FirstOrDefaultAsync(d => d.Id == id && !d.Ativo);
-    }
-
     public async Task<(List<Disciplina>, int total)> ObterTodasAsDisciplinasAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
             DirecaoOrdenacaoEnum? direcao = null)
     {
-        var query = _context.Disciplinas.AsNoTracking().AsQueryable();
+        var query = _dbSet.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrEmpty(pesquisa))
             query = query.Where(d => d.Nome.Contains(pesquisa)
@@ -91,16 +58,9 @@ public class DisciplinaRepository : IDisciplinaRepository
         return (disciplinas, total);
     }
 
-    public async Task ReativarDisciplinaAsync(int id)
-    {
-        await _context.Disciplinas
-            .Where(d => d.Id == id)
-            .ExecuteUpdateAsync(d => d.SetProperty(d => d.Ativo, true));
-    }
-
     public async Task<bool> ExistePeloNomeAsync(string nome, int? ignorarId = null)
     {
-        var query = _context.Disciplinas
+        var query = _dbSet
             .Where(d => d.Nome.ToLower() == nome.ToLower());
 
         if (ignorarId.HasValue)
@@ -111,7 +71,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task<bool> ExisteAtivaAsync(int id)
     {
-        return await _context.Disciplinas.AnyAsync(d => d.Id == id && d.Ativo);
+        return await _dbSet.AnyAsync(d => d.Id == id && d.Ativo);
     }
 
     public async Task<bool> PossuiDocentesAtivosAsync(int disciplinaId)
@@ -121,7 +81,7 @@ public class DisciplinaRepository : IDisciplinaRepository
 
     public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
     {
-        return await _context.Disciplinas
+        return await _dbSet
             .AsNoTracking()
             .Where(d => d.Ativo)
             .OrderBy(d => d.Nome)

@@ -30,7 +30,7 @@ public class DisciplinaService : IDisciplinaService
             Ativo = true
         };
 
-        await _disciplinaRepository.AdicionarDisciplinaAsync(novaDisciplina);
+        await _disciplinaRepository.AdicionarAsync(novaDisciplina);
     }
 
     public async Task EditarDisciplinaAsync(EditarDisciplinaDTO disciplinaDTO)
@@ -45,7 +45,7 @@ public class DisciplinaService : IDisciplinaService
         disciplinaExistente.CargaHoraria = disciplinaDTO.CargaHoraria;
         disciplinaExistente.Ementa = disciplinaDTO.Ementa;
 
-        await _disciplinaRepository.EditarDisciplinaAsync(disciplinaExistente);
+        await _disciplinaRepository.EditarAsync(disciplinaExistente);
     }
 
     public async Task InativarDisciplinaAsync(int id)
@@ -55,12 +55,12 @@ public class DisciplinaService : IDisciplinaService
         if (await _disciplinaRepository.PossuiDocentesAtivosAsync(id))
             throw new RegraDeNegocioException("Não é possivel inativar uma disciplina com docentes ativos vinculados.");
 
-        await _disciplinaRepository.InativarDisciplinaAsync(id);
+        await _disciplinaRepository.InativarAsync(id);
     }
 
     public async Task<Disciplina> ObterDisciplinaPorIdAsync(int id)
     {
-        return await _disciplinaRepository.ObterDisciplinaPorIdAsync(id);
+        return await _disciplinaRepository.ObterPorIdAsync(id);
     }
 
     public async Task<List<Disciplina>> ObterDisciplinasAtivasAsync()
@@ -86,7 +86,7 @@ public class DisciplinaService : IDisciplinaService
     public async Task ReativarDisciplinaAsync(int id)
     {
         await ObterDisciplinaInativaOuLancarErroAsync(id);
-        await _disciplinaRepository.ReativarDisciplinaAsync(id);
+        await _disciplinaRepository.ReativarAsync(id);
     }
 
     private void ValidarCargaHoraria(int cargaHoraria)
@@ -99,7 +99,7 @@ public class DisciplinaService : IDisciplinaService
 
     private async Task<Disciplina> ObterDisciplinaAtivaOuLancarErroAsync(int id)
     {
-        var disciplina = await _disciplinaRepository.ObterDisciplinaPorIdAsync(id);
+        var disciplina = await _disciplinaRepository.ObterPorIdAsync(id);
         if (disciplina == null)
             throw new EntidadeNaoEncontradaException("A disciplina não foi encontrada.");
         return disciplina;
