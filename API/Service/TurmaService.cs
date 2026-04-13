@@ -35,12 +35,12 @@ public class TurmaService : ITurmaService
             Ativo = true,
         };
 
-        await _turmaRepository.AdicionarTurmaAsync(turma);
+        await _turmaRepository.AdicionarAsync(turma);
     }
 
     public async Task EditarTurmaAsync(TurmaEditarDTO turmaDTO)
     {
-        var turma = await _turmaRepository.ObterTurmaPeloIdAsync(turmaDTO.Id);
+        var turma = await _turmaRepository.ObterPorIdAsync(turmaDTO.Id);
 
         if (turma == null)
             throw new EntidadeNaoEncontradaException("Turma não encontrada.");
@@ -53,7 +53,7 @@ public class TurmaService : ITurmaService
         turma.AnoLetivo = turmaDTO.AnoLetivo;
         turma.Identificador = turmaDTO.Identificador;
 
-        await _turmaRepository.EditarTurmaAsync(turma);
+        await _turmaRepository.EditarAsync(turma);
     }
 
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
@@ -82,6 +82,6 @@ public class TurmaService : ITurmaService
 
     public async Task<Turma> ObterTurmaPeloIdAsync(int id)
     {
-        return await _turmaRepository.ObterTurmaPeloIdAsync(id);
+        return await _turmaRepository.ObterPorIdAsync(id);
     }
 }
