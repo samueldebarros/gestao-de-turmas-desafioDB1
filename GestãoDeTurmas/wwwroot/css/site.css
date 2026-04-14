@@ -490,16 +490,16 @@ input {
     padding: 28px;
 }
 /* cards da pagina iniciail */
-.cards-modulos {
+.cards-dashboard {
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
     margin-top: 2rem;
 }
 
-.card-modulo {
+.card-dashboard {
     flex: 1;
-    min-width: 200px;
+    min-width: 150px;
     background-color: var(--cor-superficie);
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio-borda);
@@ -511,23 +511,34 @@ input {
     transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-    .card-modulo:hover {
+    .card-dashboard:hover {
         box-shadow: 0 4px 12px rgba(0,0,0,.1);
         transform: translateY(-2px);
     }
 
-.card-modulo-titulo {
+.card-dashboard-cabecalho{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-dashboard-titulo {
     font-size: 1rem;
     font-weight: 600;
     color: var(--cor-texto);
     margin: 0;
 }
 
-.card-modulo-descricao {
-    font-size: 0.875rem;
-    color: var(--cor-texto-suave);
+.card-dashboard-icone{
+    color: var(--cor-identidade);
+    font-size: 1.5rem;
+}
+
+.card-dashboard-data {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-seri;
+    font-size: 2.6rem;
     margin: 0;
-    flex-grow: 1;
+    margin-top: auto;
 }
 
 /* card das turmas */
@@ -567,8 +578,3 @@ input {
     margin-top: -5px;
 }
 
-.botao-icone {
-}
-
-    .botao-icone:hover {
-    }

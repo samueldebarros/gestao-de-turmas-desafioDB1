@@ -1,6 +1,6 @@
 ﻿using Common.Domains;
 
-namespace Repository;
+namespace Repository.Repositories.Base;
 
 public interface IBaseRepository<T> where T : class, IEntidade
 {

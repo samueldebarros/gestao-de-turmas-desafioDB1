@@ -2,7 +2,7 @@
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
-using Repository;
+using Repository.Repositories.TurmaRepository;
 
 namespace API.Service;
 

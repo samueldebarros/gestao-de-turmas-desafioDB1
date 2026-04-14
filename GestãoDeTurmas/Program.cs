@@ -4,6 +4,9 @@ using GestãoDeTurmas.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Repository.Context;
+using Repository.Repositories;
+using Repository.Repositories.DocenteRepository;
+using Repository.Repositories.TurmaRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 

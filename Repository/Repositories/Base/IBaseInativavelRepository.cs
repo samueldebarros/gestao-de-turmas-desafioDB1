@@ -1,9 +1,6 @@
 ﻿using Common.Domains;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Repository;
+namespace Repository.Repositories.Base;
 
 public interface IBaseInativavelRepository<T> : IBaseRepository<T> where T : class , IEntidadeInativavel
 {

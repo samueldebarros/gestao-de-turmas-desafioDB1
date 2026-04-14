@@ -2,8 +2,9 @@
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
+using Repository.Repositories.Base;
 
-namespace Repository;
+namespace Repository.Repositories.DocenteRepository;
 
 public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepository
 {

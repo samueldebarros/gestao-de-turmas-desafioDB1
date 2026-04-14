@@ -3,8 +3,9 @@ using Common.Utils;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
+using Repository.Repositories.Base;
 
-namespace Repository;
+namespace Repository.Repositories.TurmaRepository;
 
 public class TurmaRepository : BaseRepository<Turma> , ITurmaRepository
 {

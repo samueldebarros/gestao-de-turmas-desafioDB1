@@ -1,11 +1,8 @@
 ﻿using Common.Domains;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Repository;
+namespace Repository.Repositories.Base;
 
 public abstract class BaseRepository<T> : IBaseRepository<T> where T : class, IEntidade
 {

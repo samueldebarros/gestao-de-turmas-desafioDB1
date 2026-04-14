@@ -1,10 +1,8 @@
 ﻿using Common.Domains;
 using Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Repository.Repositories.Base;
 
-namespace Repository;
+namespace Repository.Repositories.DocenteRepository;
 
 public interface IDocenteRepository : IBaseInativavelRepository<Docente>
 {

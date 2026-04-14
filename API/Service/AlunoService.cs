@@ -4,7 +4,7 @@ using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Utils;
-using Repository;
+using Repository.Repositories;
 
 namespace API.Service
 {

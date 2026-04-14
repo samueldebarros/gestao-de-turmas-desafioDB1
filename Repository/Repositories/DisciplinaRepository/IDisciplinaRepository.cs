@@ -1,7 +1,8 @@
 ﻿using Common.Domains;
 using Common.Enums;
+using Repository.Repositories.Base;
 
-namespace Repository;
+namespace Repository.Repositories;
 
 public interface IDisciplinaRepository : IBaseInativavelRepository<Disciplina>
 {

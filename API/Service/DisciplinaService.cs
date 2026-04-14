@@ -3,7 +3,7 @@ using API.DTOs.DisciplinaDTOs;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
-using Repository;
+using Repository.Repositories;
 
 namespace API.Service;
 

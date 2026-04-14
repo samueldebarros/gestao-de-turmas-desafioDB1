@@ -1,7 +1,8 @@
 ﻿using Common.Domains;
 using Common.Enums;
+using Repository.Repositories.Base;
 
-namespace Repository;
+namespace Repository.Repositories.TurmaRepository;
 
 public interface ITurmaRepository : IBaseRepository<Turma>
 {
