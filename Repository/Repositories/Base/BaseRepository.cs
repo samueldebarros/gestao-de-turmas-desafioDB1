@@ -31,4 +31,9 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class, IE
     {
         return await _dbSet.FirstOrDefaultAsync(t => t.Id == id);
     }
+
+    public virtual async Task<int> ContarTodosAsync()
+    {
+        return await _dbSet.CountAsync();
+    }
 }

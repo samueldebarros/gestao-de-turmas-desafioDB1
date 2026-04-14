@@ -24,4 +24,13 @@ public abstract class BaseInativavelRepository<T> : BaseRepository<T>, IBaseInat
         await _dbSet.Where(t => t.Id == id)
             .ExecuteUpdateAsync(t => t.SetProperty(t => t.Ativo, true));
     }
+
+    public virtual async Task<int> ContarAtivosAsync()
+    {
+        return await _dbSet.CountAsync(t => t.Ativo);
+    }
+    public virtual async Task<int> ContarInativosAsync()
+    {
+        return await _dbSet.CountAsync(t => !t.Ativo);
+    }
 }

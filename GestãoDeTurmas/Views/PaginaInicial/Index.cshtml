@@ -1,4 +1,6 @@
-﻿@{
+﻿@model GestãoDeTurmas.Models.Dashboard.DashboardDadosViewModel;
+
+@{
     ViewData["Title"] = "Início";
 }
 
@@ -13,7 +15,10 @@
                 <icone nome="Alunos"></icone>
             </div>
         </div>
-        <p class="card-dashboard-data">10</p>
+        <div class="card-dashboard-footer">
+            <p class="card-dashboard-data">@Model.TotalAlunos</p>
+            <h6 class="card-dashboard-data-secundaria">@Model.AlunosInativos inativos</h6>
+        </div>
     </div>
 
     <div class="card-dashboard">
@@ -23,7 +28,10 @@
                 <icone nome="Docentes"></icone>
             </div>
         </div>
-        <p class="card-dashboard-data">10</p>
+        <div class="card-dashboard-footer">
+            <p class="card-dashboard-data">@Model.TotalDocentes</p>
+            <h6 class="card-dashboard-data-secundaria">@Model.DocentesInativos inativos</h6>
+        </div>
     </div>
 
     <div class="card-dashboard">
@@ -33,17 +41,22 @@
                 <icone nome="Disciplinas"></icone>
             </div>
         </div>
-        <p class="card-dashboard-data">10</p>
+        <div class="card-dashboard-footer">
+            <p class="card-dashboard-data">@Model.TotalDisciplinas</p>
+            <h6 class="card-dashboard-data-secundaria">@Model.DisciplinasInativos inativos</h6>
+        </div>
     </div>
 
     <div class="card-dashboard">
         <div class="card-dashboard-cabecalho">
-            <p class="card-dashboard-titulo">Turmas ativas</p>
+            <p class="card-dashboard-titulo">Total turmas</p>
             <div class="card-dashboard-icone">
                 <icone nome="Turmas"></icone>
             </div>
         </div>
-        <p class="card-dashboard-data">10</p>
+        <div class="card-dashboard-footer">
+            <p class="card-dashboard-data">@Model.TotalTurmas</p>
+        </div>
     </div>
 
 </div>

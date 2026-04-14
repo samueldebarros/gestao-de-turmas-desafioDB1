@@ -522,6 +522,12 @@ input {
     align-items: center;
 }
 
+.card-dashboard-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
 .card-dashboard-titulo {
     font-size: 1rem;
     font-weight: 600;
@@ -539,8 +545,13 @@ input {
     font-size: 2.6rem;
     margin: 0;
     margin-top: auto;
+    padding: 0;
 }
 
+.card-dashboard-data-secundaria {
+    color: var(--cor-texto-suave);
+    font-size: 0.8rem;
+}
 /* card das turmas */
 .cards-turmas {
     display: grid;
