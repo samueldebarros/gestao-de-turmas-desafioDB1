@@ -10,4 +10,5 @@
     <Project Path="Repository/Repository.csproj" Id="09ce5bcf-1a5f-4555-b534-02ae97915d21" />
   </Folder>
   <Project Path="DesafioTecnico1-Fundamentos/DesafioTecnico1-Fundamentos.csproj" />
+  <Project Path="Tests/Tests.csproj" />
 </Solution>
