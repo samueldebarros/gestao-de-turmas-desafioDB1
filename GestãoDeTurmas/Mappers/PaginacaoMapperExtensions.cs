@@ -14,7 +14,6 @@ public static class PaginacaoMapperExtensions
         viewModel.TamanhoPagina = listaPaginada.TamanhoPagina;
         viewModel.TemPaginaAnterior = listaPaginada.TemPaginaAnterior;
         viewModel.TemProximaPagina = listaPaginada.TemProximaPagina;
-
         viewModel.Ordenacao = ordenacao;
         viewModel.Direcao = direcao;
     }
