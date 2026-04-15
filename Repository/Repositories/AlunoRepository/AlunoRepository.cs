@@ -56,13 +56,13 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
 
     public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId)
     {
-        var alunosMatriculados = _context.Enturmamentos
-            .Where(e => e.TurmaId == turmaId)
-            .Select(e => e.AlunoId);
+        //var alunosMatriculados = _context.Enturmamentos
+        //    .Where(e => e.TurmaId == turmaId)
+        //    .Select(e => e.AlunoId);
 
         return await _dbSet
             .AsNoTracking()
-            .Where(a => a.Ativo && !alunosMatriculados.Contains(a.Id))
+            .Where(a => a.Ativo && !_context.Enturmamentos.Any(e => e.TurmaId == turmaId && e.AlunoId == a.Id))
             .OrderBy(a => a.Nome)
             .ToListAsync();
     }

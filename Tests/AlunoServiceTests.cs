@@ -5,6 +5,7 @@ using API.Service;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
+using FluentAssertions;
 using Moq;
 using Repository.Repositories;
 
@@ -19,16 +20,17 @@ public class AlunoServiceTests
         var alunoDto = new AlunoInputDTO
         {
             Nome = "Samuel de BArros",
-            Cpf = "663.544.610-90",
+            Cpf = "151.310.580-90",
             Email = "samuel@teste.com",
             Sexo = SexoEnum.Masculino,
             DataNascimento = DateOnly.FromDateTime(DateTime.Today.AddDays(1))
         };
 
-        var excecao = await Assert.ThrowsAsync<RegraDeNegocioException>(() => 
-        alunoService.AdicionarAlunoAsync(alunoDto));
+        Func<Task> acao = async () => await alunoService.AdicionarAlunoAsync(alunoDto);
 
-        Assert.Equal("A data de nascimento não pode ser maior ou igual à data atual.", excecao.Message);
+        await acao.Should().ThrowAsync<RegraDeNegocioException>()
+            .WithMessage("A data de nascimento não pode ser maior ou igual à data atual.");
+
         alunoRepositoryMock.Verify(repo => repo.AdicionarAsync(It.IsAny<Aluno>()), Times.Never);
     }
 
@@ -41,16 +43,17 @@ public class AlunoServiceTests
         var alunoDto = new AlunoInputDTO
         {
             Nome = "Samuel de BArros",
-            Cpf = "663.544.610-90",
+            Cpf = "151.310.580-90",
             Email = "samuel@teste.com",
             Sexo = SexoEnum.Masculino,
             DataNascimento = DateOnly.FromDateTime(DateTime.Today.AddYears(-200))
         };
 
-        var excecao = await Assert.ThrowsAsync<RegraDeNegocioException>(() =>
-        alunoService.AdicionarAlunoAsync(alunoDto));
+        Func<Task> acao = async () => await alunoService.AdicionarAlunoAsync(alunoDto);
 
-        Assert.Equal("A data de nascimento informada é inválida (idade superior a 120 anos).", excecao.Message);
+        await acao.Should().ThrowAsync<RegraDeNegocioException>()
+            .WithMessage("A data de nascimento informada é inválida (idade superior a 120 anos).");
+
         alunoRepositoryMock.Verify(repo => repo.AdicionarAsync(It.IsAny<Aluno>()), Times.Never);
     }
 
@@ -67,15 +70,18 @@ public class AlunoServiceTests
         var alunoDto = new AlunoInputDTO
         {
             Nome = "asdsadasdas",
-            Cpf = "663.544.610-90",
+            Cpf = "151.310.580-90",
             Email = emailDuplicado,
             Sexo = SexoEnum.Masculino,
             DataNascimento = DateOnly.FromDateTime(DateTime.Today.AddYears(-20))
         };
 
-        var excecao = await Assert.ThrowsAsync<RegraDeNegocioException>(() => alunoService.AdicionarAlunoAsync(alunoDto));
+        Func<Task> acao = async () => await alunoService.AdicionarAlunoAsync(alunoDto);
 
-        Assert.Equal("Este e-mail já esta em uso.", excecao.Message);
+        await acao.Should()
+                .ThrowAsync<RegraDeNegocioException>()
+                .WithMessage("Este e-mail já esta em uso.");
+
         alunoRepositoryMock.Verify(repo => repo.AdicionarAsync(It.IsAny<Aluno>()), Times.Never);
     }
 
@@ -88,7 +94,7 @@ public class AlunoServiceTests
         var alunoDto = new AlunoInputDTO
         {
             Nome = "Samuel de barros",
-            Cpf = "663.544.610-90",
+            Cpf = "151.310.580-90",
             Email = "samuel@teste.com",
             Sexo = SexoEnum.Masculino,
             DataNascimento = DateOnly.FromDateTime(DateTime.Today.AddYears(-20))
@@ -97,10 +103,12 @@ public class AlunoServiceTests
         alunoRepositoryMock.Setup(repo => repo.ExisteMatriculaAsync(It.IsAny<string>()))
         .ReturnsAsync(true);
 
-        var excecao = await Assert.ThrowsAsync<RegraDeNegocioException>(() => alunoService.AdicionarAlunoAsync(alunoDto));
+        Func<Task> acao = async () => await alunoService.AdicionarAlunoAsync(alunoDto);
 
-        Assert.Equal("Não foi possível gerar uma matrícula única. Tente novamente!!", excecao.Message);
+        await acao.Should()
+                .ThrowAsync<RegraDeNegocioException>()
+                .WithMessage("Não foi possível gerar uma matrícula única. Tente novamente!!");
+
         alunoRepositoryMock.Verify(repo => repo.AdicionarAsync(It.IsAny<Aluno>()), Times.Never);
     }
 }
- 
