@@ -8,7 +8,10 @@ namespace Repository.Mappings
     {
         public void Configure(EntityTypeBuilder<Disciplina> builder)
         {
-            builder.ToTable("Disciplinas");
+            builder.ToTable("Disciplinas", tb =>
+            {
+                tb.HasCheckConstraint("CK_Disciplinas_CargaHoraria", "[CargaHoraria] > 0");
+            });
             builder.HasKey(d => d.Id);
 
             builder.Property(d => d.Nome)

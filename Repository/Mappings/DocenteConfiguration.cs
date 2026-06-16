@@ -8,7 +8,11 @@ public class DocenteConfiguration : IEntityTypeConfiguration<Docente>
 {
     public void Configure(EntityTypeBuilder<Docente> builder)
     {
-        builder.ToTable("Docentes");
+        builder.ToTable("Docentes", tb =>
+        {
+            tb.HasCheckConstraint("CK_Docentes_Cpf_Numerico", "[Cpf] NOT LIKE '%[^0-9]%'");
+        });
+
         builder.HasKey(x => x.Id);
 
         builder.Property(d => d.Nome)

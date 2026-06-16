@@ -108,6 +108,11 @@ public class DocenteService : IDocenteService
         return docentesPaginados;
     }
 
+    public async Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync()
+    {
+        return await _docenteRepository.ObterDocentesDisciplinasSqlAsync();
+    }
+
     public async Task EditarDocenteAsync(EditarDocenteDTO docente)
     {
         var docenteExistente = await ObterDocenteAtivoOuLancarErroAsync(docente.Id);

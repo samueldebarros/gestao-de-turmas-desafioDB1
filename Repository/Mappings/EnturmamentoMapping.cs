@@ -10,7 +10,10 @@ public class EnturmamentoMapping : IEntityTypeConfiguration<Enturmamento>
 {
     public void Configure(EntityTypeBuilder<Enturmamento> builder)
     {
-        builder.ToTable("Enturmamentos");
+        builder.ToTable("Enturmamentos", tb =>
+        {
+            tb.HasCheckConstraint("CK_Enturmamentos_Situacao", "[Situacao] IN (1,2,3,4)");
+        });
 
         builder.HasKey(e => new { e.AlunoId, e.TurmaId });
 

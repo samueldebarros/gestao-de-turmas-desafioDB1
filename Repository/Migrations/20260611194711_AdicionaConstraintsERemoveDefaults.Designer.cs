@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Context;
 
@@ -11,9 +12,11 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(GestaoEscolarContext))]
-    partial class GestaoEscolarContextModelSnapshot : ModelSnapshot
+    [Migration("20260611194711_AdicionaConstraintsERemoveDefaults")]
+    partial class AdicionaConstraintsERemoveDefaults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,39 +260,6 @@ namespace Repository.Migrations
                             t.HasCheckConstraint("CK_Turmas_Serie", "[Serie] IN (1,2,3)");
 
                             t.HasCheckConstraint("CK_Turmas_Turno", "[Turno] IN (1,2,3)");
-                        });
-                });
-
-            modelBuilder.Entity("Common.Domains.Usuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("VARCHAR(150)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR(20)");
-
-                    b.Property<string>("SenhaHash")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Usuarios", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Usuarios_Role", "[Role] IN ('Admin','Coordenador', 'Docente')");
                         });
                 });
 

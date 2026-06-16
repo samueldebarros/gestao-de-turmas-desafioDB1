@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Context;
 using Repository.Repositories;
 using Repository.Repositories.Base;
+using System.Text.RegularExpressions;
 
 namespace Repository.Repositories;
 
@@ -40,7 +41,14 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
      
         if (sexo.HasValue) query = query.Where(a => a.Sexo == sexo.Value);
 
-        if (ativo.HasValue) query = query.Where(a => a.Ativo == ativo.Value);        
+        if (ativo.HasValue) query = query.Where(a => a.Ativo == ativo.Value);
+
+        // SELECT * FROM Alunos 
+        // WHERE (Nome LIKE '%14150309957%' OR Cpf = '14150309957' OR Matricula = '14150309957' ) 
+        // AND Ativo = 1 AND Sexo = 'Masculino' 
+        // ORDER BY Nome ASC;
+        // [LIKE para pesquisa mais modular mas menos performático e = para pesquisas exatas]
+        // Para ter um resultado parecido, eu teria que trocar o Contains de CPF e Matriucla pelo == ou usar o .startWith para simular o LIKE '141%'
 
 
         int total = await query.CountAsync();
@@ -51,20 +59,32 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
             .Take(tamanho)
             .ToListAsync();
 
+        //OFFSET 5 ROWS 
+        //FETCH NEXT 5 ROWS ONLY;
+
         return (lista, total);
     }
 
     public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaAsync(int turmaId)
     {
-        //var alunosMatriculados = _context.Enturmamentos
-        //    .Where(e => e.TurmaId == turmaId)
-        //    .Select(e => e.AlunoId);
 
         return await _dbSet
             .AsNoTracking()
             .Where(a => a.Ativo && !_context.Enturmamentos.Any(e => e.TurmaId == turmaId && e.AlunoId == a.Id))
             .OrderBy(a => a.Nome)
             .ToListAsync();
+
+        /*  
+         *  SELECT * 
+         *  FROM Alunos AS a
+         *  WHERE a.Ativo = 1
+         *  AND NOT EXISTS (
+         *      SELECT 1
+         *      FROM Enturmamentos AS e
+         *      JOIN Turmas AS t ON e.TurmaId = t.Id
+         *      WHERE e.AlunoId = a.Id AND e.TurmaId = turmaId
+         *  )
+        */
     }
 
     public async Task<bool> ExistePeloCpfAsync(string cpf)
@@ -85,5 +105,24 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
     public async Task<bool> ExisteMatriculaAsync(string matricula)
     {
         return await _dbSet.AnyAsync(d => d.Matricula == matricula);
+    }
+
+    public async Task<List<Aluno>> ObterAlunosDisponiveisParaTurmaSQL(int turmaId)
+    {
+        return await _dbSet
+            .FromSqlInterpolated($@"
+                SELECT a.Id, a.Matricula, a.Nome, a.Cpf, a.DataNascimento, a.Sexo, a.Email, a.Ativo 
+                FROM Alunos AS a
+                WHERE a.Ativo = 1
+                AND NOT EXISTS (
+                   SELECT 1
+                   FROM Enturmamentos AS e
+                   JOIN Turmas AS t ON e.TurmaId = t.Id
+                   WHERE e.AlunoId = a.Id AND e.TurmaId = turmaId
+                )
+                ORDER BY a.Nome ASC
+            ")
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

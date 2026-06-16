@@ -13,6 +13,7 @@ public class GestaoEscolarContext : DbContext
     public DbSet<Turma> Turmas { get; set; }
     public DbSet<Enturmamento> Enturmamentos { get; set; }
     public DbSet<GradeCurricular> GradeCurricular { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

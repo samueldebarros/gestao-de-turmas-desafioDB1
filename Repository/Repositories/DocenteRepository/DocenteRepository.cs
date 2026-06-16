@@ -77,6 +77,22 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
         return (docentesPaginados, total);
     }
 
+    public async Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync()
+    {
+        return await _context.Database
+            .SqlQuery<DocenteSqlDto>($@"
+            SELECT 
+                doc.Id AS Id,
+                doc.Nome AS DocenteNome, 
+                doc.Email AS DocenteEmail, 
+                disc.Nome AS DisciplinaNome, 
+                disc.CargaHoraria AS CargaHoraria
+            FROM Docentes AS doc
+            JOIN Disciplinas AS disc ON disc.Id = doc.DisciplinaId
+        ")
+            .ToListAsync();
+    }
+
     public async Task<bool> ExistePeloCpfAsync(string cpf)
     {
         return await _dbSet.AnyAsync(d => d.Cpf == cpf);

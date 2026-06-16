@@ -2,6 +2,7 @@
 using API.DTOs.DocenteDTOs;
 using Common.Domains;
 using Common.Enums;
+using Repository.Repositories;
 
 namespace API.Service;
 
@@ -14,4 +15,5 @@ public interface IDocenteService
     Task ReativarDocenteAsync(int id);
     Task<Docente> ObterPeloIdAsync(int id);
     Task EditarDocenteAsync(EditarDocenteDTO docente);
+    Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync();
 }

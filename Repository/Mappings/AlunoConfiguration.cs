@@ -8,14 +8,18 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
 {
     public void Configure(EntityTypeBuilder<Aluno> builder)
     {
-        builder.ToTable("Alunos");
+        builder.ToTable("Alunos", tb =>
+        {
+            tb.HasCheckConstraint("CK_Alunos_Cpf_Numerico", "[Cpf] NOT LIKE '%[^0-9]%'");
+            tb.HasCheckConstraint("CK_Alunos_Sexo",
+                "[Sexo] IN ('Masculino','Feminino','Outro')");
+        });
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Matricula)
             .HasMaxLength(20)
             .IsRequired()
-            .HasColumnType("VARCHAR(20)")
-            .HasDefaultValueSql("'000000'");
+            .HasColumnType("VARCHAR(20)");
 
         builder.Property(x => x.Nome)
             .IsRequired()
@@ -26,18 +30,16 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
             .IsRequired()
             .HasColumnType("CHAR(11)")
             .HasMaxLength(11);
-            
+
         builder.Property(x => x.DataNascimento)
             .IsRequired()
-            .HasColumnType("date")
-            .HasDefaultValueSql("GETDATE()");
+            .HasColumnType("date");
 
         builder.Property(x => x.Sexo)
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(20)
-            .HasColumnType("VARCHAR(20)")
-            .HasDefaultValueSql("'NaoInformado'");
+            .HasColumnType("VARCHAR(20)");
 
         builder.Property(x => x.Email)
             .HasMaxLength(150)
@@ -48,13 +50,8 @@ internal class AlunoConfiguration : IEntityTypeConfiguration<Aluno>
             .IsRequired()
             .HasDefaultValue(true);
 
-        builder.HasIndex(x => x.Cpf)
-            .IsUnique();
-
-        builder.HasIndex(x => x.Matricula)
-            .IsUnique();
-
-        builder.HasIndex(d => d.Email)
-            .IsUnique();
+        builder.HasIndex(x => x.Cpf).IsUnique();
+        builder.HasIndex(x => x.Matricula).IsUnique();
+        builder.HasIndex(d => d.Email).IsUnique();
     }
 }

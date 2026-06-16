@@ -11,7 +11,12 @@ public class TurmaMapping : IEntityTypeConfiguration<Turma>
 {
     public void Configure(EntityTypeBuilder<Turma> builder)
     {
-        builder.ToTable("Turmas");
+        builder.ToTable("Turmas", tb =>
+        {
+            tb.HasCheckConstraint("CK_Turmas_Serie", "[Serie] IN (1,2,3)");
+            tb.HasCheckConstraint("CK_Turmas_Turno", "[Turno] IN (1,2,3)");
+            tb.HasCheckConstraint("CK_Turmas_Capacidade", "[Capacidade] > 0");
+        });
 
         builder.HasKey(t => t.Id);
 
