@@ -1,4 +1,4 @@
-﻿using API.Service;
+using API.Service;
 using Microsoft.AspNetCore.Mvc;
 using GestãoDeTurmas.Mappers;
 

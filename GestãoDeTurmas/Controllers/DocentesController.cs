@@ -1,4 +1,4 @@
-﻿using API.Service;
+using API.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +6,7 @@ namespace GestãoDeTurmas.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin, Coordenador")]
+    [Authorize(Roles = "Admin,Coordenador")]
     public class DocentesController : ControllerBase
     {
         private readonly IDocenteService _docenteService;

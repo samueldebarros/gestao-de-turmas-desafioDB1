@@ -10,7 +10,7 @@ namespace GestãoDeTurmas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles ="Admin, Coordenador, Docente")]
+[Authorize(Roles ="Admin,Coordenador,Docente")]
 public class AlunosController : ControllerBase
 {
     private readonly IAlunoService _alunoService;
@@ -22,11 +22,16 @@ public class AlunosController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> ObterTodosOsAlunos([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10, [FromQuery] string? pesquisa = null, [FromQuery] SexoEnum? sexo = null,
-        [FromQuery] bool? ativo = null)
+        [FromQuery] bool? ativo = null, [FromQuery] OrdenacaoAlunoEnum? ordenacao = null, [FromQuery] DirecaoOrdenacaoEnum? direcao = null)
     {
+        if (ordenacao.HasValue && !Enum.IsDefined(ordenacao.Value))
+            return BadRequest("Ordenação inválida");
+        if (direcao.HasValue && !Enum.IsDefined(direcao.Value))
+            return BadRequest("Direção inválida");
+
         try
         {
-            var lista = await _alunoService.ObterTodosOsAlunosAsync(pagina, tamanhoPagina, pesquisa, sexo, ativo);
+            var lista = await _alunoService.ObterTodosOsAlunosAsync(pagina, tamanhoPagina, pesquisa, sexo, ativo, ordenacao, direcao);
             return Ok(new
             {
                 itens = lista,

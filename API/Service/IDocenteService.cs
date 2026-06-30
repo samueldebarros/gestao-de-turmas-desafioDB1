@@ -16,4 +16,6 @@ public interface IDocenteService
     Task<Docente> ObterPeloIdAsync(int id);
     Task EditarDocenteAsync(EditarDocenteDTO docente);
     Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync();
+
+
 }

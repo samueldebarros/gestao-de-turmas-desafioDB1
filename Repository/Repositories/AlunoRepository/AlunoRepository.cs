@@ -12,21 +12,21 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
 {
     public AlunoRepository(GestaoEscolarContext context) : base(context) { }
 
-    private IQueryable<Aluno> OrdenarLista(IQueryable<Aluno> query,string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
+    private IQueryable<Aluno> AplicarOrdenacao(IQueryable<Aluno> query, OrdenacaoAlunoEnum? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
     {
         bool isDesc = direcao == DirecaoOrdenacaoEnum.Desc;
 
         return ordenacao switch
         { 
-            "Matricula" => isDesc ? query.OrderByDescending(a => a.Matricula) : query.OrderBy(a => a.Matricula),
-            "Nome" => isDesc ? query.OrderByDescending(a => a.Nome) : query.OrderBy(a => a.Nome),
-            "DataNascimento" => isDesc ? query.OrderByDescending(a => a.DataNascimento) : query.OrderBy(a => a.DataNascimento),
+            OrdenacaoAlunoEnum.Matricula => isDesc ? query.OrderByDescending(a => a.Matricula) : query.OrderBy(a => a.Matricula),
+            OrdenacaoAlunoEnum.Nome => isDesc ? query.OrderByDescending(a => a.Nome) : query.OrderBy(a => a.Nome),
+            OrdenacaoAlunoEnum.DataNascimento => isDesc ? query.OrderByDescending(a => a.DataNascimento) : query.OrderBy(a => a.DataNascimento),
             _ => query.OrderBy(a => a.Nome)
         };
     }
 
     public async Task<(List<Aluno> lista, int total)> ObterTodosOsAlunoAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
-        string? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
+        OrdenacaoAlunoEnum? ordenacao = null, DirecaoOrdenacaoEnum? direcao = null)
     {
         var query = _dbSet.AsNoTracking().AsQueryable();
 
@@ -53,7 +53,7 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
 
         int total = await query.CountAsync();
 
-        query = OrdenarLista(query, ordenacao, direcao);
+        query = AplicarOrdenacao(query, ordenacao, direcao);
 
         var lista = await query.Skip((pagina - 1) * tamanho)
             .Take(tamanho)

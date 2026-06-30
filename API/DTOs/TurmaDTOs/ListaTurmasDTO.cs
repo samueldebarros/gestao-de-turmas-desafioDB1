@@ -12,4 +12,5 @@ public class ListaTurmasDTO
     public int AnoLetivo { get; set; }
     public int QuantidadeAlunos { get; set; }
     public int QuantidadeDisciplinas { get; set; }
+    public bool Ativo { get; set; }
 }

@@ -10,4 +10,7 @@ public class TurmaInputDTO
     public SerieEnum Serie { get; set; }
     public int AnoLetivo { get; set; }
     public int Capacidade { get; set; }
+    public List<int> Alocacoes { get; set; } = new();
+    public List<int> AlunosIds { get; set; } = new();
+
 }

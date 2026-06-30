@@ -92,7 +92,7 @@ namespace API.Service
         }
 
         public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
-            string? ordenacao = null,
+            OrdenacaoAlunoEnum? ordenacao = null,
             DirecaoOrdenacaoEnum? direcao = null)
         {
             var (alunos, total) = await _alunoRepository.ObterTodosOsAlunoAsync(pagina, tamanho, pesquisa, sexo, ativo, ordenacao, direcao);

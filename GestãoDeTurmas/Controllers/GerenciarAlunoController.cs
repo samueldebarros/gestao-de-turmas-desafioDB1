@@ -18,7 +18,7 @@ namespace GestãoDeTurmas.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null, string? ordenacao = null,
+        public async Task<IActionResult> Index(int pagina = 1, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null, OrdenacaoAlunoEnum? ordenacao = null,
             DirecaoOrdenacaoEnum? direcao = null)
         {
             var alunosPaginados = await _alunoService.ObterTodosOsAlunosAsync(pagina, Constantes.TAMANHO_PAGINA, pesquisa, sexo, ativo, ordenacao, direcao);
@@ -31,7 +31,6 @@ namespace GestãoDeTurmas.Controllers
                 AlunosCadastrados = alunosPaginados.Select(a => a.ToListaViewModel()).ToList()
             };
 
-            viewModel.MapearPaginacao(alunosPaginados, ordenacao, direcao);
             viewModel.RegistrarFiltros(pesquisa,sexo, ativo);
 
             return View(viewModel);

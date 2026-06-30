@@ -1,4 +1,5 @@
 ﻿using API.DTOs.DashboardDTOs;
+using Common.Utils;
 using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
 using Repository.Repositories.TurmaRepository;
@@ -33,6 +34,39 @@ public class DashboardService : IDashboardService
             DisciplinasInativos = await _disciplinaRepository.ContarInativosAsync(),
             DocentesInativos = await _docenteRepository.ContarInativosAsync()
         };
+    }
+
+    public async Task<List<PainelDemograficoTurmaDTO>> ObterPainelDemograficoPorTurmaAsync()
+    {
+        var resultados = await _turmaRepository.ObterPainelDemograficoPorTurmaAsync();
+
+        return resultados.Select(r => new PainelDemograficoTurmaDTO
+        {
+            TurmaId = r.TurmaId,
+            Identificador = r.Identificador,
+            Serie = (int)r.Serie,
+            SerieDescricao = r.Serie.ObterSerieFormatada(),
+            Menor15 = r.Menor15,
+            De15a17 = r.De15a17,
+            Maior18 = r.Maior18,
+            IdadeMedia = r.IdadeMedia
+        }).ToList();
+    }
+
+    public async Task<List<BalancoEvasaoSerieDTO>> ObterBalancoEvasaoPorSerieAsync()
+    {
+        var resultados = await _turmaRepository.ObterBalancoEvasaoPorSerieAsync();
+
+        return resultados.Select(r => new BalancoEvasaoSerieDTO
+        {
+            AnoLetivo = r.AnoLetivo,
+            Serie = (int)r.Serie,
+            SerieDescricao = r.Serie.ObterSerieFormatada(),
+            TotalMatriculas = r.TotalMatriculas,
+            AlunosAtivos = r.AlunosAtivos,
+            AlunosTrancadosOuCancelados = r.AlunosTrancadosOuCancelados,
+            PercentualEvasao = r.PercentualEvasao
+        }).ToList();
     }
 }
 

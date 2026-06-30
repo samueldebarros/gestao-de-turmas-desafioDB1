@@ -44,7 +44,12 @@ public class AuthController : ControllerBase
     [Authorize]
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("access_token");
+        Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+        });
         return NoContent();
     }
 
@@ -52,6 +57,8 @@ public class AuthController : ControllerBase
     [Authorize]
     public IActionResult Me()
     {
-        return Ok(new UsuarioPublicoOutput(User.FindFirstValue(ClaimTypes.Role)!));
+        var role = User.FindFirstValue(ClaimTypes.Role);
+        if (role is null) return Forbid();
+        return Ok(new UsuarioPublicoOutput(role));
     }
 }

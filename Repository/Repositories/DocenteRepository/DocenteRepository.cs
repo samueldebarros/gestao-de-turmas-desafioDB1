@@ -106,4 +106,12 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
 
         return await query.AnyAsync();
     }
+
+    public async Task<List<Docente>> ObterAtivosPorIdsAsync(List<int> ids)
+    {
+        return await _dbSet
+            .AsNoTracking()
+            .Where(d => ids.Contains(d.Id) && d.Ativo && d.DisciplinaId != null)
+            .ToListAsync();
+    }
 }

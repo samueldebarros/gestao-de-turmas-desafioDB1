@@ -12,4 +12,5 @@ public interface IDocenteRepository : IBaseInativavelRepository<Docente>
     Task<bool> ExistePeloCpfAsync(string cpf);
     Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
     Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync();
+    Task<List<Docente>> ObterAtivosPorIdsAsync(List<int> ids);
 }
