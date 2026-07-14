@@ -20,4 +20,10 @@
     <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json;appsettings.*.json">
+	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+	</Content>
+  </ItemGroup>
+
 </Project>

@@ -10,4 +10,8 @@
     <Project Path="Repository/Repository.csproj" Id="09ce5bcf-1a5f-4555-b534-02ae97915d21" />
   </Folder>
   <Project Path="Tests/Tests.csproj" />
+  <Folder Name="/docs/">
+    <File Path="docs/AUTENTICACAO-TOKENS.md" />
+    <File Path="docs/SEGURANCA-ARQUITETURA.md" />
+  </Folder>
 </Solution>
