@@ -7,7 +7,8 @@ namespace API.Service
 {
     public interface IAlunoService
     {
-        Task AdicionarAlunoAsync(AlunoInputDTO aluno);
+        Task<Aluno> AdicionarAlunoAsync(AlunoInputDTO aluno);
+        Task<ImportacaoResultadoDTO> ImportarAlunosAsync(ImportarAlunosRequest request);
         Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null, OrdenacaoAlunoEnum? ordenacao = null,
             DirecaoOrdenacaoEnum? direcao = null);
         Task<Aluno> ObterPeloIdAsync(int id);

@@ -12,6 +12,7 @@
   <Project Path="Tests/Tests.csproj" />
   <Folder Name="/docs/">
     <File Path="docs/AUTENTICACAO-TOKENS.md" />
+    <File Path="docs/IMPORTACAO-ALUNOS-BACKEND.md" />
     <File Path="docs/SEGURANCA-ARQUITETURA.md" />
   </Folder>
 </Solution>

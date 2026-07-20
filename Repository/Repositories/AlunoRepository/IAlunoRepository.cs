@@ -12,5 +12,8 @@ namespace Repository.Repositories
         Task<bool> ExistePeloCpfAsync(string cpf);
         Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
         Task<bool> ExisteMatriculaAsync(string matricula);
+        Task<HashSet<string>> ObterCpfsExistentesAsync(IEnumerable<string> cpfs);
+        Task<HashSet<string>> ObterEmailsExistentesAsync(IEnumerable<string> emails);
+        Task AdicionarVariosAsync(IEnumerable<Aluno> alunos);
     }
 }

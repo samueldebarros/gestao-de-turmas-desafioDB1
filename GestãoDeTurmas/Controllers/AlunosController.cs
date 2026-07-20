@@ -1,4 +1,7 @@
-﻿using API.Service;
+﻿using API.DTOs.AlunoDTOs;
+using API.Exceptions;
+using API.Service;
+using Common;
 using Common.Enums;
 using Common.Exceptions;
 using GestãoDeTurmas.Mappers;
@@ -52,10 +55,15 @@ public class AlunosController : ControllerBase
     {
         try
         {
-            var alunoDTO = novoAluno.ToDTO();
-            await _alunoService.AdicionarAlunoAsync(alunoDTO);
-            return Ok();
-        } catch (Exception)
+            var aluno = await _alunoService.AdicionarAlunoAsync(novoAluno.ToDTO());
+            var dto = new AlunoCriadoDTO(aluno.Id, aluno.Matricula, aluno.Cpf);
+            return Created($"/api/alunos/{aluno.Id}", dto);
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
         {
             return StatusCode(500, mensagemStatus500);
         }
@@ -110,6 +118,33 @@ public class AlunosController : ControllerBase
         catch (EntidadeNaoEncontradaException)
         {
             return NotFound();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPost("importar")]
+    [Authorize(Roles = "Admin,Coordenador")]
+    [ProducesResponseType(typeof(ImportacaoResultadoDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ImportacaoErroDTO), StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> Importar([FromBody] ImportarAlunosRequest request)
+    {
+        if (request?.Alunos is null || request.Alunos.Count == 0)
+            return BadRequest("LOTE_VAZIO");
+
+        if (request.Alunos.Count > Constantes.LIMITE_IMPORTACAO_ALUNOS)
+            return BadRequest("LOTE_MUITO_GRANDE");
+        
+        try
+        {
+            var resultado = await _alunoService.ImportarAlunosAsync(request);
+            return Created($"/api/alunos", resultado);
+        }
+        catch (ImportacaoInvalidaException ex)
+        {
+            return UnprocessableEntity(new ImportacaoErroDTO(ex.Erros));
         }
         catch (Exception)
         {

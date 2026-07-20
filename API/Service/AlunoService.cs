@@ -1,10 +1,12 @@
 ﻿using API.DTOs;
 using API.DTOs.AlunoDTOs;
+using API.Exceptions;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Utils;
 using Repository.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Service
 {
@@ -27,7 +29,10 @@ namespace API.Service
                 throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
         }
 
-        private async Task<string> GerarMatriculaUnicaAsync()
+        private Task<string> GerarMatriculaUnicaAsync() =>
+            GerarMatriculaUnicaAsync(new HashSet<string>());
+
+        private async Task<string> GerarMatriculaUnicaAsync(ISet<string> usadasNoLote)
         {
             string prefixo = DateTime.Now.ToString("yyyyMM");
             for (int tentativa = 0; tentativa < 5; tentativa++)
@@ -35,8 +40,14 @@ namespace API.Service
                 string aleatorio = Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
                 string matricula = $"{prefixo}{aleatorio}";
 
+                if (usadasNoLote.Contains(matricula))
+                    continue;
+
                 if (!await _alunoRepository.ExisteMatriculaAsync(matricula))
+                {
+                    usadasNoLote.Add(matricula);
                     return matricula;
+                }
             }
             throw new RegraDeNegocioException("Não foi possível gerar uma matrícula única. Tente novamente!!");
         }
@@ -70,7 +81,46 @@ namespace API.Service
 
         }
 
-        public async Task AdicionarAlunoAsync(AlunoInputDTO aluno)
+        private LinhaErroDTO? ValidarLinha(
+            AlunoInputDTO a, int indice,
+            ISet<string> cpfsNoLote, ISet<string> emailsNoLote,
+            ISet<string> cpfsNoBanco, ISet<string> emailsNoBanco)
+        {
+            if (string.IsNullOrWhiteSpace(a.Nome) || a.Nome.Trim().Length is < 3 or > 100)
+                return new(indice, nameof(a.Nome), "NOME_INVALIDO");
+
+            if (!Enum.IsDefined(a.Sexo))
+                return new(indice, nameof(a.Sexo), "SEXO_INVALIDO");
+
+            var hoje = DateOnly.FromDateTime(DateTime.Today);
+            if (a.DataNascimento >= hoje || a.DataNascimento < hoje.AddYears(-120))
+                return new(indice, nameof(a.DataNascimento), "DATA_INVALIDA");
+
+            if (!string.IsNullOrWhiteSpace(a.Email))
+            {
+                if (!EmailBemFormado(a.Email)) 
+                    return new(indice, nameof(a.Email), "EMAIL_INVALIDO");
+                var email = a.Email.Trim().ToLowerInvariant();
+                if (emailsNoBanco.Contains(email))
+                    return new(indice, nameof(a.Email), "EMAIL_JA_EXISTE");
+                if (!emailsNoLote.Add(email))
+                    return new(indice, nameof(a.Email), "EMAIL_DUPLICADO_NO_LOTE");
+            }
+
+            var cpf = ValidacaoCpf.Limpar(a.Cpf);
+            if (!ValidacaoCpf.IsCpfValido(cpf)) 
+                return new(indice, nameof(a.Cpf), "CPF_INVALIDO");
+            if (cpfsNoBanco.Contains(cpf))
+                return new(indice, nameof(a.Cpf), "CPF_JA_EXISTE");
+            if (!cpfsNoLote.Add(cpf))
+                return new(indice, nameof(a.Cpf), "CPF_DUPLICADO_NO_LOTE");
+
+            return null;
+        }
+        private static bool EmailBemFormado(string email) =>
+           new EmailAddressAttribute().IsValid(email);
+
+        public async Task<Aluno> AdicionarAlunoAsync(AlunoInputDTO aluno)
         {
             await ValidarDadosAlunoAsync(aluno.DataNascimento, aluno.Email, aluno.Sexo);
 
@@ -89,6 +139,53 @@ namespace API.Service
             };
 
             await _alunoRepository.AdicionarAsync(novoAluno);
+            return novoAluno;
+        }
+
+        public async Task<ImportacaoResultadoDTO> ImportarAlunosAsync(ImportarAlunosRequest request)
+        {
+            var itens = request.Alunos;
+
+            var cpfsBanco = await _alunoRepository.ObterCpfsExistentesAsync(
+                itens.Select(i => ValidacaoCpf.Limpar(i.Cpf)));
+            var emailsBanco = await _alunoRepository.ObterEmailsExistentesAsync(
+                itens.Where(i => !string.IsNullOrWhiteSpace(i.Email))
+                     .Select(i => i.Email!));
+
+            var erros = new List<LinhaErroDTO>();
+            var cpfsLote = new HashSet<string>();
+            var emailsLote = new HashSet<string>();
+            for (int i = 0; i < itens.Count; i++)
+            {
+                var erro = ValidarLinha(itens[i], i, cpfsLote, emailsLote, cpfsBanco, emailsBanco);
+                if (erro is not null)
+                    erros.Add(erro);
+            }
+            if (erros.Count > 0)
+                throw new ImportacaoInvalidaException(erros);
+
+            var matriculasUsadas = new HashSet<string>();
+            var alunos = new List<Aluno>(itens.Count);
+            foreach (var item in itens)
+            {
+                alunos.Add(new Aluno
+                {
+                    Nome = item.Nome.Trim(),
+                    Cpf = ValidacaoCpf.Limpar(item.Cpf),
+                    Email = item.Email?.Trim(),
+                    DataNascimento = item.DataNascimento,
+                    Sexo = item.Sexo,
+                    Ativo = true,
+                    Matricula = await GerarMatriculaUnicaAsync(matriculasUsadas)
+                });
+            }
+
+            await _alunoRepository.AdicionarVariosAsync(alunos);
+
+            var criados = alunos
+                .Select(a => new AlunoCriadoDTO(a.Id, a.Matricula, a.Cpf))
+                .ToList();
+            return new ImportacaoResultadoDTO(criados.Count, criados);
         }
 
         public async Task<ListaPaginada<Aluno>> ObterTodosOsAlunosAsync(int pagina = 1, int tamanho = 10, string? pesquisa = null, SexoEnum? sexo = null, bool? ativo = null,
@@ -137,5 +234,7 @@ namespace API.Service
             
             await _alunoRepository.EditarAsync(alunoExistente);
         }
+
+
     }
 }

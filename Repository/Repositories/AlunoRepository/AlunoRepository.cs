@@ -125,4 +125,43 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
             .AsNoTracking()
             .ToListAsync();
     }
+
+    public async Task<HashSet<string>> ObterCpfsExistentesAsync(IEnumerable<string> cpfs)
+    {
+        var lista = cpfs.Where(c => !string.IsNullOrWhiteSpace(c)).Distinct().ToList();
+        if (lista.Count == 0)
+            return new HashSet<string>();
+
+        var encontrados = await _dbSet
+            .Where(a => lista.Contains(a.Cpf)) 
+            .Select(a => a.Cpf)
+            .ToListAsync();
+
+        return encontrados.ToHashSet();
+
+    }
+
+    public async Task<HashSet<string>> ObterEmailsExistentesAsync(IEnumerable<string> emails)
+    {
+        var normalizados = emails
+        .Where(e => !string.IsNullOrWhiteSpace(e))
+        .Select(e => e.Trim().ToLowerInvariant())
+        .Distinct()
+        .ToList();
+        if (normalizados.Count == 0)
+            return new HashSet<string>();
+
+        var encontrados = await _dbSet
+            .Where(a => a.Email != null && normalizados.Contains(a.Email.ToLower()))
+            .Select(a => a.Email!)
+            .ToListAsync();
+
+        return encontrados.Select(e => e.Trim().ToLowerInvariant()).ToHashSet();
+    }
+
+    public async Task AdicionarVariosAsync(IEnumerable<Aluno> alunos)
+    {
+        _dbSet.AddRange(alunos);
+        await _context.SaveChangesAsync();
+    }
 }
