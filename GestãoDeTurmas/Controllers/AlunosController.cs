@@ -50,6 +50,35 @@ public class AlunosController : ControllerBase
         }
     }
 
+    [HttpPost("buscar")]
+    public async Task<IActionResult> BuscarAlunos([FromBody] AlunoBuscaRequest request)
+    {
+        if (request.Ordenacao.HasValue && !Enum.IsDefined(request.Ordenacao.Value))
+            return BadRequest("Ordenação Inválida");
+        if (request.Direcao.HasValue && !Enum.IsDefined(request.Direcao.Value))
+            return BadRequest("Direção Inválida");
+
+        try
+        {
+            var lista = await _alunoService.ObterTodosOsAlunosAsync(
+            request.Pagina, request.TamanhoPagina, request.Pesquisa,
+            request.Sexo, request.Ativo, request.Ordenacao, request.Direcao);
+
+            return Ok(new
+            {
+                itens = lista,
+                lista.PaginaAtual,
+                lista.TotalPaginas,
+                lista.TotalResultados,
+                lista.TamanhoPagina
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> AdicionarAluno([FromBody] AlunoInputViewModel novoAluno)
     {

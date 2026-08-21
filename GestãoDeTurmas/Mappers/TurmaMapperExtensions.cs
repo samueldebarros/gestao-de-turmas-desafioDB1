@@ -10,14 +10,14 @@ public static class TurmaMapperExtensions
     {
         return new ListaTurmaViewModel()
         {
-            TurmaId = turma.TurmaId,
+            TurmaId = turma.Id,
             Identificador = turma.Identificador,
             AnoLetivo = turma.AnoLetivo,
             Turno = turma.Turno,
             Capacidade = turma.Capacidade,
             Serie = turma.Serie,
-            QuantidadeAlunos = turma.QuantidadeAlunos,
-            QuantidadeDisciplinas = turma.QuantidadeDisciplinas
+            QuantidadeAlunos = turma.TotalAlunos,
+            QuantidadeDisciplinas = turma.TotalDisciplinas
         };
     }
 

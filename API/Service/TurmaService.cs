@@ -3,6 +3,7 @@ using API.DTOs.TurmaDTOs;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
+using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
 using Repository.Repositories.TurmaRepository;
 
@@ -99,13 +100,13 @@ public class TurmaService : ITurmaService
 
         var turmasDTO = turmas.Select(t => new ListaTurmasDTO
         {
-            TurmaId = t.Id,
+            Id = t.Id,
             Identificador = t.Identificador,
             Turno = t.Turno,
             AnoLetivo = t.AnoLetivo,
             Capacidade = t.Capacidade,
-            QuantidadeAlunos = t.QuantidadeAlunos,
-            QuantidadeDisciplinas = t.QuantidadeDisciplinas,
+            TotalAlunos = t.QuantidadeAlunos,
+            TotalDisciplinas = t.QuantidadeDisciplinas,
             Serie = t.Serie
         }).ToList();
 
@@ -117,26 +118,89 @@ public class TurmaService : ITurmaService
         return await _turmaRepository.ObterPorIdAsync(id);
     }
 
+    private async Task GarantirQueTurmaExisteAsync(int turmaId)
+    {
+        if (!await _turmaRepository.ExisteAsync(turmaId))
+            throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+    }
+
+    public async Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId)
+    {
+        await GarantirQueTurmaExisteAsync(turmaId);
+
+        return await _turmaRepository.ObterDocentesDaTurmaAsync(turmaId);
+    }
+
+    public async Task<List<AlunoDaTurmaDTO>> ObterAlunosDaTurmaAsync(int turmaId)
+    {
+        await GarantirQueTurmaExisteAsync(turmaId);
+
+        var alunos = await _turmaRepository.ObterAlunosDaTurmaAsync(turmaId);
+
+        return alunos.Select(a => new AlunoDaTurmaDTO(
+            a.Id,
+            a.Matricula,
+            a.Nome,
+            a.Cpf,
+            a.Email,
+            a.Sexo,
+            a.DataNascimento)).ToList();
+    }
+
     public async Task<ListaPaginada<ListaTurmasDTO>> ObterTurmasAsync(
-    int pagina = 1, int tamanho = 12, string? pesquisa = null, int? anoLetivo = null,
-    TurnoEnum? turno = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null)
+        int pagina = 1, int tamanho = 12, string? pesquisa = null, int? anoLetivo = null,
+        TurnoEnum? turno = null, bool? ativo = null, OrdenacaoTurmaEnum? ordenacao = null,
+        InclusaoTurmaEnum incluir = InclusaoTurmaEnum.Nenhum)
     {
         var (turmas, total) = await _turmaRepository.ObterTurmasPaginadasAsync(
             pagina, tamanho, pesquisa, anoLetivo, turno, ativo, ordenacao);
 
         var dtos = turmas.Select(t => new ListaTurmasDTO
         {
-            TurmaId = t.Id,
+            Id = t.Id,
             Identificador = t.Identificador,
             Turno = t.Turno,
             Serie = t.Serie,
             Capacidade = t.Capacidade,
             AnoLetivo = t.AnoLetivo,
             Ativo = t.Ativo,
-            QuantidadeAlunos = t.QuantidadeAlunos,
-            QuantidadeDisciplinas = t.QuantidadeDisciplinas
+            TotalAlunos = t.QuantidadeAlunos,
+            TotalDisciplinas = t.QuantidadeDisciplinas
         }).ToList();
 
+        if (incluir != InclusaoTurmaEnum.Nenhum && dtos.Count > 0)
+            await ExpandirAsync(dtos, incluir);
+
         return new ListaPaginada<ListaTurmasDTO>(dtos, total, pagina, tamanho);
+    }
+
+    private async Task ExpandirAsync(List<ListaTurmasDTO> dtos, InclusaoTurmaEnum incluir)
+    {
+        var ids = dtos.Select(d => d.Id).ToList();
+        var porId = dtos.ToDictionary(d => d.Id);
+
+        if (incluir.HasFlag(InclusaoTurmaEnum.Docentes))
+        {
+            foreach (var dto in dtos) dto.Docentes = [];
+
+            foreach (var d in await _turmaRepository.ObterDocentesEmLoteAsync(ids))
+                porId[d.TurmaId].Docentes!.Add(new DocenteSqlDto
+                {
+                    Id = d.Id,
+                    DocenteNome = d.DocenteNome,
+                    DocenteEmail = d.DocenteEmail,
+                    DisciplinaNome = d.DisciplinaNome,
+                    CargaHoraria = d.CargaHoraria
+                });
+        }
+
+        if (incluir.HasFlag(InclusaoTurmaEnum.Alunos))
+        {
+            foreach (var dto in dtos) dto.Alunos = [];
+
+            foreach (var a in await _turmaRepository.ObterAlunosEmLoteAsync(ids))
+                porId[a.TurmaId].Alunos!.Add(new AlunoDaTurmaDTO(
+                    a.Id, a.Matricula, a.Nome, a.Cpf, a.Email, a.Sexo, a.DataNascimento));
+        }
     }
 }

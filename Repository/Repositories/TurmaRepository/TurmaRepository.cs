@@ -54,6 +54,78 @@ public class TurmaRepository : BaseRepository<Turma> , ITurmaRepository
         return query.Any(t => t.Identificador == identificador && t.Serie == serie && t.AnoLetivo == anoLetivo);
     }
 
+    public async Task<bool> ExisteAsync(int id)
+    {
+        return await _dbSet.AnyAsync(t => t.Id == id);
+    }
+
+    public async Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId)
+    {
+        return await _context.GradeCurricular
+            .AsNoTracking()
+            .Where(g => g.TurmaId == turmaId)
+            .OrderBy(g => g.Docente.Nome)
+            .Select(g => new DocenteSqlDto
+            {
+                Id = g.Docente.Id,
+                DocenteNome = g.Docente.Nome,
+                DocenteEmail = g.Docente.Email!,
+                DisciplinaNome = g.Disciplina.Nome,
+                CargaHoraria = g.Disciplina.CargaHoraria
+            })
+            .ToListAsync();
+    }
+
+    public async Task<List<DocenteDeTurmaSqlDto>> ObterDocentesEmLoteAsync(IReadOnlyCollection<int> turmaIds)
+    {
+        return await _context.GradeCurricular
+            .AsNoTracking()
+            .Where(g => turmaIds.Contains(g.TurmaId))
+            .OrderBy(g => g.TurmaId).ThenBy(g => g.Docente.Nome)
+            .Select(g => new DocenteDeTurmaSqlDto
+            {
+                TurmaId = g.TurmaId,
+                Id = g.Docente.Id,
+                DocenteNome = g.Docente.Nome,
+                DocenteEmail = g.Docente.Email!,
+                DisciplinaNome = g.Disciplina.Nome,
+                CargaHoraria = g.Disciplina.CargaHoraria
+            })
+            .ToListAsync();
+    }
+
+    public async Task<List<Aluno>> ObterAlunosDaTurmaAsync(int turmaId)
+    {
+        return await _context.Enturmamentos
+            .AsNoTracking()
+            .Where(e => e.TurmaId == turmaId)
+            .OrderBy(e => e.Aluno.Nome)
+            .Select(e => e.Aluno)
+            .ToListAsync();
+    }
+
+    public async Task<List<AlunoDeTurmaSqlDto>> ObterAlunosEmLoteAsync(IReadOnlyCollection<int> turmaIds)
+    {
+        return await _context.Enturmamentos
+            .AsNoTracking()
+            .Where(e => turmaIds.Contains(e.TurmaId))
+            .OrderBy(e => e.TurmaId).ThenBy(e => e.Aluno.Nome)
+            .Select(e => new AlunoDeTurmaSqlDto
+            {
+                TurmaId = e.TurmaId,
+                Id = e.Aluno.Id,
+                Matricula = e.Aluno.Matricula,
+                Nome = e.Aluno.Nome,
+                Cpf = e.Aluno.Cpf,
+                Email = e.Aluno.Email,
+                Sexo = e.Aluno.Sexo,
+                DataNascimento = e.Aluno.DataNascimento
+            })
+            .ToListAsync();
+    }
+
+
+
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
     {
         return await _dbSet
