@@ -14,6 +14,7 @@ env:
   APP: api-gestao-turmas-sb
   SERVIDOR_SQL: sql-gestao-turmas-sb
   PROJETO_HOST: GestãoDeTurmas/GestãoDeTurmas.csproj
+  PROJETO_STARTUP: GestãoDeTurmas
 
 jobs:
   build:
@@ -31,31 +32,42 @@ jobs:
 
       - run: dotnet test --no-build -c Release --verbosity normal
 
-      - name: Gerar script idempotente de migrations
-        run: |
-          dotnet tool install --global dotnet-ef
-          dotnet ef migrations script --idempotent --no-build --configuration Release \
-            --project Repository \
-            --startup-project "$(dirname "$PROJETO_HOST")" \
-            --output migrations.sql
-
       - run: dotnet publish "$PROJETO_HOST" -c Release --no-build -o publish
 
       - uses: actions/upload-artifact@v4
         with:
           name: pacote
-          path: |
-            publish
-            migrations.sql
+          path: publish
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment: producao
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
       - uses: actions/download-artifact@v4
         with:
           name: pacote
+          path: publish
+
+      - name: Conferir configuracao
+        run: |
+          faltando=0
+          [ -z "${{ vars.AZURE_CLIENT_ID }}" ] && echo "AZURE_CLIENT_ID vazio - cadastre como VARIABLE" && faltando=1
+          [ -z "${{ vars.AZURE_TENANT_ID }}" ] && echo "AZURE_TENANT_ID vazio - cadastre como VARIABLE" && faltando=1
+          [ -z "${{ vars.AZURE_SUBSCRIPTION_ID }}" ] && echo "AZURE_SUBSCRIPTION_ID vazio - cadastre como VARIABLE" && faltando=1
+          [ -z "${{ secrets.SQL_CONNECTION_STRING }}" ] && echo "SQL_CONNECTION_STRING vazio - cadastre como SECRET" && faltando=1
+          if [ "$faltando" = "1" ]; then
+            echo "---"
+            echo "No environment 'producao': AZURE_* em Variables, SQL_CONNECTION_STRING em Secrets."
+            exit 1
+          fi
+          echo "configuracao presente"
 
       - uses: azure/login@v2
         with:
@@ -67,23 +79,19 @@ jobs:
         run: |
           IP=$(curl -s https://api.ipify.org)
           echo "IP do runner: $IP"
-          az sql server firewall-rule create \
-            -g "$GRUPO" -s "$SERVIDOR_SQL" \
-            -n "gh-runner-${{ github.run_id }}" \
-            --start-ip-address "$IP" --end-ip-address "$IP"
+          az sql server firewall-rule create -g "$GRUPO" -s "$SERVIDOR_SQL" -n "gh-runner-${{ github.run_id }}" --start-ip-address "$IP" --end-ip-address "$IP" --output none
 
       - name: Aplicar migrations
-        uses: azure/sql-action@v2
-        with:
-          connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-          path: migrations.sql
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --project Repository --startup-project "$PROJETO_STARTUP"
 
       - name: Fechar firewall do SQL
         if: always()
         run: |
-          az sql server firewall-rule delete \
-            -g "$GRUPO" -s "$SERVIDOR_SQL" \
-            -n "gh-runner-${{ github.run_id }}" || true
+          az sql server firewall-rule delete -g "$GRUPO" -s "$SERVIDOR_SQL" -n "gh-runner-${{ github.run_id }}" --output none || true
 
       - uses: azure/webapps-deploy@v3
         with:
@@ -93,6 +101,7 @@ jobs:
       - name: Verificar que subiu e que o MVC segue fechado
         run: |
           BASE="https://${APP}.azurewebsites.net"
+          CODIGO=000
           for i in $(seq 1 10); do
             CODIGO=$(curl -s -o /dev/null -m 120 -w '%{http_code}' "$BASE/api/alunos")
             [ "$CODIGO" = "401" ] && break
@@ -105,3 +114,4 @@ jobs:
           MVC=$(curl -s -o /dev/null -m 60 -w '%{http_code}' "$BASE/GerenciarAluno")
           echo "raiz: $RAIZ | GerenciarAluno: $MVC"
           [ "$RAIZ" = "404" ] && [ "$MVC" = "404" ] || exit 1
+          echo "API no ar e MVC fechado"
