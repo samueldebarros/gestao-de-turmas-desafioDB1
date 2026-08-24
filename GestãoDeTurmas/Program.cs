@@ -50,16 +50,25 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddSingleton<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 
-builder.Services.AddDbContext<GestaoEscolarContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<GestaoEscolarContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sql => sql
+            .EnableRetryOnFailure(maxRetryCount: 8, maxRetryDelay: TimeSpan.FromSeconds(20), errorNumbersToAdd: null)
+            .CommandTimeout(90)));
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+var origens = builder.Configuration.GetSection("Cors:Origens").Get<string[]>() ?? [];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirAngular", policy =>
     {
-        policy.WithOrigins("https://localhost:4200")
+        if (origens.Length == 0) return;
+
+        policy.WithOrigins(origens)
         .AllowCredentials()
         .WithHeaders("Content-Type", "Accept", "X-XSRF-TOKEN")
         .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
@@ -98,21 +107,39 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<GestaoEscolarContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
-    if (!db.Usuarios.Any())
+    try
     {
-        var hasher = new PasswordHasher<Usuario>();
-        var admin = new Usuario
+        var db = scope.ServiceProvider.GetRequiredService<GestaoEscolarContext>();
+
+        if (!db.Usuarios.Any())
         {
-            Email = "admin@admin.com",
-            Role = "Admin"
-        };
-        admin.SenhaHash = hasher.HashPassword(admin, "Admin123!");
-        db.Usuarios.Add(admin);
-        db.SaveChanges();
+            var senha = app.Configuration["Seed:AdminSenha"];
+
+            if (string.IsNullOrWhiteSpace(senha))
+            {
+                logger.LogWarning("Seed do admin ignorado: Seed:AdminSenha ausente.");
+            }
+            else
+            {
+                var hasher = new PasswordHasher<Usuario>();
+                var admin = new Usuario
+                {
+                    Email = "admin@admin.com",
+                    Role = "Admin"
+                };
+                admin.SenhaHash = hasher.HashPassword(admin, senha);
+                db.Usuarios.Add(admin);
+                db.SaveChanges();
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Seed do admin falhou; a aplicacao segue subindo.");
     }
 }
 
@@ -133,14 +160,17 @@ app.UseCors("PermitirAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 app.MapControllers();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=PaginaInicial}/{action=Index}/{id?}")
-    .WithStaticAssets();
+if (app.Environment.IsDevelopment())
+{
+    app.MapStaticAssets();
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=PaginaInicial}/{action=Index}/{id?}")
+        .WithStaticAssets();
+}
 
 
 app.Run();

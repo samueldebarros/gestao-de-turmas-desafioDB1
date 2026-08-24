@@ -1,0 +1,107 @@
+name: deploy-api
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  GRUPO: rg-gestao-turmas
+  APP: api-gestao-turmas-sb
+  SERVIDOR_SQL: sql-gestao-turmas-sb
+  PROJETO_HOST: GestãoDeTurmas/GestãoDeTurmas.csproj
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - run: dotnet restore
+
+      - run: dotnet build --no-restore -c Release
+
+      - run: dotnet test --no-build -c Release --verbosity normal
+
+      - name: Gerar script idempotente de migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef migrations script --idempotent --no-build \
+            --project Repository \
+            --startup-project "$(dirname "$PROJETO_HOST")" \
+            --output migrations.sql
+
+      - run: dotnet publish "$PROJETO_HOST" -c Release --no-build -o publish
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacote
+          path: |
+            publish
+            migrations.sql
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: producao
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pacote
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Abrir firewall do SQL para este runner
+        run: |
+          IP=$(curl -s https://api.ipify.org)
+          echo "IP do runner: $IP"
+          az sql server firewall-rule create \
+            -g "$GRUPO" -s "$SERVIDOR_SQL" \
+            -n "gh-runner-${{ github.run_id }}" \
+            --start-ip-address "$IP" --end-ip-address "$IP"
+
+      - name: Aplicar migrations
+        uses: azure/sql-action@v2
+        with:
+          connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
+          path: migrations.sql
+
+      - name: Fechar firewall do SQL
+        if: always()
+        run: |
+          az sql server firewall-rule delete \
+            -g "$GRUPO" -s "$SERVIDOR_SQL" \
+            -n "gh-runner-${{ github.run_id }}" || true
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: api-gestao-turmas-sb
+          package: publish
+
+      - name: Verificar que subiu e que o MVC segue fechado
+        run: |
+          BASE="https://${APP}.azurewebsites.net"
+          for i in $(seq 1 10); do
+            CODIGO=$(curl -s -o /dev/null -m 120 -w '%{http_code}' "$BASE/api/alunos")
+            [ "$CODIGO" = "401" ] && break
+            echo "tentativa $i: $CODIGO (aguardando cold start e resume do banco)"
+            sleep 15
+          done
+          echo "api/alunos: $CODIGO"
+          [ "$CODIGO" = "401" ] || exit 1
+          RAIZ=$(curl -s -o /dev/null -m 60 -w '%{http_code}' "$BASE/")
+          MVC=$(curl -s -o /dev/null -m 60 -w '%{http_code}' "$BASE/GerenciarAluno")
+          echo "raiz: $RAIZ | GerenciarAluno: $MVC"
+          [ "$RAIZ" = "404" ] && [ "$MVC" = "404" ] || exit 1

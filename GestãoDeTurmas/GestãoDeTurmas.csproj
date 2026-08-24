@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <AssemblyName>GestaoDeTurmas</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>70ef316e-9cc4-4212-b24f-17d2799cb522</UserSecretsId>
   </PropertyGroup>
