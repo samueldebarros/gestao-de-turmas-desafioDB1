@@ -101,6 +101,7 @@ jobs:
           ConnectionStrings__DefaultConnection: ${{ secrets.SQL_CONNECTION_STRING }}
         run: |
           dotnet tool install --global dotnet-ef
+          dotnet restore
           dotnet ef database update --project Repository --startup-project "$PROJETO_STARTUP"
 
       - name: Fechar firewall do SQL
