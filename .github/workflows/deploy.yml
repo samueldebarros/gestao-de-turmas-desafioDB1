@@ -56,18 +56,33 @@ jobs:
           path: publish
 
       - name: Conferir configuracao
+        env:
+          CS: ${{ secrets.SQL_CONNECTION_STRING }}
         run: |
           faltando=0
           [ -z "${{ vars.AZURE_CLIENT_ID }}" ] && echo "AZURE_CLIENT_ID vazio - cadastre como VARIABLE" && faltando=1
           [ -z "${{ vars.AZURE_TENANT_ID }}" ] && echo "AZURE_TENANT_ID vazio - cadastre como VARIABLE" && faltando=1
           [ -z "${{ vars.AZURE_SUBSCRIPTION_ID }}" ] && echo "AZURE_SUBSCRIPTION_ID vazio - cadastre como VARIABLE" && faltando=1
-          [ -z "${{ secrets.SQL_CONNECTION_STRING }}" ] && echo "SQL_CONNECTION_STRING vazio - cadastre como SECRET" && faltando=1
+          [ -z "$CS" ] && echo "SQL_CONNECTION_STRING vazio - cadastre como SECRET" && faltando=1
+          if [ -n "$CS" ]; then
+            case "$CS" in
+              '"'*) echo "SQL_CONNECTION_STRING comeca com aspas - remova as aspas do valor do secret" && faltando=1 ;;
+            esac
+            case "$CS" in
+              *'"') echo "SQL_CONNECTION_STRING termina com aspas - remova as aspas do valor do secret" && faltando=1 ;;
+            esac
+            case "$CS" in
+              Server=*) ;;
+              *) echo "SQL_CONNECTION_STRING deveria comecar com 'Server=' - confira o valor colado" && faltando=1 ;;
+            esac
+          fi
           if [ "$faltando" = "1" ]; then
             echo "---"
             echo "No environment 'producao': AZURE_* em Variables, SQL_CONNECTION_STRING em Secrets."
+            echo "A connection string vai SEM aspas, comecando em Server=tcp:..."
             exit 1
           fi
-          echo "configuracao presente"
+          echo "configuracao presente e bem formada"
 
       - uses: azure/login@v2
         with:
