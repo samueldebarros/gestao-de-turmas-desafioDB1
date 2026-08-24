@@ -34,7 +34,7 @@ jobs:
       - name: Gerar script idempotente de migrations
         run: |
           dotnet tool install --global dotnet-ef
-          dotnet ef migrations script --idempotent --no-build \
+          dotnet ef migrations script --idempotent --no-build --configuration Release \
             --project Repository \
             --startup-project "$(dirname "$PROJETO_HOST")" \
             --output migrations.sql
