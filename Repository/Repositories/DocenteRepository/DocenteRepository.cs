@@ -33,15 +33,6 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
             .FirstOrDefaultAsync(d => d.Id == id && d.Ativo);
     }
 
-    public override async Task InativarAsync(int id)
-    {
-        await _dbSet
-            .Where(d => d.Id == id)
-            .ExecuteUpdateAsync(d => d
-            .SetProperty(d => d.Ativo, false)
-            .SetProperty(d => d.DisciplinaId, (int?)null));
-    }
-
     public async Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId)
     {
         return await _dbSet
@@ -89,6 +80,7 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
                 disc.CargaHoraria AS CargaHoraria
             FROM Docentes AS doc
             JOIN Disciplinas AS disc ON disc.Id = doc.DisciplinaId
+            WHERE doc.Ativo = 1
         ")
             .ToListAsync();
     }
