@@ -14,6 +14,8 @@ public interface ITurmaService
     Task AdicionarTurmaAsync(TurmaInputDTO turma);
     Task<Turma> ObterTurmaPeloIdAsync(int id);
     Task EditarTurmaAsync(TurmaEditarDTO turmaDTO);
+    Task InativarTurmaAsync(int id);
+    Task ReativarTurmaAsync(int id);
     Task<List<ListaTurmasDTO>> ObterTurmasSimplificadasAsync(string? pesquisa = null, OrdenacaoTurmaEnum? ordenacao = null);
     Task<ListaPaginada<ListaTurmasDTO>> ObterTurmasAsync(
     int pagina = 1, int tamanho = 12, string? pesquisa = null, int? anoLetivo = null,
