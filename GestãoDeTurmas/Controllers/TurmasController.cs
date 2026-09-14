@@ -116,5 +116,83 @@ public class TurmasController : ControllerBase
         }
     }
 
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> EditarTurma(int id, [FromBody] TurmaEditarDTO turma)
+    {
+        turma.Id = id;
+
+        try
+        {
+            await _turmaService.EditarTurmaAsync(turma);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPatch("{id}/inativar")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> InativarTurma(int id)
+    {
+        try
+        {
+            await _turmaService.InativarTurmaAsync(id);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPatch("{id}/reativar")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> ReativarTurma(int id)
+    {
+        try
+        {
+            await _turmaService.ReativarTurmaAsync(id);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
 }
    
