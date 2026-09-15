@@ -5,12 +5,13 @@ using Repository.Repositories.Base;
 
 namespace Repository.Repositories.TurmaRepository;
 
-public interface ITurmaRepository : IBaseRepository<Turma>
+public interface ITurmaRepository : IBaseInativavelRepository<Turma>
 {
     public Task<List<Turma>> ObterTodasAsTurmasAsync();
     Task<List<TurmaResumo>> ObterTurmasSimplificadasAsync(string? pesquisa = null, OrdenacaoTurmaEnum? ordenacao = null);
     Task<bool> ValidarPelosIdentificadores(string identificador, SerieEnum serie, int anoLetivo, int? ignorarId = null);
     Task<bool> ExisteAsync(int id);
+    Task<int> ContarAlunosAtivosAsync(int turmaId);
     Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId);
     Task<List<Aluno>> ObterAlunosDaTurmaAsync(int turmaId);
     Task<List<PainelDemograficoTurmaResultado>> ObterPainelDemograficoPorTurmaAsync();

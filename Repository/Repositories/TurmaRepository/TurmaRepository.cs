@@ -8,7 +8,7 @@ using Repository.Repositories.Base;
 
 namespace Repository.Repositories.TurmaRepository;
 
-public class TurmaRepository : BaseRepository<Turma> , ITurmaRepository
+public class TurmaRepository : BaseInativavelRepository<Turma> , ITurmaRepository
 {
     public TurmaRepository (GestaoEscolarContext context) : base(context)
     {
@@ -57,6 +57,13 @@ public class TurmaRepository : BaseRepository<Turma> , ITurmaRepository
     public async Task<bool> ExisteAsync(int id)
     {
         return await _dbSet.AnyAsync(t => t.Id == id);
+    }
+
+    public async Task<int> ContarAlunosAtivosAsync(int turmaId)
+    {
+        return await _context.Enturmamentos
+            .AsNoTracking()
+            .CountAsync(e => e.TurmaId == turmaId && e.Situacao == SituacaoEnturmamentoEnum.Ativo);
     }
 
     public async Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId)

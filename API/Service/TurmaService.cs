@@ -80,6 +80,11 @@ public class TurmaService : ITurmaService
 
         await ValidarTurma(turmaDTO.Identificador, turmaDTO.Serie, turmaDTO.AnoLetivo, turmaDTO.Id);
 
+        var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(turmaDTO.Id);
+
+        if (turmaDTO.Capacidade < alunosAtivos)
+            throw new RegraDeNegocioException($"A capacidade não pode ser menor que o número de alunos ativos na turma. Capacidade informada: {turmaDTO.Capacidade}; alunos ativos: {alunosAtivos}.");
+
         turma.Turno = turmaDTO.Turno;
         turma.Capacidade = turmaDTO.Capacidade;
         turma.Serie = turmaDTO.Serie;
@@ -87,6 +92,33 @@ public class TurmaService : ITurmaService
         turma.Identificador = turmaDTO.Identificador;
 
         await _turmaRepository.EditarAsync(turma);
+    }
+
+    private async Task<Turma> ObterTurmaInativaOuLancarErroAsync(int id)
+    {
+        var turma = await _turmaRepository.ObterInativoPorIdAsync(id);
+        if (turma == null)
+            throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+        return turma;
+    }
+
+    public async Task InativarTurmaAsync(int id)
+    {
+        await GarantirQueTurmaExisteAsync(id);
+
+        var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(id);
+
+        if (alunosAtivos > 0)
+            throw new RegraDeNegocioException($"Não é possível inativar uma turma com alunos ativos. A turma possui {alunosAtivos} aluno(s) ativo(s).");
+
+        await _turmaRepository.InativarAsync(id);
+    }
+
+    public async Task ReativarTurmaAsync(int id)
+    {
+        await ObterTurmaInativaOuLancarErroAsync(id);
+
+        await _turmaRepository.ReativarAsync(id);
     }
 
     public async Task<List<Turma>> ObterTodasAsTurmasAsync()
