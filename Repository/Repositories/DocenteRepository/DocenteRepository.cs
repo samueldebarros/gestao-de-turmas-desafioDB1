@@ -43,7 +43,7 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
     }
 
     public async Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
-            DirecaoOrdenacaoEnum? direcao = null)
+            DirecaoOrdenacaoEnum? direcao = null, int? disciplinaId = null)
     {
         var query = _dbSet.Include(d => d.Disciplina).AsNoTracking().AsQueryable();
 
@@ -56,6 +56,13 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
         }
 
         if (ativo.HasValue) query = query.Where(d => d.Ativo == ativo.Value);
+
+        if (disciplinaId.HasValue)
+        {
+            query = disciplinaId.Value == 0
+                ? query.Where(d => d.DisciplinaId == null)
+                : query.Where(d => d.DisciplinaId == disciplinaId.Value);
+        }
 
         int total = await query.CountAsync();
 

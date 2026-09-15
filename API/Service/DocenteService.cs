@@ -99,9 +99,9 @@ public class DocenteService : IDocenteService
     }
 
     public async Task<ListaPaginada<Docente>> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
-            DirecaoOrdenacaoEnum? direcao = null)
+            DirecaoOrdenacaoEnum? direcao = null, int? disciplinaId = null)
     {
-        var (docentes, total) = await _docenteRepository.ObterTodosOsDocentesAsync(pagina, tamanho, pesquisa,ativo, ordenacao, direcao);
+        var (docentes, total) = await _docenteRepository.ObterTodosOsDocentesAsync(pagina, tamanho, pesquisa,ativo, ordenacao, direcao, disciplinaId);
 
         var docentesPaginados = new ListaPaginada<Docente>(docentes, total, pagina, tamanho);
 

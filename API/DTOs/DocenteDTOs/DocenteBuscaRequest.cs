@@ -8,4 +8,5 @@ public record DocenteBuscaRequest(
     string? Pesquisa = null,
     bool? Ativo = null,
     OrdenacaoDocenteEnum? Ordenacao = null,
-    DirecaoOrdenacaoEnum? Direcao = null);
+    DirecaoOrdenacaoEnum? Direcao = null,
+    int? DisciplinaId = null);

@@ -70,12 +70,14 @@ namespace GestãoDeTurmas.Controllers
                 return BadRequest("Ordenação Inválida");
             if (request.Direcao.HasValue && !Enum.IsDefined(request.Direcao.Value))
                 return BadRequest("Direção Inválida");
+            if (request.DisciplinaId.HasValue && request.DisciplinaId.Value < 0)
+                return BadRequest("Disciplina Inválida");
 
             try
             {
                 var lista = await _docenteService.ObterTodosOsDocentesAsync(
                     request.Pagina, request.TamanhoPagina, request.Pesquisa,
-                    request.Ativo, MapearOrdenacao(request.Ordenacao), request.Direcao);
+                    request.Ativo, MapearOrdenacao(request.Ordenacao), request.Direcao, request.DisciplinaId);
 
                 var itens = lista
                     .Select(d => new DocenteListaDTO(d.Id, d.Nome, d.Email, d.Disciplina?.Nome, d.Ativo))

@@ -8,7 +8,7 @@ public interface IDocenteRepository : IBaseInativavelRepository<Docente>
 {
     Task<List<Docente>> ObterDocentesPorDisciplinaAsync(int disciplinaId);
     Task<(List<Docente>, int total)> ObterTodosOsDocentesAsync(int pagina = 1, int tamanho = 5, string? pesquisa = null, bool? ativo = null, string? ordenacao = null,
-            DirecaoOrdenacaoEnum? direcao = null);
+            DirecaoOrdenacaoEnum? direcao = null, int? disciplinaId = null);
     Task<bool> ExistePeloCpfAsync(string cpf);
     Task<bool> ExistePeloEmailAsync(string email, int? ignorarId = null);
     Task<List<DocenteSqlDto>> ObterDocentesDisciplinasSqlAsync();
