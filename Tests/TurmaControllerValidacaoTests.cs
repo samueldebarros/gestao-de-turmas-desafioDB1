@@ -15,10 +15,11 @@ public class TurmaControllerValidacaoTests
     [Fact]
     public async Task AdicionarTurma_ComRegraDeNegocioViolada_DeveRetornarUnprocessableEntityComMensagem()
     {
+        var parametros = new Dictionary<string, object> { ["capacidade"] = 20, ["alunosAtivos"] = 20 };
         var turmaServiceMock = new Mock<ITurmaService>();
         turmaServiceMock
             .Setup(s => s.AdicionarTurmaAsync(It.IsAny<TurmaInputDTO>()))
-            .ThrowsAsync(new RegraDeNegocioException("Capacidade da turma excedida."));
+            .ThrowsAsync(new RegraDeNegocioException("TURMA_CAPACIDADE_ATINGIDA", "Capacidade da turma excedida.", parametros));
 
         var controller = new TurmasController(turmaServiceMock.Object);
 
@@ -37,5 +38,7 @@ public class TurmaControllerValidacaoTests
         unprocessable.StatusCode.Should().Be(422);
         var erro = unprocessable.Value.Should().BeOfType<ErroNegocioDTO>().Subject;
         erro.Mensagem.Should().Be("Capacidade da turma excedida.");
+        erro.Codigo.Should().Be("TURMA_CAPACIDADE_ATINGIDA");
+        erro.Params.Should().BeEquivalentTo(parametros);
     }
 }
