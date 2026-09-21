@@ -1,5 +1,6 @@
 namespace Tests;
 
+using API.DTOs;
 using API.DTOs.TurmaDTOs;
 using API.Service;
 using Common.Enums;
@@ -34,6 +35,7 @@ public class TurmaControllerValidacaoTests
 
         var unprocessable = resultado.Should().BeOfType<UnprocessableEntityObjectResult>().Subject;
         unprocessable.StatusCode.Should().Be(422);
-        unprocessable.Value.Should().Be("Capacidade da turma excedida.");
+        var erro = unprocessable.Value.Should().BeOfType<ErroNegocioDTO>().Subject;
+        erro.Mensagem.Should().Be("Capacidade da turma excedida.");
     }
 }

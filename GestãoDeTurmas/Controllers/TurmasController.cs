@@ -1,3 +1,4 @@
+using API.DTOs;
 using API.DTOs.TurmaDTOs;
 using API.Service;
 using Common.Enums;
@@ -130,7 +131,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -158,7 +159,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -183,7 +184,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -208,7 +209,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -233,7 +234,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -258,7 +259,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -283,7 +284,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {
@@ -308,7 +309,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {

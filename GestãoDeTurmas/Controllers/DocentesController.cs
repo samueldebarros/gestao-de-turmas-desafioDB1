@@ -1,3 +1,4 @@
+using API.DTOs;
 using API.DTOs.DocenteDTOs;
 using API.Service;
 using Common.Enums;
@@ -111,7 +112,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
-                return UnprocessableEntity(ex.Message);
+                return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
             }
             catch (Exception)
             {
@@ -139,7 +140,7 @@ namespace GestãoDeTurmas.Controllers
             }
             catch (RegraDeNegocioException ex)
             {
-                return UnprocessableEntity(ex.Message);
+                return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
             }
             catch (Exception)
             {
