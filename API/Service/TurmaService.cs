@@ -36,7 +36,9 @@ public class TurmaService : ITurmaService
     private async Task ValidarTurma(string identificador, SerieEnum serie, int anoLetivo, int? ignorarId = null)
     {
         if (await _turmaRepository.ValidarPelosIdentificadores(identificador, serie, anoLetivo, ignorarId))
-            throw new RegraDeNegocioException("Já existe uma turma com essa combinação de Identificador, Série e Ano letivo");
+            throw new RegraDeNegocioException(
+                "TURMA_COMBINACAO_DUPLICADA",
+                "Já existe uma turma com essa combinação de Identificador, Série e Ano letivo");
     }
 
     public async Task AdicionarTurmaAsync(TurmaInputDTO turmaDTO)
@@ -59,11 +61,15 @@ public class TurmaService : ITurmaService
             var docentes = await _docenteRepository.ObterAtivosPorIdsAsync(turmaDTO.Alocacoes);
 
             if (docentes.Count != turmaDTO.Alocacoes.Distinct().Count())
-                throw new RegraDeNegocioException("Uma ou mais alocações de docente são inválidas.");
+                throw new RegraDeNegocioException(
+                    "TURMA_ALOCACAO_DOCENTE_INVALIDA",
+                    "Uma ou mais alocações de docente são inválidas.");
 
             var disciplinaIds = docentes.Select(d => d.DisciplinaId!.Value).ToList();
             if (disciplinaIds.Distinct().Count() != disciplinaIds.Count)
-                throw new RegraDeNegocioException("Há mais de um docente para a mesma disciplina na turma.");
+                throw new RegraDeNegocioException(
+                    "TURMA_DOCENTE_DUPLICADO_NA_DISCIPLINA",
+                    "Há mais de um docente para a mesma disciplina na turma.");
 
             foreach (var docente in docentes)
                 turma.GradeCurricular.Add(new GradeCurricular
@@ -96,7 +102,10 @@ public class TurmaService : ITurmaService
         var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(turmaDTO.Id);
 
         if (turmaDTO.Capacidade < alunosAtivos)
-            throw new RegraDeNegocioException($"A capacidade não pode ser menor que o número de alunos ativos na turma. Capacidade informada: {turmaDTO.Capacidade}; alunos ativos: {alunosAtivos}.");
+            throw new RegraDeNegocioException(
+                "TURMA_CAPACIDADE_MENOR_QUE_ATIVOS",
+                $"A capacidade não pode ser menor que o número de alunos ativos na turma. Capacidade informada: {turmaDTO.Capacidade}; alunos ativos: {alunosAtivos}.",
+                new Dictionary<string, object> { ["capacidade"] = turmaDTO.Capacidade, ["alunosAtivos"] = alunosAtivos });
 
         turma.Turno = turmaDTO.Turno;
         turma.Capacidade = turmaDTO.Capacidade;
@@ -122,7 +131,10 @@ public class TurmaService : ITurmaService
         var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(id);
 
         if (alunosAtivos > 0)
-            throw new RegraDeNegocioException($"Não é possível inativar uma turma com alunos ativos. A turma possui {alunosAtivos} aluno(s) ativo(s).");
+            throw new RegraDeNegocioException(
+                "TURMA_INATIVAR_COM_ALUNOS_ATIVOS",
+                $"Não é possível inativar uma turma com alunos ativos. A turma possui {alunosAtivos} aluno(s) ativo(s).",
+                new Dictionary<string, object> { ["alunosAtivos"] = alunosAtivos });
 
         await _turmaRepository.InativarAsync(id);
     }
@@ -209,7 +221,9 @@ public class TurmaService : ITurmaService
             ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
         if (!turma.Ativo)
-            throw new RegraDeNegocioException("Não é possível matricular aluno em uma turma inativa.");
+            throw new RegraDeNegocioException(
+                "TURMA_INATIVA_NAO_MATRICULA",
+                "Não é possível matricular aluno em uma turma inativa.");
 
         if (await _alunoRepository.ObterPorIdAsync(alunoId) is null)
             throw new EntidadeNaoEncontradaException("Aluno não encontrado.");
@@ -222,7 +236,10 @@ public class TurmaService : ITurmaService
         var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(turmaId);
 
         if (alunosAtivos >= turma.Capacidade)
-            throw new RegraDeNegocioException($"A turma atingiu a capacidade máxima. Capacidade: {turma.Capacidade}; alunos ativos: {alunosAtivos}.");
+            throw new RegraDeNegocioException(
+                "TURMA_CAPACIDADE_ATINGIDA",
+                $"A turma atingiu a capacidade máxima. Capacidade: {turma.Capacidade}; alunos ativos: {alunosAtivos}.",
+                new Dictionary<string, object> { ["capacidade"] = turma.Capacidade, ["alunosAtivos"] = alunosAtivos });
 
         if (existente != null)
         {
@@ -247,7 +264,9 @@ public class TurmaService : ITurmaService
             ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
         if (!turma.Ativo)
-            throw new RegraDeNegocioException("Não é possível alterar matrículas de uma turma inativa.");
+            throw new RegraDeNegocioException(
+                "TURMA_INATIVA_NAO_ALTERA_MATRICULA",
+                "Não é possível alterar matrículas de uma turma inativa.");
 
         var enturmamento = await _enturmamentoRepository.ObterAsync(turmaId, alunoId)
             ?? throw new EntidadeNaoEncontradaException("Matrícula não encontrada.");
@@ -265,16 +284,22 @@ public class TurmaService : ITurmaService
             ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
         if (!turma.Ativo)
-            throw new RegraDeNegocioException("Não é possível alterar alocações de uma turma inativa.");
+            throw new RegraDeNegocioException(
+                "TURMA_INATIVA_NAO_ALTERA_ALOCACAO",
+                "Não é possível alterar alocações de uma turma inativa.");
 
         var docente = await _docenteRepository.ObterPorIdAsync(docenteId)
             ?? throw new EntidadeNaoEncontradaException("Docente não encontrado.");
 
         if (!docente.Ativo)
-            throw new RegraDeNegocioException("Não é possível alocar um docente inativo.");
+            throw new RegraDeNegocioException(
+                "DOCENTE_INATIVO_NAO_ALOCAVEL",
+                "Não é possível alocar um docente inativo.");
 
         if (docente.DisciplinaId is null)
-            throw new RegraDeNegocioException("O docente não possui disciplina associada.");
+            throw new RegraDeNegocioException(
+                "DOCENTE_SEM_DISCIPLINA",
+                "O docente não possui disciplina associada.");
 
         var disciplinaId = docente.DisciplinaId.Value;
         var grade = await _gradeCurricularRepository.ObterAsync(turmaId, disciplinaId);
@@ -303,7 +328,9 @@ public class TurmaService : ITurmaService
             ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
 
         if (!turma.Ativo)
-            throw new RegraDeNegocioException("Não é possível alterar alocações de uma turma inativa.");
+            throw new RegraDeNegocioException(
+                "TURMA_INATIVA_NAO_ALTERA_ALOCACAO",
+                "Não é possível alterar alocações de uma turma inativa.");
 
         var grade = await _gradeCurricularRepository.ObterAsync(turmaId, disciplinaId);
 

@@ -23,15 +23,22 @@ public class DocenteService : IDocenteService
     private void ValidarDataNascimento(DateOnly? dataNascimento)
     {
         if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-            throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual à data atual.");
+            throw new RegraDeNegocioException(
+                "DATA_NASCIMENTO_FUTURA",
+                "A data de nascimento não pode ser maior ou igual à data atual.");
 
         var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
         if (dataNascimento < dataMinimaAceitavel)
-            throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
+            throw new RegraDeNegocioException(
+                "DATA_NASCIMENTO_IDADE_EXCESSIVA",
+                "A data de nascimento informada é inválida (idade superior a 120 anos).");
 
         var dataMinima18Anos = DateOnly.FromDateTime(DateTime.Today).AddYears(-18);
         if (dataNascimento > dataMinima18Anos)
-            throw new RegraDeNegocioException("O docente deve ter pelo menos 18 anos.");
+            throw new RegraDeNegocioException(
+                "DOCENTE_IDADE_MINIMA",
+                "O docente deve ter pelo menos 18 anos.",
+                new Dictionary<string, object> { ["idadeMinima"] = 18 });
 
     }
 
@@ -55,7 +62,9 @@ public class DocenteService : IDocenteService
     {
         if (disciplinaId.HasValue)
             if (!await _disciplinaRepository.ExisteAtivaAsync(disciplinaId.Value))
-                throw new RegraDeNegocioException("A disciplina informada não existe ou está inativa.");
+                throw new RegraDeNegocioException(
+                    "DISCIPLINA_INEXISTENTE_OU_INATIVA",
+                    "A disciplina informada não existe ou está inativa.");
     }
 
     private async Task ValidarDadosDocenteAsync(DateOnly? dataNascimento, string? email, int? disciplinaId, int? ignorarId = null)
@@ -65,7 +74,9 @@ public class DocenteService : IDocenteService
 
         if (!string.IsNullOrEmpty(email))
             if (await _docenteRepository.ExistePeloEmailAsync(email, ignorarId))
-                throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+                throw new RegraDeNegocioException(
+                    "EMAIL_EM_USO",
+                    "Este e-mail já esta em uso.");
     }
 
     public async Task AdicionarDocenteAsync(DocenteInputDTO docente)

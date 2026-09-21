@@ -47,9 +47,11 @@ public static class ValidacaoCpf
     {
         var cpfLimpo = Limpar(cpfSujo);
 
-        if (!IsCpfValido(cpfLimpo)) throw new RegraDeNegocioException("O CPF informado é invalido");
+        if (!IsCpfValido(cpfLimpo))
+            throw new RegraDeNegocioException("CPF_INVALIDO", "O CPF informado é invalido");
 
-        if (await verificarExistencia(cpfLimpo)) throw new RegraDeNegocioException("Esse CPF já esta em uso.");
+        if (await verificarExistencia(cpfLimpo))
+            throw new RegraDeNegocioException("CPF_EM_USO", "Esse CPF já esta em uso.");
 
         return cpfLimpo;
     }
