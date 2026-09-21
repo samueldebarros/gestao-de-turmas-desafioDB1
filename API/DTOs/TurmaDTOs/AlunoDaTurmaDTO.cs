@@ -9,4 +9,6 @@ public record AlunoDaTurmaDTO(
     string Cpf,
     string? Email,
     SexoEnum Sexo,
-    DateOnly DataNascimento);
+    DateOnly DataNascimento,
+    SituacaoEnturmamentoEnum Situacao,
+    DateTime DataEnturmamento);

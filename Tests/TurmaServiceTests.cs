@@ -7,16 +7,27 @@ using Common.Enums;
 using Common.Exceptions;
 using FluentAssertions;
 using Moq;
+using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
+using Repository.Repositories.EnturmamentoRepository;
+using Repository.Repositories.GradeCurricularRepository;
 using Repository.Repositories.TurmaRepository;
 
 public class TurmaServiceTests
 {
     private readonly Mock<ITurmaRepository> _turmaRepositoryMock = new();
     private readonly Mock<IDocenteRepository> _docenteRepositoryMock = new();
+    private readonly Mock<IAlunoRepository> _alunoRepositoryMock = new();
+    private readonly Mock<IEnturmamentoRepository> _enturmamentoRepositoryMock = new();
+    private readonly Mock<IGradeCurricularRepository> _gradeCurricularRepositoryMock = new();
 
     private TurmaService CriarService() =>
-        new TurmaService(_turmaRepositoryMock.Object, _docenteRepositoryMock.Object);
+        new TurmaService(
+            _turmaRepositoryMock.Object,
+            _docenteRepositoryMock.Object,
+            _alunoRepositoryMock.Object,
+            _enturmamentoRepositoryMock.Object,
+            _gradeCurricularRepositoryMock.Object);
 
     private static Turma CriarTurma(int id = 1, int capacidade = 30) => new Turma
     {

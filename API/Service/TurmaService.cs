@@ -1,10 +1,12 @@
-﻿using API.DTOs;
+using API.DTOs;
 using API.DTOs.TurmaDTOs;
 using Common.Domains;
 using Common.Enums;
 using Common.Exceptions;
 using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
+using Repository.Repositories.EnturmamentoRepository;
+using Repository.Repositories.GradeCurricularRepository;
 using Repository.Repositories.TurmaRepository;
 
 namespace API.Service;
@@ -13,11 +15,22 @@ public class TurmaService : ITurmaService
 {
     private readonly ITurmaRepository _turmaRepository;
     private readonly IDocenteRepository _docenteRepository;
+    private readonly IAlunoRepository _alunoRepository;
+    private readonly IEnturmamentoRepository _enturmamentoRepository;
+    private readonly IGradeCurricularRepository _gradeCurricularRepository;
 
-    public TurmaService(ITurmaRepository turmaRepository, IDocenteRepository docenteRepository)
+    public TurmaService(
+        ITurmaRepository turmaRepository,
+        IDocenteRepository docenteRepository,
+        IAlunoRepository alunoRepository,
+        IEnturmamentoRepository enturmamentoRepository,
+        IGradeCurricularRepository gradeCurricularRepository)
     {
         _turmaRepository = turmaRepository;
         _docenteRepository = docenteRepository;
+        _alunoRepository = alunoRepository;
+        _enturmamentoRepository = enturmamentoRepository;
+        _gradeCurricularRepository = gradeCurricularRepository;
     }
 
     private async Task ValidarTurma(string identificador, SerieEnum serie, int anoLetivo, int? ignorarId = null)
@@ -167,16 +180,137 @@ public class TurmaService : ITurmaService
     {
         await GarantirQueTurmaExisteAsync(turmaId);
 
-        var alunos = await _turmaRepository.ObterAlunosDaTurmaAsync(turmaId);
+        var enturmamentos = await _turmaRepository.ObterAlunosDaTurmaAsync(turmaId);
 
-        return alunos.Select(a => new AlunoDaTurmaDTO(
-            a.Id,
-            a.Matricula,
-            a.Nome,
-            a.Cpf,
-            a.Email,
-            a.Sexo,
-            a.DataNascimento)).ToList();
+        return enturmamentos.Select(e => new AlunoDaTurmaDTO(
+            e.Aluno.Id,
+            e.Aluno.Matricula,
+            e.Aluno.Nome,
+            e.Aluno.Cpf,
+            e.Aluno.Email,
+            e.Aluno.Sexo,
+            e.Aluno.DataNascimento,
+            e.Situacao,
+            e.DataEnturmamento)).ToList();
+    }
+
+    public async Task<List<AlunoResumoDTO>> ObterAlunosDisponiveisAsync(int turmaId)
+    {
+        await GarantirQueTurmaExisteAsync(turmaId);
+
+        var alunos = await _alunoRepository.ObterAlunosDisponiveisParaTurmaAsync(turmaId);
+
+        return alunos.Select(a => new AlunoResumoDTO(a.Id, a.Matricula, a.Nome)).ToList();
+    }
+
+    public async Task MatricularAlunoAsync(int turmaId, int alunoId)
+    {
+        var turma = await _turmaRepository.ObterPorIdAsync(turmaId)
+            ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        if (!turma.Ativo)
+            throw new RegraDeNegocioException("Não é possível matricular aluno em uma turma inativa.");
+
+        if (await _alunoRepository.ObterPorIdAsync(alunoId) is null)
+            throw new EntidadeNaoEncontradaException("Aluno não encontrado.");
+
+        var existente = await _enturmamentoRepository.ObterAsync(turmaId, alunoId);
+
+        if (existente != null && existente.Situacao == SituacaoEnturmamentoEnum.Ativo)
+            return;
+
+        var alunosAtivos = await _turmaRepository.ContarAlunosAtivosAsync(turmaId);
+
+        if (alunosAtivos >= turma.Capacidade)
+            throw new RegraDeNegocioException($"A turma atingiu a capacidade máxima. Capacidade: {turma.Capacidade}; alunos ativos: {alunosAtivos}.");
+
+        if (existente != null)
+        {
+            existente.Situacao = SituacaoEnturmamentoEnum.Ativo;
+            existente.DataEnturmamento = DateTime.Now;
+            await _enturmamentoRepository.AtualizarAsync(existente);
+            return;
+        }
+
+        await _enturmamentoRepository.AdicionarAsync(new Enturmamento
+        {
+            TurmaId = turmaId,
+            AlunoId = alunoId,
+            DataEnturmamento = DateTime.Now,
+            Situacao = SituacaoEnturmamentoEnum.Ativo
+        });
+    }
+
+    public async Task CancelarMatriculaAsync(int turmaId, int alunoId)
+    {
+        var turma = await _turmaRepository.ObterPorIdAsync(turmaId)
+            ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        if (!turma.Ativo)
+            throw new RegraDeNegocioException("Não é possível alterar matrículas de uma turma inativa.");
+
+        var enturmamento = await _enturmamentoRepository.ObterAsync(turmaId, alunoId)
+            ?? throw new EntidadeNaoEncontradaException("Matrícula não encontrada.");
+
+        if (enturmamento.Situacao == SituacaoEnturmamentoEnum.Cancelado)
+            return;
+
+        enturmamento.Situacao = SituacaoEnturmamentoEnum.Cancelado;
+        await _enturmamentoRepository.AtualizarAsync(enturmamento);
+    }
+
+    public async Task VincularDocenteAsync(int turmaId, int docenteId)
+    {
+        var turma = await _turmaRepository.ObterPorIdAsync(turmaId)
+            ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        if (!turma.Ativo)
+            throw new RegraDeNegocioException("Não é possível alterar alocações de uma turma inativa.");
+
+        var docente = await _docenteRepository.ObterPorIdAsync(docenteId)
+            ?? throw new EntidadeNaoEncontradaException("Docente não encontrado.");
+
+        if (!docente.Ativo)
+            throw new RegraDeNegocioException("Não é possível alocar um docente inativo.");
+
+        if (docente.DisciplinaId is null)
+            throw new RegraDeNegocioException("O docente não possui disciplina associada.");
+
+        var disciplinaId = docente.DisciplinaId.Value;
+        var grade = await _gradeCurricularRepository.ObterAsync(turmaId, disciplinaId);
+
+        if (grade is not null)
+        {
+            if (grade.DocenteId == docenteId)
+                return;
+
+            grade.DocenteId = docenteId;
+            await _gradeCurricularRepository.AtualizarAsync(grade);
+            return;
+        }
+
+        await _gradeCurricularRepository.AdicionarAsync(new GradeCurricular
+        {
+            TurmaId = turmaId,
+            DisciplinaId = disciplinaId,
+            DocenteId = docenteId
+        });
+    }
+
+    public async Task DesvincularDisciplinaAsync(int turmaId, int disciplinaId)
+    {
+        var turma = await _turmaRepository.ObterPorIdAsync(turmaId)
+            ?? throw new EntidadeNaoEncontradaException("Turma não encontrada.");
+
+        if (!turma.Ativo)
+            throw new RegraDeNegocioException("Não é possível alterar alocações de uma turma inativa.");
+
+        var grade = await _gradeCurricularRepository.ObterAsync(turmaId, disciplinaId);
+
+        if (grade is null)
+            return;
+
+        await _gradeCurricularRepository.RemoverAsync(grade);
     }
 
     public async Task<ListaPaginada<ListaTurmasDTO>> ObterTurmasAsync(
@@ -221,6 +355,7 @@ public class TurmaService : ITurmaService
                     Id = d.Id,
                     DocenteNome = d.DocenteNome,
                     DocenteEmail = d.DocenteEmail,
+                    DisciplinaId = d.DisciplinaId,
                     DisciplinaNome = d.DisciplinaNome,
                     CargaHoraria = d.CargaHoraria
                 });
@@ -232,7 +367,8 @@ public class TurmaService : ITurmaService
 
             foreach (var a in await _turmaRepository.ObterAlunosEmLoteAsync(ids))
                 porId[a.TurmaId].Alunos!.Add(new AlunoDaTurmaDTO(
-                    a.Id, a.Matricula, a.Nome, a.Cpf, a.Email, a.Sexo, a.DataNascimento));
+                    a.Id, a.Matricula, a.Nome, a.Cpf, a.Email, a.Sexo, a.DataNascimento,
+                    a.Situacao, a.DataEnturmamento));
         }
     }
 }

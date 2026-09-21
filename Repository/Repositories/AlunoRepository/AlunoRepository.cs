@@ -1,4 +1,4 @@
-﻿using Common.Domains;
+using Common.Domains;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using Repository.Context;
@@ -70,7 +70,10 @@ public class AlunoRepository : BaseInativavelRepository<Aluno>, IAlunoRepository
 
         return await _dbSet
             .AsNoTracking()
-            .Where(a => a.Ativo && !_context.Enturmamentos.Any(e => e.TurmaId == turmaId && e.AlunoId == a.Id))
+            .Where(a => a.Ativo && !_context.Enturmamentos.Any(e =>
+                e.TurmaId == turmaId
+                && e.AlunoId == a.Id
+                && e.Situacao == SituacaoEnturmamentoEnum.Ativo))
             .OrderBy(a => a.Nome)
             .ToListAsync();
 

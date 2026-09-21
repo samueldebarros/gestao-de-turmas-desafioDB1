@@ -1,4 +1,4 @@
-﻿namespace Common.Exceptions;
+namespace Common.Exceptions;
 
 public class RegraDeNegocioException : Exception
 {

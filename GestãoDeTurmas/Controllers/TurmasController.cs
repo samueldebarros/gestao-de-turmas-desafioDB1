@@ -1,4 +1,4 @@
-﻿using API.DTOs.TurmaDTOs;
+using API.DTOs.TurmaDTOs;
 using API.Service;
 using Common.Enums;
 using Common.Exceptions;
@@ -98,7 +98,29 @@ public class TurmasController : ControllerBase
         }
     }
 
+    [HttpGet("{id:int}/alunos-disponiveis")]
+    [ProducesResponseType(typeof(List<AlunoResumoDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ObterAlunosDisponiveis(int id)
+    {
+        try
+        {
+            var alunos = await _turmaService.ObterAlunosDisponiveisAsync(id);
+            return Ok(alunos);
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> AdicionarTurma([FromBody] TurmaInputDTO novaTurma)
     {
         try
@@ -108,7 +130,7 @@ public class TurmasController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return BadRequest(ex.Message);
+            return UnprocessableEntity(ex.Message);
         }
         catch (Exception)
         {
@@ -128,6 +150,106 @@ public class TurmasController : ControllerBase
         try
         {
             await _turmaService.EditarTurmaAsync(turma);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPost("{id:int}/alunos")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> MatricularAluno(int id, [FromBody] MatricularAlunoDTO matricula)
+    {
+        try
+        {
+            await _turmaService.MatricularAlunoAsync(id, matricula.AlunoId);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPatch("{id:int}/alunos/{alunoId:int}/cancelar")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> CancelarMatricula(int id, int alunoId)
+    {
+        try
+        {
+            await _turmaService.CancelarMatriculaAsync(id, alunoId);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpPost("{id:int}/docentes")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> VincularDocente(int id, [FromBody] VincularDocenteDTO alocacao)
+    {
+        try
+        {
+            await _turmaService.VincularDocenteAsync(id, alocacao.DocenteId);
+            return NoContent();
+        }
+        catch (EntidadeNaoEncontradaException)
+        {
+            return NotFound();
+        }
+        catch (RegraDeNegocioException ex)
+        {
+            return UnprocessableEntity(ex.Message);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, mensagemStatus500);
+        }
+    }
+
+    [HttpDelete("{id:int}/disciplinas/{disciplinaId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> DesvincularDisciplina(int id, int disciplinaId)
+    {
+        try
+        {
+            await _turmaService.DesvincularDisciplinaAsync(id, disciplinaId);
             return NoContent();
         }
         catch (EntidadeNaoEncontradaException)
