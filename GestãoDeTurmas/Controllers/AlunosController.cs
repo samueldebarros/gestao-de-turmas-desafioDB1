@@ -1,4 +1,5 @@
-﻿using API.DTOs.AlunoDTOs;
+﻿using API.DTOs;
+using API.DTOs.AlunoDTOs;
 using API.Exceptions;
 using API.Service;
 using Common;
@@ -90,7 +91,7 @@ public class AlunosController : ControllerBase
         }
         catch (RegraDeNegocioException ex)
         {
-            return UnprocessableEntity(ex.Message);
+            return UnprocessableEntity(new ErroNegocioDTO(ex.Codigo, ex.Params, ex.Message));
         }
         catch (Exception)
         {

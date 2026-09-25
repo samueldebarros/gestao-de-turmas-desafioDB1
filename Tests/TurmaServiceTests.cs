@@ -7,16 +7,27 @@ using Common.Enums;
 using Common.Exceptions;
 using FluentAssertions;
 using Moq;
+using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
+using Repository.Repositories.EnturmamentoRepository;
+using Repository.Repositories.GradeCurricularRepository;
 using Repository.Repositories.TurmaRepository;
 
 public class TurmaServiceTests
 {
     private readonly Mock<ITurmaRepository> _turmaRepositoryMock = new();
     private readonly Mock<IDocenteRepository> _docenteRepositoryMock = new();
+    private readonly Mock<IAlunoRepository> _alunoRepositoryMock = new();
+    private readonly Mock<IEnturmamentoRepository> _enturmamentoRepositoryMock = new();
+    private readonly Mock<IGradeCurricularRepository> _gradeCurricularRepositoryMock = new();
 
     private TurmaService CriarService() =>
-        new TurmaService(_turmaRepositoryMock.Object, _docenteRepositoryMock.Object);
+        new TurmaService(
+            _turmaRepositoryMock.Object,
+            _docenteRepositoryMock.Object,
+            _alunoRepositoryMock.Object,
+            _enturmamentoRepositoryMock.Object,
+            _gradeCurricularRepositoryMock.Object);
 
     private static Turma CriarTurma(int id = 1, int capacidade = 30) => new Turma
     {
@@ -53,6 +64,21 @@ public class TurmaServiceTests
             .WithMessage("Não é possível inativar uma turma com alunos ativos. A turma possui 1 aluno(s) ativo(s).");
 
         _turmaRepositoryMock.Verify(repo => repo.InativarAsync(It.IsAny<int>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task InativarTurma_ComAlunoAtivo_DeveLancarComCodigoEParams()
+    {
+        _turmaRepositoryMock.Setup(repo => repo.ExisteAsync(1)).ReturnsAsync(true);
+        _turmaRepositoryMock.Setup(repo => repo.ContarAlunosAtivosAsync(1)).ReturnsAsync(1);
+
+        var turmaService = CriarService();
+
+        Func<Task> acao = async () => await turmaService.InativarTurmaAsync(1);
+
+        var excecao = await acao.Should().ThrowAsync<RegraDeNegocioException>();
+        excecao.Which.Codigo.Should().Be("TURMA_INATIVAR_COM_ALUNOS_ATIVOS");
+        excecao.Which.Params.Should().BeEquivalentTo(new Dictionary<string, object> { ["alunosAtivos"] = 1 });
     }
 
     [Fact]
@@ -117,6 +143,23 @@ public class TurmaServiceTests
     }
 
     [Fact]
+    public async Task EditarTurma_ComCapacidadeAbaixoDosAlunosAtivos_DeveLancarComCodigoEParams()
+    {
+        _turmaRepositoryMock.Setup(repo => repo.ObterPorIdAsync(1)).ReturnsAsync(CriarTurma());
+        _turmaRepositoryMock.Setup(repo => repo.ValidarPelosIdentificadores(
+            It.IsAny<string>(), It.IsAny<SerieEnum>(), It.IsAny<int>(), It.IsAny<int?>())).ReturnsAsync(false);
+        _turmaRepositoryMock.Setup(repo => repo.ContarAlunosAtivosAsync(1)).ReturnsAsync(20);
+
+        var turmaService = CriarService();
+
+        Func<Task> acao = async () => await turmaService.EditarTurmaAsync(CriarDtoEdicao(capacidade: 19));
+
+        var excecao = await acao.Should().ThrowAsync<RegraDeNegocioException>();
+        excecao.Which.Codigo.Should().Be("TURMA_CAPACIDADE_MENOR_QUE_ATIVOS");
+        excecao.Which.Params.Should().BeEquivalentTo(new Dictionary<string, object> { ["capacidade"] = 19, ["alunosAtivos"] = 20 });
+    }
+
+    [Fact]
     public async Task EditarTurma_ComCapacidadeIgualAosAlunosAtivos_DeveEditar()
     {
         _turmaRepositoryMock.Setup(repo => repo.ObterPorIdAsync(1)).ReturnsAsync(CriarTurma());
@@ -130,5 +173,22 @@ public class TurmaServiceTests
 
         _turmaRepositoryMock.Verify(repo => repo.EditarAsync(
             It.Is<Turma>(t => t.Id == 1 && t.Capacidade == 20)), Times.Once);
+    }
+
+    [Fact]
+    public async Task MatricularAluno_ComCapacidadeAtingida_DeveLancarComCodigoEParams()
+    {
+        _turmaRepositoryMock.Setup(repo => repo.ObterPorIdAsync(1)).ReturnsAsync(CriarTurma(capacidade: 20));
+        _alunoRepositoryMock.Setup(repo => repo.ObterPorIdAsync(2)).ReturnsAsync(new Aluno { Id = 2 });
+        _enturmamentoRepositoryMock.Setup(repo => repo.ObterAsync(1, 2)).ReturnsAsync((Enturmamento?)null);
+        _turmaRepositoryMock.Setup(repo => repo.ContarAlunosAtivosAsync(1)).ReturnsAsync(20);
+
+        var turmaService = CriarService();
+
+        Func<Task> acao = async () => await turmaService.MatricularAlunoAsync(1, 2);
+
+        var excecao = await acao.Should().ThrowAsync<RegraDeNegocioException>();
+        excecao.Which.Codigo.Should().Be("TURMA_CAPACIDADE_ATINGIDA");
+        excecao.Which.Params.Should().BeEquivalentTo(new Dictionary<string, object> { ["capacidade"] = 20, ["alunosAtivos"] = 20 });
     }
 }

@@ -1,4 +1,4 @@
-﻿using Common.Domains;
+using Common.Domains;
 using Common.Enums;
 using Repository.Relatorios;
 using Repository.Repositories.Base;
@@ -13,7 +13,7 @@ public interface ITurmaRepository : IBaseInativavelRepository<Turma>
     Task<bool> ExisteAsync(int id);
     Task<int> ContarAlunosAtivosAsync(int turmaId);
     Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId);
-    Task<List<Aluno>> ObterAlunosDaTurmaAsync(int turmaId);
+    Task<List<Enturmamento>> ObterAlunosDaTurmaAsync(int turmaId);
     Task<List<PainelDemograficoTurmaResultado>> ObterPainelDemograficoPorTurmaAsync();
     Task<List<BalancoEvasaoSerieResultado>> ObterBalancoEvasaoPorSerieAsync();
     Task<(List<TurmaResumo> lista, int total)> ObterTurmasPaginadasAsync(

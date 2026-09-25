@@ -1,4 +1,4 @@
-﻿using Common.Domains;
+using Common.Domains;
 using Common.Utils;
 using Common.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +77,7 @@ public class TurmaRepository : BaseInativavelRepository<Turma> , ITurmaRepositor
                 Id = g.Docente.Id,
                 DocenteNome = g.Docente.Nome,
                 DocenteEmail = g.Docente.Email!,
+                DisciplinaId = g.DisciplinaId,
                 DisciplinaNome = g.Disciplina.Nome,
                 CargaHoraria = g.Disciplina.CargaHoraria
             })
@@ -95,19 +96,20 @@ public class TurmaRepository : BaseInativavelRepository<Turma> , ITurmaRepositor
                 Id = g.Docente.Id,
                 DocenteNome = g.Docente.Nome,
                 DocenteEmail = g.Docente.Email!,
+                DisciplinaId = g.DisciplinaId,
                 DisciplinaNome = g.Disciplina.Nome,
                 CargaHoraria = g.Disciplina.CargaHoraria
             })
             .ToListAsync();
     }
 
-    public async Task<List<Aluno>> ObterAlunosDaTurmaAsync(int turmaId)
+    public async Task<List<Enturmamento>> ObterAlunosDaTurmaAsync(int turmaId)
     {
         return await _context.Enturmamentos
             .AsNoTracking()
             .Where(e => e.TurmaId == turmaId)
             .OrderBy(e => e.Aluno.Nome)
-            .Select(e => e.Aluno)
+            .Include(e => e.Aluno)
             .ToListAsync();
     }
 
@@ -126,7 +128,9 @@ public class TurmaRepository : BaseInativavelRepository<Turma> , ITurmaRepositor
                 Cpf = e.Aluno.Cpf,
                 Email = e.Aluno.Email,
                 Sexo = e.Aluno.Sexo,
-                DataNascimento = e.Aluno.DataNascimento
+                DataNascimento = e.Aluno.DataNascimento,
+                Situacao = e.Situacao,
+                DataEnturmamento = e.DataEnturmamento
             })
             .ToListAsync();
     }

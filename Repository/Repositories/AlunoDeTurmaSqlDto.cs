@@ -1,4 +1,4 @@
-﻿
+
 using Common.Enums;
 
 namespace Repository.Repositories;
@@ -13,4 +13,6 @@ public class AlunoDeTurmaSqlDto
     public string? Email { get; set; }
     public SexoEnum Sexo { get; set; }
     public DateOnly DataNascimento { get; set; }
+    public SituacaoEnturmamentoEnum Situacao { get; set; }
+    public DateTime DataEnturmamento { get; set; }
 }

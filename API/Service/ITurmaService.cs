@@ -1,4 +1,4 @@
-﻿using API.DTOs;
+using API.DTOs;
 using API.DTOs.TurmaDTOs;
 using Common.Domains;
 using Common.Enums;
@@ -11,6 +11,11 @@ public interface ITurmaService
     Task<List<Turma>> ObterTodasAsTurmasAsync();
     Task<List<DocenteSqlDto>> ObterDocentesDaTurmaAsync(int turmaId);
     Task<List<AlunoDaTurmaDTO>> ObterAlunosDaTurmaAsync(int turmaId);
+    Task<List<AlunoResumoDTO>> ObterAlunosDisponiveisAsync(int turmaId);
+    Task MatricularAlunoAsync(int turmaId, int alunoId);
+    Task CancelarMatriculaAsync(int turmaId, int alunoId);
+    Task VincularDocenteAsync(int turmaId, int docenteId);
+    Task DesvincularDisciplinaAsync(int turmaId, int disciplinaId);
     Task AdicionarTurmaAsync(TurmaInputDTO turma);
     Task<Turma> ObterTurmaPeloIdAsync(int id);
     Task EditarTurmaAsync(TurmaEditarDTO turmaDTO);

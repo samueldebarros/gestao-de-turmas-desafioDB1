@@ -83,6 +83,7 @@ public class DocenteRepository : BaseInativavelRepository<Docente>, IDocenteRepo
                 doc.Id AS Id,
                 doc.Nome AS DocenteNome, 
                 doc.Email AS DocenteEmail, 
+                disc.Id AS DisciplinaId,
                 disc.Nome AS DisciplinaNome, 
                 disc.CargaHoraria AS CargaHoraria
             FROM Docentes AS doc

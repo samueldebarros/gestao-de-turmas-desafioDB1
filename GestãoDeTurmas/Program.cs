@@ -10,6 +10,8 @@ using Repository;
 using Repository.Context;
 using Repository.Repositories;
 using Repository.Repositories.DocenteRepository;
+using Repository.Repositories.EnturmamentoRepository;
+using Repository.Repositories.GradeCurricularRepository;
 using Repository.Repositories.TurmaRepository;
 using Repository.Repositories.UsuarioRepository;
 using System.Text;
@@ -37,6 +39,8 @@ builder.Services.AddScoped<IDocenteService, DocenteService>();
 builder.Services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
 builder.Services.AddScoped<IDisciplinaService, DisciplinaService>();
 
+builder.Services.AddScoped<IEnturmamentoRepository, EnturmamentoRepository>();
+builder.Services.AddScoped<IGradeCurricularRepository, GradeCurricularRepository>();
 builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
 builder.Services.AddScoped<ITurmaService, TurmaService>();
 

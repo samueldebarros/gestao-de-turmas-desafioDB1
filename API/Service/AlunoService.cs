@@ -22,11 +22,15 @@ namespace API.Service
         private void ValidarDataNascimento(DateOnly? dataNascimento)
         {
             if (dataNascimento >= DateOnly.FromDateTime(DateTime.Today))
-                throw new RegraDeNegocioException("A data de nascimento não pode ser maior ou igual à data atual.");
+                throw new RegraDeNegocioException(
+                    "DATA_NASCIMENTO_FUTURA",
+                    "A data de nascimento não pode ser maior ou igual à data atual.");
 
             var dataMinimaAceitavel = DateOnly.FromDateTime(DateTime.Today).AddYears(-120);
             if (dataNascimento < dataMinimaAceitavel)
-                throw new RegraDeNegocioException("A data de nascimento informada é inválida (idade superior a 120 anos).");
+                throw new RegraDeNegocioException(
+                    "DATA_NASCIMENTO_IDADE_EXCESSIVA",
+                    "A data de nascimento informada é inválida (idade superior a 120 anos).");
         }
 
         private Task<string> GerarMatriculaUnicaAsync() =>
@@ -49,7 +53,9 @@ namespace API.Service
                     return matricula;
                 }
             }
-            throw new RegraDeNegocioException("Não foi possível gerar uma matrícula única. Tente novamente!!");
+            throw new RegraDeNegocioException(
+                "ALUNO_MATRICULA_NAO_GERADA",
+                "Não foi possível gerar uma matrícula única. Tente novamente!!");
         }
 
         private async Task<Aluno> ObterAlunoAtivoOuLancarErroAsync(int id)
@@ -74,10 +80,14 @@ namespace API.Service
 
             if (!string.IsNullOrEmpty(email))
                 if (await _alunoRepository.ExistePeloEmailAsync(email, ignorarId))
-                    throw new RegraDeNegocioException("Este e-mail já esta em uso.");
+                    throw new RegraDeNegocioException(
+                        "EMAIL_EM_USO",
+                        "Este e-mail já esta em uso.");
 
             if (!sexo.HasValue)
-                throw new RegraDeNegocioException("Selecione um sexo.");
+                throw new RegraDeNegocioException(
+                    "SEXO_OBRIGATORIO",
+                    "Selecione um sexo.");
 
         }
 
