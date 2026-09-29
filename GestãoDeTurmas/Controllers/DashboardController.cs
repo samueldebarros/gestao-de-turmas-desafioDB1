@@ -1,4 +1,5 @@
 using API.Service;
+using GestãoDeTurmas.Autorizacao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace GestãoDeTurmas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Coordenador")]
+[Authorize(Policy = Politicas.Coordenacao)]
 public class DashboardController : ControllerBase
 {
     private readonly IDashboardService _dashboardService;

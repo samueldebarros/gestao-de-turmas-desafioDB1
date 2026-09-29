@@ -5,6 +5,7 @@ using API.Service;
 using Common;
 using Common.Enums;
 using Common.Exceptions;
+using GestãoDeTurmas.Autorizacao;
 using GestãoDeTurmas.Mappers;
 using GestãoDeTurmas.Models.Aluno;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +15,7 @@ namespace GestãoDeTurmas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles ="Admin,Coordenador,Docente")]
+[Authorize(Policy = Politicas.ConsultaAlunos)]
 public class AlunosController : ControllerBase
 {
     private readonly IAlunoService _alunoService;
@@ -81,6 +82,7 @@ public class AlunosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Politicas.Coordenacao)]
     public async Task<IActionResult> AdicionarAluno([FromBody] AlunoInputViewModel novoAluno)
     {
         try
@@ -101,6 +103,7 @@ public class AlunosController : ControllerBase
     }
 
     [HttpPatch("{id}/inativar")]
+    [Authorize(Policy = Politicas.Coordenacao)]
     public async Task<IActionResult> InativarAluno(int id)
     {
         try
@@ -119,6 +122,7 @@ public class AlunosController : ControllerBase
     }
 
     [HttpPatch("{id}/reativar")]
+    [Authorize(Policy = Politicas.Coordenacao)]
     public async Task<IActionResult> ReativarAluno(int id)
     {
         try
@@ -137,6 +141,7 @@ public class AlunosController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = Politicas.Coordenacao)]
     public async Task<IActionResult> EditarAluno(int id, [FromBody] AlunoEditarViewModel aluno)
     {
         try
@@ -156,7 +161,7 @@ public class AlunosController : ControllerBase
     }
 
     [HttpPost("importar")]
-    [Authorize(Roles = "Admin,Coordenador")]
+    [Authorize(Policy = Politicas.Coordenacao)]
     [ProducesResponseType(typeof(ImportacaoResultadoDTO), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ImportacaoErroDTO), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Importar([FromBody] ImportarAlunosRequest request)
