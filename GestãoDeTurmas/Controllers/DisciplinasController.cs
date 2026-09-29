@@ -1,5 +1,6 @@
 using API.DTOs.DisciplinaDTOs;
 using API.Service;
+using GestãoDeTurmas.Autorizacao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,7 @@ namespace GestãoDeTurmas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Coordenador")]
+[Authorize(Policy = Politicas.Coordenacao)]
 public class DisciplinasController : ControllerBase
 {
     private readonly IDisciplinaService _disciplinaService;

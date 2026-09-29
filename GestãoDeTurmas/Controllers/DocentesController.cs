@@ -3,6 +3,7 @@ using API.DTOs.DocenteDTOs;
 using API.Service;
 using Common.Enums;
 using Common.Exceptions;
+using GestãoDeTurmas.Autorizacao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace GestãoDeTurmas.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin,Coordenador")]
+    [Authorize(Policy = Politicas.Coordenacao)]
     public class DocentesController : ControllerBase
     {
         private readonly IDocenteService _docenteService;

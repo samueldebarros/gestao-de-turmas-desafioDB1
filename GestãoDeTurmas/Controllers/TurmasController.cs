@@ -4,6 +4,7 @@ using API.Service;
 using Common.Enums;
 using Common.Exceptions;
 using Common.Utils;
+using GestãoDeTurmas.Autorizacao;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Repositories;
@@ -12,7 +13,7 @@ namespace GestãoDeTurmas.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin,Coordenador")]
+[Authorize(Policy = Politicas.Coordenacao)]
 public class TurmasController : ControllerBase
 {
     private readonly ITurmaService _turmaService;

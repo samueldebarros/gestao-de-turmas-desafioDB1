@@ -1,5 +1,6 @@
 using API.Service;
 using Common.Domains;
+using GestãoDeTurmas.Autorizacao;
 using GestãoDeTurmas.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -106,7 +107,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(Politicas.Registrar);
 
 
 var app = builder.Build();
@@ -119,7 +120,7 @@ using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<GestaoEscolarContext>();
 
-        if (!db.Usuarios.Any())
+        if (!db.Usuarios.Any(u => u.Role == Papeis.Admin))
         {
             var senha = app.Configuration["Seed:AdminSenha"];
 
@@ -133,17 +134,54 @@ using (var scope = app.Services.CreateScope())
                 var admin = new Usuario
                 {
                     Email = "admin@admin.com",
-                    Role = "Admin"
+                    Role = Papeis.Admin
                 };
                 admin.SenhaHash = hasher.HashPassword(admin, senha);
                 db.Usuarios.Add(admin);
                 db.SaveChanges();
             }
         }
+
+        if (app.Environment.IsDevelopment())
+        {
+            var senhaTeste = app.Configuration["Seed:SenhaUsuariosTeste"];
+
+            if (string.IsNullOrWhiteSpace(senhaTeste))
+            {
+                logger.LogWarning("Seed de usuarios de teste ignorado: Seed:SenhaUsuariosTeste ausente.");
+            }
+            else
+            {
+                var hasher = new PasswordHasher<Usuario>();
+                var usuariosTeste = new[]
+                {
+                    (Email: "coordenador@teste.com", Role: Papeis.Coordenador),
+                    (Email: "docente@teste.com", Role: Papeis.Docente)
+                };
+
+                foreach (var (email, role) in usuariosTeste)
+                {
+                    if (db.Usuarios.Any(u => u.Email == email))
+                    {
+                        continue;
+                    }
+
+                    var usuarioTeste = new Usuario
+                    {
+                        Email = email,
+                        Role = role
+                    };
+                    usuarioTeste.SenhaHash = hasher.HashPassword(usuarioTeste, senhaTeste);
+                    db.Usuarios.Add(usuarioTeste);
+                    db.SaveChanges();
+                    logger.LogInformation("Usuario de teste criado com papel {Role}.", role);
+                }
+            }
+        }
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Seed do admin falhou; a aplicacao segue subindo.");
+        logger.LogError(ex, "Seed de usuarios falhou; a aplicacao segue subindo.");
     }
 }
 
